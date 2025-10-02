@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptforgeLib", "ScriptforgeLib\ScriptforgeLib.vcxproj", "{EE5CC680-18B4-4EA7-8899-C8AAB8AB2C6F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptforgeTest", "ScriptforgeTest\ScriptforgeTest.vcxproj", "{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{EE5CC680-18B4-4EA7-8899-C8AAB8AB2C6F}.Release|x64.Build.0 = Release|x64
 		{EE5CC680-18B4-4EA7-8899-C8AAB8AB2C6F}.Release|x86.ActiveCfg = Release|Win32
 		{EE5CC680-18B4-4EA7-8899-C8AAB8AB2C6F}.Release|x86.Build.0 = Release|Win32
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Debug|x64.ActiveCfg = Debug|x64
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Debug|x64.Build.0 = Debug|x64
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Debug|x86.ActiveCfg = Debug|Win32
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Debug|x86.Build.0 = Debug|Win32
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Release|x64.ActiveCfg = Release|x64
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Release|x64.Build.0 = Release|x64
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Release|x86.ActiveCfg = Release|Win32
+		{9D8BC2AE-FF46-42DB-ABC2-0EFA2B7F3922}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

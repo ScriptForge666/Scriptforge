@@ -25,8 +25,20 @@ namespace Scriptforge::Tree {
 		m_root = make_shared<TreeNode>(node);
 	}
 	template<typename T>requires requires(T t1, T t2) { t1 = t2; }
-	Tree<T>::Tree(Tree<T> tree) {
-	
+	Tree<T>::Tree(const Tree<T>& other) {
+			auto deep_copy = [&](auto&& self, const nodeptr& original, const nodeptr& parent) -> nodeptr {
+			if (!original) return nullptr;
+			nodeptr copy_node = make_shared<TreeNode>(original->node);
+			copy_node->father = parent;
+			for (const auto& child : original->children) {
+				auto child_copy = self(self, child, copy_node);
+				if (child_copy) {
+					copy_node->children.push_back(child_copy);
+				}
+			}
+			return copy_node;
+			};
+		m_root = deep_copy(deep_copy, other.m_root, nullptr);
 	}
 
 	template<typename T>requires requires(T t1, T t2) { t1 = t2; }

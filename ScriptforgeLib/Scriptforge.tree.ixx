@@ -28,7 +28,7 @@ namespace Scriptforge::Tree {
 		using nodeptr = std::shared_ptr<TreeNode>;
 		Tree();
 		explicit Tree(const T& node);
-		Tree(Tree<T> tree);
+		Tree(const Tree<T>& other);
 		nodeptr root() const;
 		nodeptr del(nodeptr node);
 		nodeptr add(nodeptr father);
