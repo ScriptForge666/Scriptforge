@@ -11,7 +11,13 @@
 #pragma once
 #ifndef SCRIPTFORGELOG_HPP
 #define SCRIPTFORGELOG_HPP
-import std;
+#include <string>
+#include <queue>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <fstream>
 
 namespace Scriptforge::Log {
 	class Logger {

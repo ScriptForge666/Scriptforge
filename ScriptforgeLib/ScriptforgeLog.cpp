@@ -9,7 +9,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "ScriptforgeLog.hpp"
-import std;
+#include <string>
+#include <queue>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <fstream>
 using namespace std;
 
 namespace Scriptforge::Log{

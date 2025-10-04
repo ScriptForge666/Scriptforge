@@ -9,7 +9,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "ScriptforgeErr.hpp"
-import std;
+#include <string>
+#include <ostream>
 
 namespace Scriptforge::Err {
     Error::Error(std::string_view error) : m_error{ error }{}
@@ -19,7 +20,7 @@ namespace Scriptforge::Err {
     std::string_view Error::code() const { return m_code; }
 
     std::ostream& operator<<(std::ostream& os, const Error& err) {
-        os << '[' << err.code() << "] " << err.what();
+        os.put('[') << err.code() << ']' << " " << err.what();
         return os;
     }
 }

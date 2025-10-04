@@ -11,7 +11,6 @@
 #pragma once
 #ifndef SCRIPTFORFE_HPP
 #define SCRIPTFORFE_HPP
-import std;
 #include"ScriptforgeErr.hpp"
 #include"ScriptforgeLog.hpp"
 #include"Scriptforge.tree.hpp"
