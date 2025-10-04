@@ -19,13 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scriptforge.err.cpp" />
-    <ClCompile Include="Scriptforge.err.ixx" />
-    <ClCompile Include="Scriptforge.ixx" />
-    <ClCompile Include="Scriptforge.log.cpp" />
-    <ClCompile Include="Scriptforge.log.ixx" />
-    <ClCompile Include="Scriptforge.tree.cpp" />
-    <ClCompile Include="Scriptforge.tree.ixx" />
+    <ClCompile Include="ScriptforgeErr.cpp" />
+    <ClCompile Include="ScriptforgeLog.cpp" />
+    <ClCompile Include="ScriptforgeTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scriptforge.hpp" />
+    <ClInclude Include="ScriptforgeErr.hpp" />
+    <ClInclude Include="ScriptforgeLog.hpp" />
+    <ClInclude Include="ScriptforgeTree.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -15,26 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scriptforge.err.cpp">
+    <ClCompile Include="ScriptforgeErr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Scriptforge.err.ixx">
+    <ClCompile Include="ScriptforgeLog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Scriptforge.ixx">
+    <ClCompile Include="ScriptforgeTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Scriptforge.log.cpp">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ScriptforgeErr.hpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Scriptforge.log.ixx">
+    </ClInclude>
+    <ClInclude Include="ScriptforgeLog.hpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Scriptforge.tree.cpp">
+    </ClInclude>
+    <ClInclude Include="ScriptforgeTree.hpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Scriptforge.tree.ixx">
+    </ClInclude>
+    <ClInclude Include="Scriptforge.hpp">
       <Filter>源文件</Filter>
-    </ClCompile>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Scriptforge
+// Copyright 2025 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -8,18 +8,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-module Scriptforge.err;
+#pragma once
+#ifndef SCRIPTFORFE_HPP
+#define SCRIPTFORFE_HPP
 import std;
-
-namespace Scriptforge::Err {
-    Error::Error(std::string_view error) : m_error{ error }{}
-    Error::Error(std::string_view code, std::string_view error) :m_code{ code }, m_error{ error }{}
-
-    std::string_view Error::what() const { return m_error; }
-    std::string_view Error::code() const { return m_code; }
-
-    std::ostream& operator<<(std::ostream& os, const Error& err) {
-        os << '[' << err.code() << "] " << err.what();
-        return os;
-    }
-}
+#include"ScriptforgeErr.hpp"
+#include"ScriptforgeLog.hpp"
+#include"Scriptforge.tree.hpp"
+#endif // !SCRIPTFORFE_HPP

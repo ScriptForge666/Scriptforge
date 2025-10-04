@@ -1,4 +1,4 @@
-﻿// Copyright 2025 Scriptforge
+//Copyright 2025 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -8,3 +8,26 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#pragma once
+#ifndef SCRIPTFORGELOG_HPP
+#define SCRIPTFORGELOG_HPP
+import std;
+
+namespace Scriptforge::Log {
+	class Logger {
+	public:
+		Logger(const std::string& filename);
+		~Logger();
+		void log(const std::string& msg);
+	private:
+		void process();
+
+		std::queue<std::string> logQueue;
+		std::mutex mtx;
+		std::condition_variable cv;
+		std::atomic<bool> running{ true };
+		std::thread logThread;
+		std::ofstream logFile;
+	};
+}
+#endif // !SCRIPTFORGELOG_HPP
