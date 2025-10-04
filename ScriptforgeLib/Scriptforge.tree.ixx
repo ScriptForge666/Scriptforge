@@ -11,7 +11,7 @@
 export module Scriptforge.tree;
 import std;
 
-namespace Scriptforge::Tree {
+export namespace Scriptforge::Tree {
 	template<typename T>requires requires(T t1, T t2) { t1 = t2; }
 	class Tree {
 	private:
