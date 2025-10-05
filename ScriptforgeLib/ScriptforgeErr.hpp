@@ -11,7 +11,9 @@
 #pragma once
 #ifndef SCRIPTFORGE_ERR_HPP
 #define SCRIPTFORGE_ERR_HPP
+#include "ScriptforgeLog.hpp"
 #include <string>
+#include <exception>
 
 namespace Scriptforge::Err {
 	//建议用E0100~E9999，E0001~E0099留给库内容
@@ -29,6 +31,16 @@ namespace Scriptforge::Err {
     private:
         std::string m_code{ "No Code" };
         std::string m_error{ "Unknown Error" };
+    };
+
+    class ThreadError {
+    public:
+        ThreadError(std::string_view name, Scriptforge::Log::Logger& logger);
+        ThreadError() = delete;
+        void threadFunc(std::exception_ptr err, auto run);
+    private:
+        std::string_view m_name;
+        Scriptforge::Log::Logger& m_logger;
     };
 }
 #endif // !SCRIPTFORGE_ERR_HPP

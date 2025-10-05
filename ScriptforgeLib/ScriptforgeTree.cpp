@@ -1,6 +1,8 @@
 ﻿#include "ScriptforgeTree.hpp"
 #include "ScriptforgeErr.hpp"
 #include <algorithm>
+#include <memory>
+#include <vector>
 
 namespace Scriptforge::Tree {
     //构造函数
@@ -102,8 +104,30 @@ namespace Scriptforge::Tree {
     }
 
     //创建新节点
-	template<typename T, typename Alloc>
-		requires requires(T t1, T t2) { t1 = t2; }
+    template<typename T, typename Alloc>
+        requires requires(T t1, T t2) { t1 = t2; }
+    template<typename U>
+    typename Tree<T, Alloc>::nodeptr
+        Tree<T, Alloc>::create_node(U&& value) {
+        using node_allocator = typename std::allocator_traits<Alloc>
+            ::template rebind_alloc<TreeNode>;
+        using node_alloc_traits = std::allocator_traits<node_allocator>;
+        node_allocator node_alloc(alloc_);
+        TreeNode* raw = node_alloc.allocate(1);
+        try {
+            node_alloc_traits::construct(node_alloc, raw, std::forward<U>(value));
+        }
+        catch (...) {
+            node_alloc.deallocate(raw, 1);
+            throw;
+        }
+        return nodeptr(raw, [&node_alloc](TreeNode* p) noexcept {
+            if (p) {
+                node_alloc_traits::destroy(node_alloc, p);
+                node_alloc.deallocate(p, 1);
+            }
+            });
+    }
     template class Tree<int>;
 
 }

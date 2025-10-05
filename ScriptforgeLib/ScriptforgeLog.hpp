@@ -13,7 +13,6 @@
 #define SCRIPTFORGELOG_HPP
 #include <string>
 #include <queue>
-#include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
@@ -22,18 +21,21 @@
 namespace Scriptforge::Log {
 	class Logger {
 	public:
-		Logger(const std::string& filename);
+		Logger(const std::string& filename="log.log");
+		Logger(const Logger& logger);
 		~Logger();
 		void log(const std::string& msg);
+		std::string returnfilename() const;
 	private:
 		void process();
 
-		std::queue<std::string> logQueue;
+		std::queue<std::string>logQueue;
 		std::mutex mtx;
 		std::condition_variable cv;
 		std::atomic<bool> running{ true };
 		std::thread logThread;
 		std::ofstream logFile;
+		std::string m_filename;
 	};
 }
 #endif // !SCRIPTFORGELOG_HPP

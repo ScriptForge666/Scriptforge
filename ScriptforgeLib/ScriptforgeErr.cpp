@@ -9,6 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "ScriptforgeErr.hpp"
+#include "ScriptforgeLog.hpp"
 #include <string>
 #include <ostream>
 
@@ -22,5 +23,19 @@ namespace Scriptforge::Err {
     std::ostream& operator<<(std::ostream& os, const Error& err) {
         os.put('[') << err.code() << ']' << " " << err.what();
         return os;
+    }
+    class Err;
+
+    ThreadError::ThreadError(std::string_view name, Scriptforge::Log::Logger& logger) :m_name(name),m_logger(logger){ m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Create a new TreadError."); }
+
+    void ThreadError::threadFunc(std::exception_ptr err, auto run) {
+        try {
+            run();
+        }
+        catch (...) {
+            err = std::current_exception();
+           m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "thread caught exception.");
+           
+        }
     }
 }

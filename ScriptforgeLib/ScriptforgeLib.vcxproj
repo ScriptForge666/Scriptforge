@@ -21,12 +21,14 @@
   <ItemGroup>
     <ClCompile Include="ScriptforgeErr.cpp" />
     <ClCompile Include="ScriptforgeLog.cpp" />
+    <ClCompile Include="ScriptforgeTime.cpp" />
     <ClCompile Include="ScriptforgeTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scriptforge.hpp" />
     <ClInclude Include="ScriptforgeErr.hpp" />
     <ClInclude Include="ScriptforgeLog.hpp" />
+    <ClInclude Include="ScriptforgeTime.hpp" />
     <ClInclude Include="ScriptforgeTree.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

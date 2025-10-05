@@ -31,6 +31,7 @@ namespace Scriptforge::Log{
 	}
 
 	Logger::Logger(const std::string& filename) : logFile(filename) {
+		m_filename = filename;
 		logThread = std::thread(&Logger::process, this);
 	}
 	Logger::~Logger() {
@@ -45,5 +46,13 @@ namespace Scriptforge::Log{
 			logQueue.push(msg);
 		}
 		cv.notify_one();
+	}
+	std::string Logger::returnfilename() const {
+		return m_filename;
+	}
+	Logger::Logger(const Logger& logger) {
+		 std::string filename = logger.returnfilename();
+		m_filename = filename;
+		logThread = std::thread(&Logger::process, this);
 	}
 }
