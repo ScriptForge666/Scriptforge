@@ -56,6 +56,5 @@ namespace Scriptforge::Tree {
         template<typename U>
         nodeptr create_node(U&& value);
     };
-
 }
 #endif // !SCRIPTFORGETREE_HPP
