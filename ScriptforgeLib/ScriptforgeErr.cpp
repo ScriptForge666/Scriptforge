@@ -28,14 +28,24 @@ namespace Scriptforge::Err {
 
     ThreadError::ThreadError(std::string_view name, Scriptforge::Log::Logger& logger) :m_name(name),m_logger(logger){ m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Create a new TreadError."); }
 
-    void ThreadError::threadFunc(std::exception_ptr err, auto run) {
+    void ThreadError::threadFunc(std::exception_ptr& err, auto run) {
         try {
             run();
         }
         catch (...) {
             err = std::current_exception();
-           m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "thread caught exception.");
-           
+           m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Thread caught exception.");
+        }
+    }
+    
+    void ThreadError::threadStart(auto run) {
+        std::exception_ptr err;
+        std::thread t(&ThreadError::threadFunc, this,
+            std::ref(err), std::forward<decltype(run)>(run));
+        t.join();
+        if (err) { 
+            m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Main thread caught exception.");
+            std::rethrow_exception(err); 
         }
     }
 }

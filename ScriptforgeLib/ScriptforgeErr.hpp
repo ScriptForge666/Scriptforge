@@ -37,8 +37,10 @@ namespace Scriptforge::Err {
     public:
         ThreadError(std::string_view name, Scriptforge::Log::Logger& logger);
         ThreadError() = delete;
-        void threadFunc(std::exception_ptr err, auto run);
+        
+        void threadStart(auto run);
     private:
+        void threadFunc(std::exception_ptr& err, auto run);
         std::string_view m_name;
         Scriptforge::Log::Logger& m_logger;
     };
