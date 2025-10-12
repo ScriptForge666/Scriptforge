@@ -13,5 +13,6 @@
 #define SCRIPTFORFE_HPP
 #include"ScriptforgeErr.hpp"
 #include"ScriptforgeLog.hpp"
-#include"Scriptforge.tree.hpp"
+#include"ScriptforgeTree.hpp"
+#include"ScriptforgeTime.hpp"
 #endif // !SCRIPTFORFE_HPP
