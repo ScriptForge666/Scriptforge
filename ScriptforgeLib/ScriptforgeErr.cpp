@@ -12,6 +12,8 @@
 #include "ScriptforgeLog.hpp"
 #include <string>
 #include <ostream>
+#include <thread>
+#include <exception>
 
 namespace Scriptforge::Err {
     Error::Error(std::string_view error) : m_error{ error }{}
@@ -28,7 +30,8 @@ namespace Scriptforge::Err {
 
     ThreadError::ThreadError(std::string_view name, Scriptforge::Log::Logger& logger) :m_name(name),m_logger(logger){ m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Create a new TreadError."); }
 
-    void ThreadError::threadFunc(std::exception_ptr& err, auto run) {
+    template <typename T>
+    void ThreadError::threadFunc(std::exception_ptr& err, T run) {
         try {
             run();
         }
@@ -37,10 +40,10 @@ namespace Scriptforge::Err {
            m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Thread caught exception.");
         }
     }
-    
-    void ThreadError::threadStart(auto run) {
+    template <typename T>
+    void ThreadError::threadStart(T run) {
         std::exception_ptr err;
-        std::thread t(&ThreadError::threadFunc, this,
+        std::thread t(&ThreadError::threadFunc<T>,this,
             std::ref(err), std::forward<decltype(run)>(run));
         t.join();
         if (err) { 
@@ -48,4 +51,7 @@ namespace Scriptforge::Err {
             std::rethrow_exception(err); 
         }
     }
+    //显式声明
+    template void ThreadError::threadStart<int(*)()>(int(*)());
+    template void ThreadError::threadFunc<int(*)()>(std::exception_ptr&, int(*)());
 }
