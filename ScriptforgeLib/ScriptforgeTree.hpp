@@ -7,7 +7,6 @@
 namespace Scriptforge::Tree {
 
     template<typename T, typename Alloc = std::allocator<T>>
-        requires requires(T t1, T t2) { t1 = t2; }
     class Tree {
     private:
         struct TreeNode;
