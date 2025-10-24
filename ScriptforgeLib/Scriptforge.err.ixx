@@ -8,15 +8,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#pragma once
-#ifndef SCRIPTFORGE_ERR_HPP
-#define SCRIPTFORGE_ERR_HPP
-#include "ScriptforgeLog.hpp"
-#include <string>
-#include <exception>
+export module Scriptforge.err;
+import Scriptforge.log;
+import <string>;
+import <exception>;
 
-namespace Scriptforge::Err {
-	//建议用E0100~E9999，E0001~E0099留给库内容
+export namespace Scriptforge::Err {
+    //建议用E0100~E9999，E0001~E0099留给库内容
     class Error {
     public:
         Error() = default;
@@ -46,4 +44,3 @@ namespace Scriptforge::Err {
         Scriptforge::Log::Logger& m_logger;
     };
 }
-#endif // !SCRIPTFORGE_ERR_HPP
