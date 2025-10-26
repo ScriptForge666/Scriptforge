@@ -1,4 +1,4 @@
-﻿#include "ScriptforgeTree.hpp"
+#include "ScriptforgeTree.hpp"
 #include "ScriptforgeErr.hpp"
 #include <algorithm>
 #include <memory>

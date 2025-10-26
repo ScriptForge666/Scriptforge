@@ -22,20 +22,20 @@ namespace Scriptforge::Tree {
         using allocator_type = Alloc;
         using nodeptr = std::shared_ptr<TreeNode>;
 
-        //¹¹Ôìº¯Êı
+        //æ„é€ å‡½æ•°
         Tree(const allocator_type& alloc = allocator_type());
         explicit Tree(const T& node, const allocator_type& alloc = allocator_type());
         Tree(const Tree<T, Alloc>& other);
 
-        nodeptr root() const;                              //·µ»Ø¸ù½Úµã
-        nodeptr del(nodeptr node);                         //É¾³ı½Úµã
+        nodeptr root() const;                              //è¿”å›æ ¹èŠ‚ç‚¹
+        nodeptr del(nodeptr node);                         //åˆ é™¤èŠ‚ç‚¹
         
-        //Ìí¼Ó½Úµã
+        //æ·»åŠ èŠ‚ç‚¹
         nodeptr add(nodeptr father);
         nodeptr add(nodeptr father, T& node);
         nodeptr add(nodeptr father, const T& node);
 
-        allocator_type get_allocator() const noexcept;     //·µ»Ø·ÖÅäÆ÷
+        allocator_type get_allocator() const noexcept;     //è¿”å›åˆ†é…å™¨
 
     private:
         struct TreeNode

@@ -16,7 +16,7 @@
 #include <exception>
 
 namespace Scriptforge::Err {
-	//½¨ÒéÓÃE0100~E9999£¬E0001~E0099Áô¸ø¿âÄÚÈİ
+	//å»ºè®®ç”¨E0100~E9999ï¼ŒE0001~E0099ç•™ç»™åº“å†…å®¹
     class Error {
     public:
         Error() = default;
