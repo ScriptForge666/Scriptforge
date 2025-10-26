@@ -27,11 +27,23 @@
     <ClCompile Include="ScriptforgeTime.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Scriptforge.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.err.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.log.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.time.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.tree.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ScriptforgeErr.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptforgeLog.hpp">
       <Filter>源文件</Filter>
     </ClInclude>

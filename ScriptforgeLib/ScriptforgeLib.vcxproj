@@ -19,6 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Scriptforge.err.ixx" />
+    <ClCompile Include="Scriptforge.ixx" />
+    <ClCompile Include="Scriptforge.log.ixx" />
+    <ClCompile Include="Scriptforge.time.ixx" />
+    <ClCompile Include="Scriptforge.tree.ixx" />
     <ClCompile Include="ScriptforgeErr.cpp" />
     <ClCompile Include="ScriptforgeLog.cpp" />
     <ClCompile Include="ScriptforgeTime.cpp" />
@@ -26,7 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scriptforge.hpp" />
-    <ClInclude Include="ScriptforgeErr.hpp" />
     <ClInclude Include="ScriptforgeLog.hpp" />
     <ClInclude Include="ScriptforgeTime.hpp" />
     <ClInclude Include="ScriptforgeTree.hpp" />

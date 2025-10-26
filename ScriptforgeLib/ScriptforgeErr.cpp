@@ -8,12 +8,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "ScriptforgeErr.hpp"
-#include "ScriptforgeLog.hpp"
-#include <string>
-#include <ostream>
-#include <thread>
-#include <exception>
+module Scriptforge.err;
+import Scriptforge.log;
+import <string>;
+import <ostream>;
+import <thread>;
+import <exception>;
 
 namespace Scriptforge::Err {
     Error::Error(std::string_view error) : m_error{ error }{}
