@@ -9,3 +9,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export module Scriptforge.log;
+import std;
+
+export namespace Scriptforge::Log {
+	class Logger {
+	public:
+		Logger(const std::string& filename = "log.log");
+		Logger(const Logger& logger);
+		~Logger();
+		void log(const std::string& msg);
+		std::string returnfilename() const;
+	private:
+		void process();
+		std::queue<std::string>logQueue;
+		std::mutex mtx;
+		std::condition_variable cv;
+		std::atomic<bool> running{ true };
+		std::thread logThread;
+		std::ofstream logFile;
+		std::string m_filename;
+	};
+}

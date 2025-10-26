@@ -10,8 +10,7 @@
 // limitations under the License.
 export module Scriptforge.err;
 import Scriptforge.log;
-import <string>;
-import <exception>;
+import std;
 
 export namespace Scriptforge::Err {
     //建议用E0100~E9999，E0001~E0099留给库内容

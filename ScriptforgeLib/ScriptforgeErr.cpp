@@ -10,10 +10,7 @@
 // limitations under the License.
 module Scriptforge.err;
 import Scriptforge.log;
-import <string>;
-import <ostream>;
-import <thread>;
-import <exception>;
+import std;
 
 namespace Scriptforge::Err {
     Error::Error(std::string_view error) : m_error{ error }{}
@@ -51,7 +48,4 @@ namespace Scriptforge::Err {
             std::rethrow_exception(err); 
         }
     }
-    //显式声明
-    template void ThreadError::threadStart<int(*)()>(int(*)());
-    template void ThreadError::threadFunc<int(*)()>(std::exception_ptr&, int(*)());
 }

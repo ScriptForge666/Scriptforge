@@ -1,8 +1,6 @@
 ﻿#include "ScriptforgeTree.hpp"
-#include "ScriptforgeErr.hpp"
-#include <algorithm>
-#include <memory>
-#include <vector>
+import Scriptforge.err;
+import std;
 
 namespace Scriptforge::Tree {
     //构造函数
