@@ -12,9 +12,9 @@ export module Scriptforge.err;
 import Scriptforge.log;
 import std;
 
-export namespace Scriptforge::Err {
-    //½¨ÒéÓÃE0100~E9999£¬E0001~E0099Áô¸ø¿âÄÚÈÝ
-    class Error {
+namespace Scriptforge::Err {
+    //å»ºè®®ç”¨E0100~E9999ï¼ŒE0001~E0099ç•™ç»™åº“å†…å®¹
+    export class Error {
     public:
         Error() = default;
         Error(std::string_view error);
@@ -30,7 +30,7 @@ export namespace Scriptforge::Err {
         std::string m_error{ "Unknown Error" };
     };
 
-    class ThreadError {
+    export class ThreadError {
     public:
         ThreadError(std::string_view name, Scriptforge::Log::Logger& logger);
         ThreadError() = delete;
