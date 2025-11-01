@@ -1,3 +1,13 @@
+// Copyright 2025 Scriptforge
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//     http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 #pragma once
 #ifndef SCRIPTFORGETREE_HPP
 #define SCRIPTFORGETREE_HPP
@@ -5,6 +15,33 @@
 #include <vector>
 
 namespace Scriptforge::Tree {
+    enum class TreeTraversalOrder {
+        PreOrder,
+        PostOrder,
+        LevelOrder
+	};
+    template <typename TreeType>
+    class ConstTreeIterator {
+    public:
+		using tree_traversal_order = TreeTraversalOrder::LevelOrder;
+		using value_type = typename TreeType::value_type;
+        using reference = const value_type&;
+        using pointer = const value_type*;
+        using size_type = std::size_t;
+        using difference_type = std::ptrdiff_t;
+        using iterator_category = std::forward_iterator_tag;
+        ConstTreeIterator() = default;
+        explicit ConstTreeIterator(typename TreeType::nodeptr node,TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
+        reference operator*() const;
+        pointer operator->() const;
+        ConstTreeIterator& operator++();
+        ConstTreeIterator operator++(int);
+        bool operator==(const ConstTreeIterator& other) const;
+		bool operator!=(const ConstTreeIterator& other) const;
+        private:
+        typename TreeType::nodeptr current_node_;
+		TreeTraversalOrder traversal_order_;
+    };
 
     template<typename T, typename Alloc = std::allocator<T>>
     class Tree {
