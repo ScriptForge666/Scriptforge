@@ -23,7 +23,6 @@ namespace Scriptforge::Tree {
     template <typename TreeType>
     class ConstTreeIterator {
     public:
-		using tree_traversal_order = TreeTraversalOrder::LevelOrder;
 		using value_type = typename TreeType::value_type;
         using reference = const value_type&;
         using pointer = const value_type*;

@@ -16,7 +16,7 @@
 
 namespace Scriptforge::Tree {
     //ConstTreeIterator实现部分
-    {
+    
         //构造函数
         template<typename TreeType>
         ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
@@ -60,10 +60,10 @@ namespace Scriptforge::Tree {
         bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator& other) const {
             return !(*this == other);
         }
-	}
+	
 
 	//Tree<T>实现部分
-    {
+    
         //构造函数
         template<typename T, typename Alloc>
         Tree<T, Alloc>::Tree(const allocator_type & alloc)
@@ -177,7 +177,7 @@ namespace Scriptforge::Tree {
                 }
                 });
         }
-	}
+	
     //显式实例化
     template class Tree<int>;
 
