@@ -53,7 +53,7 @@ namespace Scriptforge::Tree {
         using size_type = std::size_t;
 
         using iterator = int;
-        using const_iterator = int;
+		using const_iterator = ConstTreeIterator<Tree<T, Alloc>>;
         using difference_type = std::ptrdiff_t;
         using allocator_type = Alloc;
         using nodeptr = std::shared_ptr<TreeNode>;
