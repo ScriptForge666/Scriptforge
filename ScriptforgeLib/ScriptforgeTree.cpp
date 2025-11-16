@@ -1,9 +1,57 @@
-﻿#include "ScriptforgeTree.hpp"
+module Scriptforge.tree;
 import Scriptforge.err;
 import std;
-
 namespace Scriptforge::Tree {
-    //构造函数
+    //ConstTreeIterator实现部分
+
+        //构造函数
+    template<typename TreeType>
+    ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
+        : current_node_(node), traversal_order_(order) {
+        // 初始化逻辑（如果需要）
+    }
+    //解引用操作符
+    template<typename TreeType>
+    typename ConstTreeIterator<TreeType>::reference
+        ConstTreeIterator<TreeType>::operator*() const {
+        return current_node_->node;
+    }
+    //箭头操作符
+    template<typename TreeType>
+    typename ConstTreeIterator<TreeType>::pointer
+        ConstTreeIterator<TreeType>::operator->() const {
+        return &(current_node_->node);
+    }
+    //前置递增操作符
+    template<typename TreeType>
+    ConstTreeIterator<TreeType>&
+        ConstTreeIterator<TreeType>::operator++() {
+        // 递增逻辑（根据遍历顺序）
+        return *this;
+    }
+    //后置递增操作符
+    template<typename TreeType>
+    ConstTreeIterator<TreeType>
+        ConstTreeIterator<TreeType>::operator++(int) {
+        ConstTreeIterator temp = *this;
+        ++(*this);
+        return temp;
+    }
+    //相等比较操作符
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::operator==(const ConstTreeIterator& other) const {
+        return current_node_ == other.current_node_;
+    }
+    //不等比较操作符
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator& other) const {
+        return !(*this == other);
+    }
+
+
+    //Tree<T>实现部分
+
+        //构造函数
     template<typename T, typename Alloc>
         requires requires(T t1, T t2) { t1 = t2; }
     Tree<T, Alloc>::Tree(const allocator_type& alloc)
@@ -97,8 +145,8 @@ namespace Scriptforge::Tree {
     //返回分配器
     template<typename T, typename Alloc>
         requires requires(T t1, T t2) { t1 = t2; }
-    typename Tree<T,Alloc>::allocator_type Tree<T,Alloc>::get_allocator() const noexcept { 
-        return alloc_; 
+    typename Tree<T, Alloc>::allocator_type Tree<T, Alloc>::get_allocator() const noexcept {
+        return alloc_;
     }
 
     //创建新节点
@@ -126,6 +174,8 @@ namespace Scriptforge::Tree {
             }
             });
     }
-    template class Tree<int>;
 
+    //显式实例化
+    template class Tree<int>;
+    template class ConstTreeIterator<Tree<int>>;
 }
