@@ -178,5 +178,4 @@ namespace Scriptforge::Tree {
     //显式实例化
     template class Tree<int>;
     template class ConstTreeIterator<Tree<int>>;
-
 }
