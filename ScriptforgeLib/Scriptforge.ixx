@@ -14,3 +14,4 @@ export import Scriptforge.Err;
 export import Scriptforge.Log;
 export import Scriptforge.Tree;
 export import Scriptforge.Version;
+export import Scriptforge.BitPack;
