@@ -21,7 +21,7 @@
     <ClCompile Include="Scriptforge.Log.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptforgeTree.cpp">
+    <ClCompile Include="Scriptforge.Tree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Scriptforge.ixx">
