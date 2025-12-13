@@ -23,23 +23,33 @@ namespace Scriptforge::Tree {
     template <typename TreeType>
     class ConstTreeIterator {
     public:
-		using value_type = typename TreeType::value_type;
+        using value_type = typename TreeType::value_type;
         using reference = const value_type&;
         using pointer = const value_type*;
         using size_type = std::size_t;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::forward_iterator_tag;
         ConstTreeIterator() = default;
-        explicit ConstTreeIterator(typename TreeType::nodeptr node,TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
+        explicit ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
         reference operator*() const;
         pointer operator->() const;
         ConstTreeIterator& operator++();
         ConstTreeIterator operator++(int);
         bool operator==(const ConstTreeIterator& other) const;
-		bool operator!=(const ConstTreeIterator& other) const;
-        private:
-        typename TreeType::nodeptr current_node_;
-		TreeTraversalOrder traversal_order_;
+        bool operator!=(const ConstTreeIterator& other) const;
+        TreeType::nodeptr current_node() const;
+    private:
+        typename TreeType::nodeptr m_current_node;
+        TreeTraversalOrder m_traversal_order;
+        // 私有辅助函数
+        void advance_preorder();
+        void advance_postorder();
+        void advance_levelorder();
+        bool has_children() const;
+        void go_to_first_child();
+        void find_next_sibling_or_ancestor();
+        bool move_to_next_sibling(const typename TreeType::nodeptr& current,
+            const typename TreeType::nodeptr& father);
     };
 
     template<typename T, typename Alloc = std::allocator<T>>
