@@ -24,9 +24,6 @@
     <ClCompile Include="ScriptforgeTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptforgeTime.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScriptforgeErr.hpp">
@@ -39,9 +36,6 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Scriptforge.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptforgeTime.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
