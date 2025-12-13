@@ -8,14 +8,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "ScriptforgeLog.hpp"
-#include <string>
-#include <queue>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <atomic>
-#include <fstream>
+module Scriptforge.Log;
+import	std;
 using namespace std;
 
 namespace Scriptforge::Log{

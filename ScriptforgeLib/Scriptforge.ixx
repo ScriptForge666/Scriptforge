@@ -10,7 +10,6 @@
 // limitations under the License.
 export module Scriptforge;
 
-export import Scriptforge.err;
-export import Scriptforge.log;
-export import Scriptforge.time;
-export import Scriptforge.tree;
+export import Scriptforge.Err;
+export import Scriptforge.Log;
+export import Scriptforge.Tree;

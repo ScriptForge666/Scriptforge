@@ -8,8 +8,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export module Scriptforge.err;
-import Scriptforge.log;
+export module Scriptforge.Err;
+import Scriptforge.Log;
 import std;
 
 namespace Scriptforge::Err {

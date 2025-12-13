@@ -1,5 +1,5 @@
-module Scriptforge.tree;
-import Scriptforge.err;
+module Scriptforge.Tree;
+import Scriptforge.Err;
 import std;
 namespace Scriptforge::Tree {
     //ConstTreeIterator实现部分
