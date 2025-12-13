@@ -10,26 +10,31 @@
 // limitations under the License.
 #include "ScriptforgeErr.hpp"
 #include "ScriptforgeLog.hpp"
+#include "ScriptforgeVersion.hpp"
 #include <iostream>
 using namespace Scriptforge::Err;
 using namespace Scriptforge::Log;
+using namespace Scriptforge::Version;
 int asd(){
 	return 0;
 }
 int main() {
-		try{
-			throw Error{};
-		}catch (Error e){
-			std::cout << e;
-		}
-		auto* a{ asd };
-		Logger logger{ "log.log" };
-		ThreadError t{ "thread",logger };
-		try {
-			t.threadStart(a);
-		}
-		catch (Error e) {
-			std::cout << e;
-		}
-        return 0;
- }
+	std::cout << getVersion() << std::endl;
+	try {
+		throw Error{};
+	}
+	catch (Error e) {
+		std::cout << e;
+	}
+	auto* a{ asd };
+	Logger logger{ "log.log" };
+	ThreadError t{ "thread",logger };
+	try {
+		t.threadStart(a);
+	}
+	catch (Error e) {
+		std::cout << e;
+	}
+
+	return 0;
+}

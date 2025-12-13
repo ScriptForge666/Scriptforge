@@ -22,12 +22,14 @@
     <ClCompile Include="ScriptforgeErr.cpp" />
     <ClCompile Include="ScriptforgeLog.cpp" />
     <ClCompile Include="ScriptforgeTree.cpp" />
+    <ClCompile Include="ScriptforgeVersion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scriptforge.hpp" />
     <ClInclude Include="ScriptforgeErr.hpp" />
     <ClInclude Include="ScriptforgeLog.hpp" />
     <ClInclude Include="ScriptforgeTree.hpp" />
+    <ClInclude Include="ScriptforgeVersion.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
