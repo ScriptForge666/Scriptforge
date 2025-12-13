@@ -8,9 +8,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export module Scriptforge;
+export module Scriptforge.Version;
 
-export import Scriptforge.Err;
-export import Scriptforge.Log;
-export import Scriptforge.Tree;
-export import Scriptforge.Version;
+import std;
+
+export namespace Scriptforge::Version {
+	inline constexpr std::string_view ProjectName = "Scriptforge";
+	inline constexpr std::string_view ProjectVersion = "0.9.14";
+	inline constexpr std::string_view ProjectContributor = "Scriptforge";
+	inline constexpr std::string_view ProjectLicense = "Apache License 2.0";
+	inline constexpr std::string_view ProjectStartYear = "2025";
+
+	std::string getVersion();
+	std::string getCopyright();
+	int getYear();
+	std::string getYearInterval();
+}

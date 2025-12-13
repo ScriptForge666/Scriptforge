@@ -26,6 +26,8 @@
     <ClCompile Include="Scriptforge.Log.ixx" />
     <ClCompile Include="Scriptforge.Tree.cpp" />
     <ClCompile Include="Scriptforge.Tree.ixx" />
+    <ClCompile Include="Scriptforge.Version.cpp" />
+    <ClCompile Include="Scriptforge.Version.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
