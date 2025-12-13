@@ -10,7 +10,7 @@
 // limitations under the License.
 export module Scriptforge.Tree;
 import std;
-namespace Scriptforge::Tree {
+export namespace Scriptforge::Tree {
     enum class TreeTraversalOrder {
         PreOrder,
         PostOrder,

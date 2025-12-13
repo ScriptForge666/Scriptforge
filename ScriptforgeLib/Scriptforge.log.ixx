@@ -12,8 +12,8 @@ export module Scriptforge.Log;
 
 import std;
 
-export namespace Scriptforge::Log {
-	class Logger {
+namespace Scriptforge::Log {
+	export class Logger {
 	public:
 		Logger(const std::string& filename = "log.log");
 		Logger(const Logger& logger);

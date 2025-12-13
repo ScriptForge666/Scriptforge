@@ -18,19 +18,19 @@
     <ClCompile Include="Scriptforge.Err.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Scriptforge.Log.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Scriptforge.Tree.cpp">
+    <ClCompile Include="Scriptforge.Err.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Scriptforge.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Scriptforge.Err.ixx">
+    <ClCompile Include="Scriptforge.Log.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Scriptforge.Log.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.Tree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Scriptforge.Tree.ixx">
