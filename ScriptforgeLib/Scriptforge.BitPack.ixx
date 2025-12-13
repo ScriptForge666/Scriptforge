@@ -19,7 +19,8 @@ namespace Scriptforge::BitPack {
 		using size_type = std::size_t;
 		using classItself = BoolBitPack;
 		BoolBitPack() = default;
-		BoolBitPack(const classItself& src);
+		BoolBitPack(const classItself& src) = default;
+		BoolBitPack(classItself&&) = default;
 		explicit BoolBitPack(const value_type bool1,
 			const value_type bool2,
 			const value_type bool3,
@@ -31,9 +32,9 @@ namespace Scriptforge::BitPack {
 		explicit BoolBitPack(const std::span<bool> src);
 		classItself& operator=(const classItself& rhs);
 		classItself& operator=(const std::span<bool> rhs);
-		bool operator==(const classItself& rhs) const;
+		bool operator==(const classItself& rhs) const = default;
 		bool operator==(const std::span<bool> rhs) const;
-		bool operator!=(const classItself& rhs) const;
+		bool operator!=(const classItself& rhs) const = default;
 		bool operator!=(const std::span<bool> rhs) const;
 		value_type operator[](size_type x);
 		const value_type operator[](size_type x) const;

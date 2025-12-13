@@ -15,7 +15,6 @@ import std;
 using namespace Scriptforge::Err;
 
 namespace Scriptforge::BitPack {
-	BoolBitPack::BoolBitPack(const classItself& src) : m_bools{ src.m_bools } {}
 	BoolBitPack::BoolBitPack(const value_type bool1,
 		const value_type bool2,
 		const value_type bool3,
@@ -41,5 +40,51 @@ namespace Scriptforge::BitPack {
 			write(i, src[i]);
 		}
 	}
-	BoolBitPack::classItself& BoolBitPack::operator=(const BoolBitPack::classItself& rhs){}
+	BoolBitPack::classItself& BoolBitPack::operator=(const BoolBitPack::classItself& rhs) {
+		if (this == &rhs)
+			return *this;
+		m_bools = rhs.toByte();
+		return *this;
+	}
+	BoolBitPack::classItself& BoolBitPack::operator=(const std::span<bool> rhs) {
+		if (rhs.size() != 8) {
+			throw Error{ "BoolBitPack::operator=: rhs.size() must be 8." };
+		}
+		for (size_type i = 0; i < 8; ++i) {
+			write(i, rhs[i]);
+		}
+		return *this;
+	}
+	bool BoolBitPack::operator==(const std::span<bool> rhs) const {
+		if (rhs.size() != 8) {
+			throw Error{ "BoolBitPack::operator==: rhs.size() must be 8." };
+		}
+		for (size_type i = 0; i < 8; ++i) {
+			if (read(i) != rhs[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	bool BoolBitPack::operator!=(const std::span<bool> rhs) const {
+		return !(*this == rhs);
+	}
+	BoolBitPack::value_type BoolBitPack::operator[](size_type x) {
+		return read(x);
+	}
+	const BoolBitPack::value_type BoolBitPack::operator[](size_type x) const {
+		return read(x);
+	}
+	void BoolBitPack::write(const size_type& where, const value_type what) {
+		if (where >= 8) {
+			throw Error{ "BoolBitPack::write: where must be less than 8." };
+		}
+		if (what) {
+			m_bools |= std::byte{ 1 << where };
+		}
+		else {
+			m_bools &= ~std::byte{ 1 << where };
+		}
+	}
+
 }
