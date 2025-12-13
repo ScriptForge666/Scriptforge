@@ -18,6 +18,15 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Scriptforge.Err.cpp" />
+    <ClCompile Include="Scriptforge.Err.ixx" />
+    <ClCompile Include="Scriptforge.ixx" />
+    <ClCompile Include="Scriptforge.Log.cpp" />
+    <ClCompile Include="Scriptforge.Log.ixx" />
+    <ClCompile Include="Scriptforge.Tree.cpp" />
+    <ClCompile Include="Scriptforge.Tree.ixx" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
