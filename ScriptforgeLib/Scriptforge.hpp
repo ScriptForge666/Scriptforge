@@ -14,4 +14,5 @@
 #include"ScriptforgeErr.hpp"
 #include"ScriptforgeLog.hpp"
 #include"ScriptforgeTree.hpp"
+#include"ScriptforgeVersion.hpp"
 #endif // !SCRIPTFORFE_HPP
