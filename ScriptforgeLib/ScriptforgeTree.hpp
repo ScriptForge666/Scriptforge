@@ -1,15 +1,9 @@
-// Copyright 2025 Scriptforge
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//     http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-export module Scriptforge.tree;
-import std;
+#pragma once
+#ifndef SCRIPTFORGETREE_HPP
+#define SCRIPTFORGETREE_HPP
+#include <memory>
+#include <vector>
+
 namespace Scriptforge::Tree {
     enum class TreeTraversalOrder {
         PreOrder,
@@ -61,7 +55,7 @@ namespace Scriptforge::Tree {
 
         nodeptr root() const;                              //返回根节点
         nodeptr del(nodeptr node);                         //删除节点
-
+        
         //添加节点
         nodeptr add(nodeptr father);
         nodeptr add(nodeptr father, T& node);
@@ -76,7 +70,7 @@ namespace Scriptforge::Tree {
             explicit TreeNode(T& v) : node(v) {}
             explicit TreeNode(const T& v) : node(v) {}
             std::weak_ptr<TreeNode> father;
-
+            
             std::vector<nodeptr, typename std::allocator_traits<Alloc>::template rebind_alloc<nodeptr>> children;
             T node;
         };
@@ -88,3 +82,4 @@ namespace Scriptforge::Tree {
         nodeptr create_node(U&& value);
     };
 }
+#endif // !SCRIPTFORGETREE_HPP

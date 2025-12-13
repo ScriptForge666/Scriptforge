@@ -8,25 +8,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export module Scriptforge.log;
-import std;
+#pragma once
+#ifndef SCRIPTFORGE_TIME_HPP
+#define SCRIPTFORGE_TIME_HPP
 
-export namespace Scriptforge::Log {
-	class Logger {
-	public:
-		Logger(const std::string& filename = "log.log");
-		Logger(const Logger& logger);
-		~Logger();
-		void log(const std::string& msg);
-		std::string returnfilename() const;
-	private:
-		void process();
-		std::queue<std::string>logQueue;
-		std::mutex mtx;
-		std::condition_variable cv;
-		std::atomic<bool> running{ true };
-		std::thread logThread;
-		std::ofstream logFile;
-		std::string m_filename;
-	};
+#include <iomanip>
+#include <string>
+
+namespace Scriptforge::Time {
+
+    inline std::int64_t unix_epoch_ms();
+
+    inline std::int64_t unix_epoch_us();
+
+    inline std::string format_now_local(int precision = 3); // precision=3 means ms,precision=6 means ns
+
+    inline std::string format_now_seconds();
+
 }
+#endif // SCRIPTFORGE_TIME_HPP
