@@ -8,7 +8,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export module Scriptforge.Tree;
+export module Scriptforge.tree;
 import std;
 namespace Scriptforge::Tree {
     enum class TreeTraversalOrder {
@@ -37,7 +37,6 @@ namespace Scriptforge::Tree {
         typename TreeType::nodeptr current_node_;
         TreeTraversalOrder traversal_order_;
     };
-
     template<typename T, typename Alloc = std::allocator<T>>
         requires requires(T t1, T t2) { t1 = t2; }
     class Tree {
