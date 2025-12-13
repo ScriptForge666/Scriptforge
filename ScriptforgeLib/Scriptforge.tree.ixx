@@ -10,12 +10,13 @@
 // limitations under the License.
 export module Scriptforge.Tree;
 import std;
-export namespace Scriptforge::Tree {
-    enum class TreeTraversalOrder {
+namespace Scriptforge::Tree {
+    export enum class TreeTraversalOrder {
         PreOrder,
         PostOrder,
         LevelOrder
     };
+    export
     template <typename TreeType>
     class ConstTreeIterator {
     public:
@@ -38,6 +39,7 @@ export namespace Scriptforge::Tree {
         TreeTraversalOrder traversal_order_;
     };
 
+    export
     template<typename T, typename Alloc = std::allocator<T>>
         requires requires(T t1, T t2) { t1 = t2; }
     class Tree {

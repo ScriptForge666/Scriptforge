@@ -12,8 +12,8 @@ export module Scriptforge.BitPack;
 
 import std;
 
-export namespace Scriptforge::BitPack {
-	class BoolBitPack {
+namespace Scriptforge::BitPack {
+	export class BoolBitPack {
 	public:
 		using value_type = bool;
 		using size_type = std::size_t;
