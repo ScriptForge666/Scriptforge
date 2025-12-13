@@ -8,9 +8,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-export module Scriptforge;
+#pragma once
+#ifndef SCRIPTFORGE_TIME_HPP
+#define SCRIPTFORGE_TIME_HPP
 
-export import Scriptforge.err;
-export import Scriptforge.log;
-export import Scriptforge.time;
-export import Scriptforge.tree;
+#include <iomanip>
+#include <string>
+
+namespace Scriptforge::Time {
+
+    inline std::int64_t unix_epoch_ms();
+
+    inline std::int64_t unix_epoch_us();
+
+    inline std::string format_now_local(int precision = 3); // precision=3 means ms,precision=6 means ns
+
+    inline std::string format_now_seconds();
+
+}
+#endif // SCRIPTFORGE_TIME_HPP
