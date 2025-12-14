@@ -14,7 +14,7 @@ import std;
 namespace Scriptforge::Tree {
     //ConstTreeIterator实现部分
 
-        //构造函数
+   //构造函数
     template<typename TreeType>
     ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
         : m_current_node(node), m_traversal_order(order) {
