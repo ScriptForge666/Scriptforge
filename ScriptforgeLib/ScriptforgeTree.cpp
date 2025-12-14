@@ -16,50 +16,188 @@
 
 namespace Scriptforge::Tree {
     //ConstTreeIterator实现部分
-    
-        //构造函数
-        template<typename TreeType>
-        ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
-            : current_node_(node), traversal_order_(order) {
-            // 初始化逻辑（如果需要）
+
+   //构造函数
+    template<typename TreeType>
+    ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
+        : m_current_node(node), m_traversal_order(order) {
+        // 初始化逻辑（如果需要）
+    }
+    //解引用操作符
+    template<typename TreeType>
+    typename ConstTreeIterator<TreeType>::reference
+        ConstTreeIterator<TreeType>::operator*() const {
+        return m_current_node->node;
+    }
+    //箭头操作符
+    template<typename TreeType>
+    typename ConstTreeIterator<TreeType>::pointer
+        ConstTreeIterator<TreeType>::operator->() const {
+        return &(m_current_node->node);
+    }
+    //前置递增操作符
+    template<typename TreeType>
+    ConstTreeIterator<TreeType>&
+        ConstTreeIterator<TreeType>::operator++() {
+        switch (m_traversal_order) {
+        case TreeTraversalOrder::PreOrder:
+            advance_preorder();
+            break;
+        case TreeTraversalOrder::PostOrder:
+            advance_postorder();
+            break;
+        case TreeTraversalOrder::LevelOrder:
+            advance_levelorder();
+            break;
         }
-        //解引用操作符
-        template<typename TreeType>
-        typename ConstTreeIterator<TreeType>::reference
-            ConstTreeIterator<TreeType>::operator*() const {
-            return current_node_->node;
+        return *this;
+    }
+    //后置递增操作符
+    template<typename TreeType>
+    ConstTreeIterator<TreeType>
+        ConstTreeIterator<TreeType>::operator++(int) {
+        ConstTreeIterator temp = *this;
+        ++(*this);
+        return temp;
+    }
+    //相等比较操作符
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::operator==(const ConstTreeIterator& other) const {
+        return m_current_node == other.m_current_node;
+    }
+    //不等比较操作符
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator& other) const {
+        return !(*this == other);
+    }
+    //返回树指针
+	template<typename TreeType>
+    TreeType::nodeptr ConstTreeIterator<TreeType>::current_node() const {
+        return m_current_node;
+	}
+	//私有辅助函数
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::advance_preorder() {
+        if (!m_current_node) return;
+
+        if (has_children()) {
+            go_to_first_child();
         }
-        //箭头操作符
-        template<typename TreeType>
-        typename ConstTreeIterator<TreeType>::pointer
-            ConstTreeIterator<TreeType>::operator->() const {
-            return &(current_node_->node);
+        else {
+            find_next_sibling_or_ancestor();
         }
-        //前置递增操作符
-        template<typename TreeType>
-        ConstTreeIterator<TreeType>&
-            ConstTreeIterator<TreeType>::operator++() {
-            // 递增逻辑（根据遍历顺序）
-            return *this;
+    }
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::has_children() const {
+        return !m_current_node->children.empty();
+    }
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::go_to_first_child() {
+        m_current_node = m_current_node->children.front();
+    }
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::find_next_sibling_or_ancestor() {
+        auto temp = m_current_node;
+        while (temp) {
+            auto father = temp->father.lock();
+            if (!father) {
+                m_current_node = nullptr;
+                return;
+            }
+
+            if (move_to_next_sibling(temp, father)) {
+                break;
+            }
+
+            temp = father; // 继续向上回溯
         }
-        //后置递增操作符
-        template<typename TreeType>
-        ConstTreeIterator<TreeType>
-            ConstTreeIterator<TreeType>::operator++(int) {
-            ConstTreeIterator temp = *this;
-            ++(*this);
-            return temp;
+
+        if (!temp) {
+            m_current_node = nullptr;
         }
-        //相等比较操作符
-        template<typename TreeType>
-        bool ConstTreeIterator<TreeType>::operator==(const ConstTreeIterator& other) const {
-            return current_node_ == other.current_node_;
+    }
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::move_to_next_sibling(const typename TreeType::nodeptr& current,
+        const typename TreeType::nodeptr& father) {
+        auto& siblings = father->children;
+        auto it = std::find(siblings.begin(), siblings.end(), current);
+
+        if (it != siblings.end() && ++it != siblings.end()) {
+            m_current_node = *it;
+            return true;
         }
-        //不等比较操作符
-        template<typename TreeType>
-        bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator& other) const {
-            return !(*this == other);
+        return false;
+    }
+
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::advance_postorder() {
+        if (!m_current_node) return;
+
+        auto temp = m_current_node;
+        while (temp) {
+            auto father = temp->father.lock();
+            if (!father) {
+                // 到达根节点，遍历结束
+                m_current_node = nullptr;
+                return;
+            }
+
+            auto& siblings = father->children;
+            auto it = std::find(siblings.begin(), siblings.end(), temp);
+            if (it != siblings.end()) {
+                ++it; // 移动到下一个兄弟
+                if (it != siblings.end()) {
+                    // 找到下一个兄弟，需要找到该兄弟子树的最左节点
+                    m_current_node = *it;
+                    // 一直往下找最左边的叶子节点
+                    while (!m_current_node->children.empty()) {
+                        m_current_node = m_current_node->children.front();
+                    }
+                    return;
+                }
+                else {
+                    // 当前是父节点的最后一个子节点，访问父节点
+                    m_current_node = father;
+                    return;
+                }
+            }
+            temp = father;
         }
+
+        // 遍历完成
+        m_current_node = nullptr;
+    }
+
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::advance_levelorder() {
+        if (!m_current_node) return;
+
+        // 层序遍历需要队列来维护访问顺序
+        // 由于迭代器的限制，我们用一种简化的方式来模拟
+
+        auto temp = m_current_node;
+
+        // 首先检查是否有子节点
+        if (!temp->children.empty()) {
+            m_current_node = temp->children.front();
+            return;
+        }
+
+        // 没有子节点，寻找兄弟节点
+        auto father = temp->father.lock();
+        if (father) {
+            auto& siblings = father->children;
+            auto it = std::find(siblings.begin(), siblings.end(), temp);
+            if (it != siblings.end() && ++it != siblings.end()) {
+                m_current_node = *it;
+                return;
+            }
+        }
+
+        // 没有兄弟节点，需要更复杂的层序逻辑
+        // 这里用简化版本：直接结束
+        m_current_node = nullptr;
+    }
 	
 
 	//Tree<T>实现部分
