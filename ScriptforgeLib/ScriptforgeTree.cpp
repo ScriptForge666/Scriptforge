@@ -172,32 +172,31 @@ namespace Scriptforge::Tree {
     void ConstTreeIterator<TreeType>::advance_levelorder() {
         if (!m_current_node) return;
 
-        // 层序遍历需要队列来维护访问顺序
-        // 由于迭代器的限制，我们用一种简化的方式来模拟
-
-        auto temp = m_current_node;
-
-        // 首先检查是否有子节点
-        if (!temp->children.empty()) {
-            m_current_node = temp->children.front();
+        // 最简单直接的方式：如果当前节点有子节点，移动到第一个子节点
+        if (!m_current_node->children.empty()) {
+            m_current_node = m_current_node->children.front().get();
             return;
         }
 
-        // 没有子节点，寻找兄弟节点
-        auto father = temp->father.lock();
+        // 寻找兄弟节点
+        auto father = m_current_node->father.lock();
         if (father) {
-            auto& siblings = father->children;
-            auto it = std::find(siblings.begin(), siblings.end(), temp);
-            if (it != siblings.end() && ++it != siblings.end()) {
-                m_current_node = *it;
+            const auto& siblings = father->children;
+            auto it = std::find_if(siblings.begin(), siblings.end(),
+                [this](const std::shared_ptr<TreeNode>& node) {
+                    return node.get() == this->m_current_node;
+                });
+
+            if (it != siblings.end() && (it + 1) != siblings.end()) {
+                m_current_node = (*(it + 1)).get();
                 return;
             }
         }
 
-        // 没有兄弟节点，需要更复杂的层序逻辑
-        // 这里用简化版本：直接结束
+        // 如果既没有子节点也没有兄弟节点，遍历结束
         m_current_node = nullptr;
     }
+
 	
 
 	//Tree<T>实现部分

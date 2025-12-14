@@ -15,15 +15,31 @@
 #include <string_view>
 
 namespace Scriptforge::Version {
-	inline constexpr std::string_view ProjectName = "Scriptforge";
-	inline constexpr std::string_view ProjectVersion = "0.9.14";
-	inline constexpr std::string_view ProjectContributor = "Scriptforge";
-	inline constexpr std::string_view ProjectLicense = "Apache License 2.0";
-	inline constexpr std::string_view ProjectStartYear = "2025";
-
-	std::string getVersion();
-	std::string getCopyright();
-	int getYear();
-	std::string getYearInterval();
+	class VersionInfo {
+	public:
+		VersionInfo() = delete;
+		VersionInfo(const VersionInfo&) = delete;
+		VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
+			std::string_view ProjectContributor, std::string_view ProjectLicense,
+			std::string_view ProjectStartYear);
+		VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
+			std::string_view ProjectContributor, std::string_view ProjectLicense,
+			std::string_view ProjectStartYear, std::string_view ProjectStopYear);
+		VersionInfo& operator=(const VersionInfo&) = delete;
+		std::string getVersion() const;
+		std::string getCopyright() const;
+		std::string getYearInterval() const;
+		~VersionInfo() = default;
+	private:
+		int getYear() const;
+		std::string_view m_ProjectName;
+		std::string_view m_ProjectVersion;
+		std::string_view m_ProjectContributor;
+		std::string_view m_ProjectLicense;
+		std::string_view m_ProjectStartYear;
+		std::string_view m_ProjectStopYear;
+		bool m_alreadyStopped{ false };
+	};
 }
+
 #endif// !SCRIPTFORGE_VERSION_HPP

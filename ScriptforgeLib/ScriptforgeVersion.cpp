@@ -14,11 +14,24 @@
 #include <sstream>
 
 namespace Scriptforge::Version {
-    std::string getVersion() {
-        return std::string(ProjectName) + " version " + std::string(ProjectVersion);
+    VersionInfo::VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
+        std::string_view ProjectContributor, std::string_view ProjectLicense,
+        std::string_view ProjectStartYear)
+        : m_ProjectName(ProjectName),
+        m_ProjectVersion(ProjectVersion),
+        m_ProjectContributor(ProjectContributor),
+        m_ProjectLicense(ProjectLicense),
+        m_ProjectStartYear(ProjectStartYear),
+        m_ProjectStopYear(""),
+        m_alreadyStopped(false)
+    {
     }
 
-    int getYear() {
+    std::string VersionInfo::getVersion() const {
+        return std::string(m_ProjectName) + " version " + std::string(m_ProjectVersion);
+    }
+
+    int VersionInfo::getYear() const {
         using namespace std::chrono;
         auto now = system_clock::now();
         auto dp = floor<days>(now);
@@ -26,20 +39,20 @@ namespace Scriptforge::Version {
         return int(ymd.year());
     }
 
-    std::string getCopyright() {
+    std::string VersionInfo::getCopyright() const {
         std::ostringstream oss;
-        oss << "Copyright " << getYearInterval() << " " << ProjectContributor
-            << "\nLicensed under the " << ProjectLicense;
+        oss << "Copyright " << getYearInterval() << " " << m_ProjectContributor
+            << "\nLicensed under the " << m_ProjectLicense;
         return oss.str();
     }
-    std::string getYearInterval() {
+    std::string VersionInfo::getYearInterval() const {
         int currentYear = getYear();
-        int startYear = std::stoi(std::string(ProjectStartYear));
+        int startYear = std::stoi(std::string(m_ProjectStartYear));
         if (currentYear == startYear) {
-            return std::string(ProjectStartYear);
+            return std::string(m_ProjectStartYear);
         }
         else {
-            return std::string(ProjectStartYear) + "~" + std::to_string(currentYear);
+            return std::string(m_ProjectStartYear) + "~" + std::to_string(currentYear);
         }
     }
 }

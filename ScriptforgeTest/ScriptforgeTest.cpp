@@ -19,7 +19,6 @@ int asd(){
 	return 0;
 }
 int main() {
-	std::cout << getVersion() << std::endl;
 	try {
 		throw Error{};
 	}
