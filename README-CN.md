@@ -17,6 +17,7 @@
 ```
 Scriptforge/
 ├── Scriptforge.sln
+├── README.md
 ├──README-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.ixx
