@@ -17,26 +17,36 @@ namespace Scriptforge::Tree {
         //构造函数
     template<typename TreeType>
     ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
-        : current_node_(node), traversal_order_(order) {
+        : m_current_node(node), m_traversal_order(order) {
         // 初始化逻辑（如果需要）
     }
     //解引用操作符
     template<typename TreeType>
     typename ConstTreeIterator<TreeType>::reference
         ConstTreeIterator<TreeType>::operator*() const {
-        return current_node_->node;
+        return m_current_node->node;
     }
     //箭头操作符
     template<typename TreeType>
     typename ConstTreeIterator<TreeType>::pointer
         ConstTreeIterator<TreeType>::operator->() const {
-        return &(current_node_->node);
+        return &(m_current_node->node);
     }
     //前置递增操作符
     template<typename TreeType>
     ConstTreeIterator<TreeType>&
         ConstTreeIterator<TreeType>::operator++() {
-        // 递增逻辑（根据遍历顺序）
+        switch (m_traversal_order) {
+        case TreeTraversalOrder::PreOrder:
+            advance_preorder();
+            break;
+        case TreeTraversalOrder::PostOrder:
+            advance_postorder();
+            break;
+        case TreeTraversalOrder::LevelOrder:
+            advance_levelorder();
+            break;
+        }
         return *this;
     }
     //后置递增操作符
@@ -50,14 +60,141 @@ namespace Scriptforge::Tree {
     //相等比较操作符
     template<typename TreeType>
     bool ConstTreeIterator<TreeType>::operator==(const ConstTreeIterator& other) const {
-        return current_node_ == other.current_node_;
+        return m_current_node == other.m_current_node;
     }
     //不等比较操作符
     template<typename TreeType>
     bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator& other) const {
         return !(*this == other);
     }
+    //返回树指针
+	template<typename TreeType>
+    TreeType::nodeptr ConstTreeIterator<TreeType>::current_node() const {
+        return m_current_node;
+	}
+	//私有辅助函数
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::advance_preorder() {
+        if (!m_current_node) return;
 
+        if (has_children()) {
+            go_to_first_child();
+        }
+        else {
+            find_next_sibling_or_ancestor();
+        }
+    }
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::has_children() const {
+        return !m_current_node->children.empty();
+    }
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::go_to_first_child() {
+        m_current_node = m_current_node->children.front();
+    }
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::find_next_sibling_or_ancestor() {
+        auto temp = m_current_node;
+        while (temp) {
+            auto father = temp->father.lock();
+            if (!father) {
+                m_current_node = nullptr;
+                return;
+            }
+
+            if (move_to_next_sibling(temp, father)) {
+                break;
+            }
+
+            temp = father; // 继续向上回溯
+        }
+
+        if (!temp) {
+            m_current_node = nullptr;
+        }
+    }
+    template<typename TreeType>
+    bool ConstTreeIterator<TreeType>::move_to_next_sibling(const typename TreeType::nodeptr& current,
+        const typename TreeType::nodeptr& father) {
+        auto& siblings = father->children;
+        auto it = std::find(siblings.begin(), siblings.end(), current);
+
+        if (it != siblings.end() && ++it != siblings.end()) {
+            m_current_node = *it;
+            return true;
+        }
+        return false;
+    }
+
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::advance_postorder() {
+        if (!m_current_node) return;
+
+        auto temp = m_current_node;
+        while (temp) {
+            auto father = temp->father.lock();
+            if (!father) {
+                // 到达根节点，遍历结束
+                m_current_node = nullptr;
+                return;
+            }
+
+            auto& siblings = father->children;
+            auto it = std::find(siblings.begin(), siblings.end(), temp);
+            if (it != siblings.end()) {
+                ++it; // 移动到下一个兄弟
+                if (it != siblings.end()) {
+                    // 找到下一个兄弟，需要找到该兄弟子树的最左节点
+                    m_current_node = *it;
+                    // 一直往下找最左边的叶子节点
+                    while (!m_current_node->children.empty()) {
+                        m_current_node = m_current_node->children.front();
+                    }
+                    return;
+                }
+                else {
+                    // 当前是父节点的最后一个子节点，访问父节点
+                    m_current_node = father;
+                    return;
+                }
+            }
+            temp = father;
+        }
+
+        // 遍历完成
+        m_current_node = nullptr;
+    }
+
+    template<typename TreeType>
+    void ConstTreeIterator<TreeType>::advance_levelorder() {
+        if (!m_current_node) return;
+
+        // 层序遍历需要队列来维护访问顺序
+        // 由于迭代器的限制，我们用一种简化的方式来模拟
+
+        auto temp = m_current_node;
+
+        // 首先检查是否有子节点
+        if (!temp->children.empty()) {
+            m_current_node = temp->children.front();
+            return;
+        }
+
+        // 没有子节点，寻找兄弟节点
+        auto father = temp->father.lock();
+        if (father) {
+            auto& siblings = father->children;
+            auto it = std::find(siblings.begin(), siblings.end(), temp);
+            if (it != siblings.end() && ++it != siblings.end()) {
+                m_current_node = *it;
+                return;
+            }
+        }
+
+        // 没有兄弟节点，需要更复杂的层序逻辑
+        // 这里用简化版本：直接结束
+        m_current_node = nullptr;
+    }
 
     //Tree<T>实现部分
 
@@ -106,16 +243,16 @@ namespace Scriptforge::Tree {
     template<typename T, typename Alloc>
         requires requires(T t1, T t2) { t1 = t2; }
     typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
-        if (!node) throw Scriptforge::Err::Error{ "E0002", "空节点" };
+        if (!node) throw Scriptforge::Err::Error{ "Tree0002", "Empty node" };
         nodeptr father = node->father.lock();
         if (!father) {
-            if (node != m_root) throw Scriptforge::Err::Error{ "E0003", "孤立节点" };
+            if (node != m_root) throw Scriptforge::Err::Error{ "Tree0003", "Orphaned node" };
             else m_root.reset();
             return nullptr;
         }
         auto& vec = father->children;
         auto it = std::find(vec.begin(), vec.end(), node);
-        if (it == vec.end()) throw Scriptforge::Err::Error{ "E0001", "未发现节点" };
+        if (it == vec.end()) throw Scriptforge::Err::Error{ "Tree0001", "Node not found" };
 
         vec.erase(it);
         return father;
@@ -125,7 +262,7 @@ namespace Scriptforge::Tree {
     template<typename T, typename Alloc>
         requires requires(T t1, T t2) { t1 = t2; }
     typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father) {
-        if (!father) throw Scriptforge::Err::Error{ "E0002", "空节点" };
+        if (!father) throw Scriptforge::Err::Error{ "Tree0002", "Empty node" };
         nodeptr newnode = create_node(T());
         newnode->father = father;
         father->children.push_back(newnode);
@@ -135,7 +272,7 @@ namespace Scriptforge::Tree {
     template<typename T, typename Alloc>
         requires requires(T t1, T t2) { t1 = t2; }
     typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, T& node) {
-        if (!father) throw Scriptforge::Err::Error{ "E0002", "空节点" };
+        if (!father) throw Scriptforge::Err::Error{ "Tree0002", "Empty node" };
         nodeptr newnode = create_node(node);
         newnode->father = father;
         father->children.push_back(newnode);
@@ -145,7 +282,7 @@ namespace Scriptforge::Tree {
     template<typename T, typename Alloc>
         requires requires(T t1, T t2) { t1 = t2; }
     typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, const T& node) {
-        if (!father) throw Scriptforge::Err::Error{ "E0002", "空节点" };
+        if (!father) throw Scriptforge::Err::Error{ "Tree0002", "Empty node" };
         nodeptr newnode = create_node(node);
         newnode->father = father;
         father->children.push_back(newnode);

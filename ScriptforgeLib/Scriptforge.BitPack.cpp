@@ -75,16 +75,23 @@ namespace Scriptforge::BitPack {
 	const BoolBitPack::value_type BoolBitPack::operator[](size_type x) const {
 		return read(x);
 	}
-	void BoolBitPack::write(const size_type& where, const value_type what) {
-		if (where >= 8) {
-			throw Error{ "BoolBitPack::write: where must be less than 8." };
-		}
-		if (what) {
-			m_bools |= std::byte{ 1 << where };
-		}
-		else {
-			m_bools &= ~std::byte{ 1 << where };
-		}
-	}
+
+void BoolBitPack::write(const size_type& where, const value_type what) {
+	if(where >= 8)
+		throw Error{ "","BoolBitPack::write: where must be less than 8." };
+	set_bit(m_bools, where, what);
+}
+
+void BoolBitPack::write(const size_type&& where, const value_type what) {
+	write(where, what);
+}
+inline void BoolBitPack::set_bit(std::byte& b, int pos, bool val) {
+	auto bits = std::to_integer<unsigned char>(b);
+	if (val)
+		bits |= (1 << pos);
+	else
+		bits &= ~(1 << pos);
+	b = std::byte(bits);
+}
 
 }

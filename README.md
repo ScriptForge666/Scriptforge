@@ -7,9 +7,9 @@
 ---
 
 **Scriptforge::Err::Error error codes:**
-- E0001 Node not found
-- E0002 Empty node  
-- E0003 Orphaned node
+- Tree0001 Node not found
+- Tree0002 Empty node  
+- Tree0003 Orphaned node
 
 ---
 ### Project Structure:
