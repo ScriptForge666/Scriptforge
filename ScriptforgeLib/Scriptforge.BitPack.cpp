@@ -85,7 +85,7 @@ void BoolBitPack::write(const size_type& where, const value_type what) {
 void BoolBitPack::write(const size_type&& where, const value_type what) {
 	write(where, what);
 }
-inline void BoolBitPack::set_bit(std::byte& b, int pos, bool val) {
+inline void BoolBitPack::set_bit(std::byte& b, size_type pos, value_type val) {
 	auto bits = std::to_integer<unsigned char>(b);
 	if (val)
 		bits |= (1 << pos);

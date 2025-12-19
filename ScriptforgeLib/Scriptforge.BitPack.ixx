@@ -47,7 +47,7 @@ namespace Scriptforge::BitPack {
 		void clear(const value_type what = false);
 		std::byte toByte() const;
 	private:
-		inline void set_bit(std::byte& b, int pos, bool val);
+		inline void set_bit(std::byte& b, size_type pos, value_type val);
 		std::byte m_bools{ std::byte{ 0 } };
 	};
 }
