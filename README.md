@@ -1,5 +1,9 @@
 # Scriptforge
 
+**Other Language:** [Chinese](README-CN.md)
+
+## <span style="color:#ff8c00;"> ⚠️ Warning – A major update is arriving soon. Please read the changelog carefully before upgrading.  </span>
+
 ### 🎉 The project is back under active development!
 
 **An open-source library with many strange and wonderful features**

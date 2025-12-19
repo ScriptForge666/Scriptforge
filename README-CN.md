@@ -1,5 +1,9 @@
 # Scriptforge
 
+**[README主版本(English)](README.md)**
+
+## <span style="color:#ff8c00;"> ⚠️ 重要提示 – 重大更新即将发布，请在升级前阅读更新日志。  </span>
+
 ### 🎉 项目重新开始维护！
 
 **一个有着许许多多奇奇怪怪功能的开源库**
