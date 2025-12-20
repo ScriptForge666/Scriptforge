@@ -1,6 +1,8 @@
 # Scriptforge
 
-**[README主版本(English)](README.md)**
+[README主版本(English)](README.md)
+
+[更新日志](UpdateLog-CN.md)
 
 ## <span style="color:#ff8c00;"> ⚠️ 重要提示 – 重大更新即将发布，请在升级前阅读更新日志。  </span>
 
