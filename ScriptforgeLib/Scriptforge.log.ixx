@@ -31,3 +31,44 @@ namespace Scriptforge::Log {
 		std::string m_filename;
 	};
 }
+
+module :private;
+
+namespace Scriptforge::Log {
+	void Logger::process() {
+		while (running || !logQueue.empty()) {
+			std::unique_lock<std::mutex> lock(mtx);
+			cv.wait(lock, [&] { return !logQueue.empty() || !running; });
+			while (!logQueue.empty()) {
+				logFile << logQueue.front() << std::endl;
+				logQueue.pop();
+			}
+		}
+	}
+
+	Logger::Logger(const std::string& filename) : logFile(filename) {
+		m_filename = filename;
+		logThread = std::thread(&Logger::process, this);
+	}
+	Logger::~Logger() {
+		running = false;
+		cv.notify_all();
+		logThread.join();
+		logFile.close();
+	}
+	void Logger::log(const std::string& msg) {
+		{
+			std::lock_guard<std::mutex> lock(mtx);
+			logQueue.push(msg);
+		}
+		cv.notify_one();
+	}
+	std::string Logger::returnfilename() const {
+		return m_filename;
+	}
+	Logger::Logger(const Logger& logger) {
+		std::string filename = logger.returnfilename();
+		m_filename = filename;
+		logThread = std::thread(&Logger::process, this);
+	}
+}

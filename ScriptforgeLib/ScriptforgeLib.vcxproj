@@ -19,16 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scriptforge.BitPack.cpp" />
     <ClCompile Include="Scriptforge.BitPack.ixx" />
-    <ClCompile Include="Scriptforge.Err.cpp" />
     <ClCompile Include="Scriptforge.Err.ixx" />
     <ClCompile Include="Scriptforge.ixx" />
-    <ClCompile Include="Scriptforge.Log.cpp" />
     <ClCompile Include="Scriptforge.Log.ixx" />
-    <ClCompile Include="Scriptforge.Tree.cpp" />
     <ClCompile Include="Scriptforge.Tree.ixx" />
-    <ClCompile Include="Scriptforge.Version.cpp" />
     <ClCompile Include="Scriptforge.Version.ixx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

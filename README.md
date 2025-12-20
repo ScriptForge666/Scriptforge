@@ -4,7 +4,6 @@
 
 [Changelog](UpdateLog.md)
 
-## <span style="color:#ff8c00;"> ⚠️ Warning – A major update is arriving soon. Please read the changelog carefully before upgrading.  </span>
 
 ### 🎉 The project is back under active development!
 
@@ -13,9 +12,11 @@
 ---
 
 **Scriptforge::Err::Error error codes:**
-- Tree0001 Node not found
-- Tree0002 Empty node  
-- Tree0003 Orphaned node
+- Tree0001 [Function]:Node not found
+- Tree0002 [Function]:Empty node  
+- Tree0003 [Function]:Orphaned node
+- BitPack0001 [Function]:size must be 8.
+- BitPack0002 [Function]:where must be less than 8.
 
 ---
 ### Project Structure:
@@ -24,18 +25,15 @@ Scriptforge/
 ├── Scriptforge.sln
 ├── README.md
 ├── README-CN.md
+├── UpdateLog.md
+├── UpdateLog-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.ixx
 │    ├── Scriptforge.BitPack.ixx
 │    ├── Scriptforge.Err.ixx
 │    ├── Scriptforge.Log.ixx
 │    ├── Scriptforge.Tree.ixx
-│    ├── Scriptforge.Version.ixx
-│    ├── Scriptforge.BitPack.cpp
-│    ├── Scriptforge.Err.cpp
-│    ├── Scriptforge.Log.cpp
-│    ├── Scriptforge.Tree.cpp
-│    └── Scriptforge.Version.cpp
+│    └── Scriptforge.Version.ixx
 └── ScriptforgeTest/
         └── ScriptforgeTest.cpp
 

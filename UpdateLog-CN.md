@@ -2,6 +2,9 @@
 
 [更新文件主版本(English)](UpdateLog.md)
 
+# v0.1.0
+所有实现文件已被移除并合并到模块文件中，从而消除了显式模板实例化的需要。
+
 # v0.0.1
 添加版本系统(文件：[Scriptforge.Version.cpp](ScriptforgeLib/Scriptforge.Version.cpp),[Scriptforge.Version.ixx](ScriptforgeLib/Scriptforge.Version.ixx))和它自身版本（在[Scriptforge.ixx](ScriptforgeLib/Scriptforge.ixx)中）
 

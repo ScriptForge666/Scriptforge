@@ -18,7 +18,7 @@ export import Scriptforge.BitPack;
 
 import std;
 constexpr std::string_view ProjectName = "Scriptforge";
-constexpr std::string_view ProjectVersion = "0.0.1";
+constexpr std::string_view ProjectVersion = "0.1.0";
 constexpr std::string_view ProjectContributor = "Scriptforge";
 constexpr std::string_view ProjectLicense = "Apache License 2.0";
 constexpr std::string_view ProjectStartYear = "2025";

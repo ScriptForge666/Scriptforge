@@ -2,6 +2,9 @@
 
 **Other Language:**[Chinese](UpdateLog-CN.md)
 
+# v0.1.0
+All implementation files have been removed and merged into the module file, thereby eliminating the need for explicit template instantiation.
+
 # v0.0.1
 added version system(files:[Scriptforge.Version.cpp](ScriptforgeLib/Scriptforge.Version.cpp),[Scriptforge.Version.ixx](ScriptforgeLib/Scriptforge.Version.ixx)) and itself version in [Scriptforge.ixx](ScriptforgeLib/Scriptforge.ixx)
 

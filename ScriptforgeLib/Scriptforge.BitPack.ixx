@@ -12,7 +12,7 @@ export module Scriptforge.BitPack;
 
 import std;
 
-namespace Scriptforge::BitPack {
+export namespace Scriptforge::BitPack {
 	export class BoolBitPack {
 	public:
 		using value_type = bool;
@@ -50,4 +50,89 @@ namespace Scriptforge::BitPack {
 		inline void set_bit(std::byte& b, size_type pos, value_type val);
 		std::byte m_bools{ std::byte{ 0 } };
 	};
+}
+
+module :private;
+import Scriptforge.Err;
+
+namespace Scriptforge::BitPack {
+	BoolBitPack::BoolBitPack(const value_type bool1,
+		const value_type bool2,
+		const value_type bool3,
+		const value_type bool4,
+		const value_type bool5,
+		const value_type bool6,
+		const value_type bool7,
+		const value_type bool8) {
+		write(0, bool1);
+		write(1, bool2);
+		write(2, bool3);
+		write(3, bool4);
+		write(4, bool5);
+		write(5, bool6);
+		write(6, bool7);
+		write(7, bool8);
+	}
+	BoolBitPack::BoolBitPack(const std::span<bool> src) {
+		if (src.size() != 8) {
+			throw Scriptforge::Err::Error{ "BoolBit001",std::string(__func__)+":size must be 8." };
+		}
+		for (size_type i = 0; i < 8; ++i) {
+			write(i, src[i]);
+		}
+	}
+	BoolBitPack::classItself& BoolBitPack::operator=(const BoolBitPack::classItself& rhs) {
+		if (this == &rhs)
+			return *this;
+		m_bools = rhs.toByte();
+		return *this;
+	}
+	BoolBitPack::classItself& BoolBitPack::operator=(const std::span<bool> rhs) {
+		if (rhs.size() != 8) {
+			throw Scriptforge::Err::Error{ "BoolBit001",std::string(__func__) + ":size must be 8." };
+		}
+		for (size_type i = 0; i < 8; ++i) {
+			write(i, rhs[i]);
+		}
+		return *this;
+	}
+	bool BoolBitPack::operator==(const std::span<bool> rhs) const {
+		if (rhs.size() != 8) {
+			throw Scriptforge::Err::Error{ "BoolBit001",std::string(__func__) + ":size must be 8." };
+		}
+		for (size_type i = 0; i < 8; ++i) {
+			if (read(i) != rhs[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	bool BoolBitPack::operator!=(const std::span<bool> rhs) const {
+		return !(*this == rhs);
+	}
+	BoolBitPack::value_type BoolBitPack::operator[](size_type x) {
+		return read(x);
+	}
+	const BoolBitPack::value_type BoolBitPack::operator[](size_type x) const {
+		return read(x);
+	}
+
+	void BoolBitPack::write(const size_type& where, const value_type what) {
+		if (where >= 8)
+			throw Scriptforge::Err::Error{ "BoolBit002",std::string(__func__) + ":where must be less than 8." };
+		set_bit(m_bools, where, what);
+	}
+
+	void BoolBitPack::write(const size_type&& where, const value_type what) {
+		write(where, what);
+	}
+	inline void BoolBitPack::set_bit(std::byte& b, size_type pos, value_type val) {
+		auto bits = std::to_integer<unsigned char>(b);
+		if (val)
+			bits |= (1 << pos);
+		else
+			bits &= ~(1 << pos);
+		b = std::byte(bits);
+	}
+
 }
