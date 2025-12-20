@@ -20,15 +20,16 @@
 ```
 Scriptforge/
 ├── Scriptforge.sln
+├── README.md
 ├──README-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.hpp
-│    ├── ScriptforgeBitPack.hpp
+│    ├── ScriptforgeBitPack.hpp(haven't had that)
 │    ├── ScriptforgeErr.hpp
 │    ├── ScriptforgeLog.hpp
 │    ├── ScriptforgeTree.hpp
 │    ├── ScriptforgeVersion.hpp
-│    ├── ScriptforgeBitPack.cpp
+│    ├── ScriptforgeBitPack.cpp(haven't had that)
 │    ├── ScriptforgeErr.cpp
 │    ├── ScriptforgeLog.cpp
 │    ├── ScriptforgeTree.cpp

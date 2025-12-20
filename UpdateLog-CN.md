@@ -14,11 +14,9 @@ Scriptforge/
 ├──README-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.hpp
-│    ├── ScriptforgeBitPack.hpp
 │    ├── ScriptforgeErr.hpp
 │    ├── ScriptforgeLog.hpp
 │    ├── ScriptforgeTree.hpp
-│    ├── ScriptforgeBitPack.cpp
 │    ├── ScriptforgeErr.cpp
 │    ├── ScriptforgeLog.cpp
 │    └── ScriptforgeTree.cpp
