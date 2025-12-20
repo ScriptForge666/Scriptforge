@@ -15,3 +15,17 @@ export import Scriptforge.Log;
 export import Scriptforge.Tree;
 export import Scriptforge.Version;
 export import Scriptforge.BitPack;
+
+import std;
+constexpr std::string_view ProjectName = "Scriptforge";
+constexpr std::string_view ProjectVersion = "0.9.14";
+constexpr std::string_view ProjectContributor = "Scriptforge";
+constexpr std::string_view ProjectLicense = "Apache License 2.0";
+constexpr std::string_view ProjectStartYear = "2025";
+export Scriptforge::Version::VersionInfo versionInfo{
+	ProjectName,
+	ProjectVersion,
+	ProjectContributor,
+	ProjectLicense,
+	ProjectStartYear
+};

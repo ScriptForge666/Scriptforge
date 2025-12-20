@@ -13,14 +13,29 @@ export module Scriptforge.Version;
 import std;
 
 namespace Scriptforge::Version {
-	inline constexpr std::string_view ProjectName = "Scriptforge";
-	inline constexpr std::string_view ProjectVersion = "0.9.14";
-	inline constexpr std::string_view ProjectContributor = "Scriptforge";
-	inline constexpr std::string_view ProjectLicense = "Apache License 2.0";
-	inline constexpr std::string_view ProjectStartYear = "2025";
-
-	export std::string getVersion();
-	export std::string getCopyright();
-	int getYear();
-	std::string getYearInterval();
+	class VersionInfo {
+	public:
+		VersionInfo() = delete;
+		VersionInfo(const VersionInfo&) = delete;
+		VerisonInfo(std::string_view ProjectName,std::string_view ProjectVersion,
+					std::string_view ProjectContributor,std::string_view ProjectLicense,
+			std::string_view ProjectStartYear);
+		VerisonInfo(std::string_view ProjectName, std::string_view ProjectVersion,
+			std::string_view ProjectContributor, std::string_view ProjectLicense,
+			std::string_view ProjectStartYear, std::string_view ProjectStopYear);
+		VersionInfo& operator=(const VersionInfo&) = delete;
+		std::string getVersion();
+		std::string getCopyright();
+		int getYear();
+		std::string getYearInterval();
+		~VersionInfo() = default;
+	private:
+		constexpr std::string_view m_ProjectName;
+		constexpr std::string_view m_ProjectVersion;
+		constexpr std::string_view m_ProjectContributor;
+		constexpr std::string_view m_ProjectLicense;
+		constexpr std::string_view m_ProjectStartYear;
+		constexpr std::string_view m_ProjectStopYear;
+		bool m_alreadyStopped{ false };
+	};
 }
