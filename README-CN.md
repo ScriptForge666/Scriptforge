@@ -2,8 +2,6 @@
 
 **[README主版本(English)](README.md)**
 
-## <span style="color:#ff8c00;"> ⚠️ 重要提示 – 重大更新即将发布，请在升级前阅读更新日志。  </span>
-
 ### 🎉 项目重新开始维护！
 
 **一个有着许许多多奇奇怪怪功能的开源库**
@@ -11,7 +9,6 @@
 ---
 
 
-**Scriptforge::Err::Error 错误码对应：**
 - Tree0001 Node not found
 - Tree0002 Empty node  
 - Tree0003 Orphaned node
@@ -24,17 +21,17 @@ Scriptforge/
 ├── README.md
 ├──README-CN.md
 ├── ScriptforgeLib/
-│    ├── Scriptforge.ixx
-│    ├── Scriptforge.BitPack.ixx
-│    ├── Scriptforge.Err.ixx
-│    ├── Scriptforge.Log.ixx
-│    ├── Scriptforge.Tree.ixx
-│    ├── Scriptforge.Version.ixx
-│    ├── Scriptforge.BitPack.cpp
-│    ├── Scriptforge.Err.cpp
-│    ├── Scriptforge.Log.cpp
-│    ├── Scriptforge.Tree.cpp
-│    └──Scriptforge.Version.cpp
+│    ├── Scriptforge.hpp
+│    ├── ScriptforgeBitPack.hpp
+│    ├── ScriptforgeErr.hpp
+│    ├── ScriptforgeLog.hpp
+│    ├── ScriptforgeTree.hpp
+│    ├── ScriptforgeVersion.hpp
+│    ├── ScriptforgeBitPack.cpp
+│    ├── ScriptforgeErr.cpp
+│    ├── ScriptforgeLog.cpp
+│    ├── ScriptforgeTree.cpp
+│    └──ScriptforgeVersion.cpp
 └── ScriptforgeTest/
         └── ScriptforgeTest.cpp
 

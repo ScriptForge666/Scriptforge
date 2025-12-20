@@ -20,20 +20,19 @@
 ```
 Scriptforge/
 ├── Scriptforge.sln
-├── README.md
-├── README-CN.md
+├──README-CN.md
 ├── ScriptforgeLib/
-│    ├── Scriptforge.ixx
-│    ├── Scriptforge.BitPack.ixx
-│    ├── Scriptforge.Err.ixx
-│    ├── Scriptforge.Log.ixx
-│    ├── Scriptforge.Tree.ixx
-│    ├── Scriptforge.Version.ixx
-│    ├── Scriptforge.BitPack.cpp
-│    ├── Scriptforge.Err.cpp
-│    ├── Scriptforge.Log.cpp
-│    ├── Scriptforge.Tree.cpp
-│    └── Scriptforge.Version.cpp
+│    ├── Scriptforge.hpp
+│    ├── ScriptforgeBitPack.hpp
+│    ├── ScriptforgeErr.hpp
+│    ├── ScriptforgeLog.hpp
+│    ├── ScriptforgeTree.hpp
+│    ├── ScriptforgeVersion.hpp
+│    ├── ScriptforgeBitPack.cpp
+│    ├── ScriptforgeErr.cpp
+│    ├── ScriptforgeLog.cpp
+│    ├── ScriptforgeTree.cpp
+│    └──ScriptforgeVersion.cpp
 └── ScriptforgeTest/
         └── ScriptforgeTest.cpp
 
