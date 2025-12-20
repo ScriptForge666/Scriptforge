@@ -34,7 +34,7 @@ namespace Scriptforge {
 	}
 }
 
-namespace Scriptforge::Log {
+namespace Scriptforge {
 	inline namespace Log {
 		void Logger::process() {
 			while (running || !logQueue.empty()) {

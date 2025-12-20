@@ -42,6 +42,8 @@ export namespace Scriptforge {
         private:
             typename TreeType::nodeptr m_current_node;
             TreeTraversalOrder m_traversal_order;
+            std::queue<typename TreeType::nodeptr> m_queue;
+
             // 私有辅助函数
             void advance_preorder();
             void advance_postorder();
@@ -112,11 +114,15 @@ namespace Scriptforge {
     inline namespace Tree {
         //ConstTreeIterator实现部分
 
-//构造函数
+        //构造函数
         template<typename TreeType>
         ConstTreeIterator<TreeType>::ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
             : m_current_node(node), m_traversal_order(order) {
-            // 初始化逻辑（如果需要）
+            if (m_traversal_order == TreeTraversalOrder::LevelOrder) {
+                if (node) m_queue.push(node);
+                if (!m_queue.empty())
+                    m_current_node = m_queue.front();
+            }
         }
         //解引用操作符
         template<typename TreeType>
@@ -263,35 +269,22 @@ namespace Scriptforge {
             m_current_node = nullptr;
         }
 
-        template<typename TreeType>
+        template <typename TreeType>
         void ConstTreeIterator<TreeType>::advance_levelorder() {
-            if (!m_current_node) return;
+            if (!m_queue.empty())
+                m_queue.pop();                         // ① 弹出已访问的节点
 
-            // 层序遍历需要队列来维护访问顺序
-            // 由于迭代器的限制，我们用一种简化的方式来模拟
-
-            auto temp = m_current_node;
-
-            // 首先检查是否有子节点
-            if (!temp->children.empty()) {
-                m_current_node = temp->children.front();
-                return;
-            }
-
-            // 没有子节点，寻找兄弟节点
-            auto father = temp->father.lock();
-            if (father) {
-                auto& siblings = father->children;
-                auto it = std::find(siblings.begin(), siblings.end(), temp);
-                if (it != siblings.end() && ++it != siblings.end()) {
-                    m_current_node = *it;
-                    return;
+            if (m_current_node) {                      // ② 把子节点压入队列
+                for (const auto& child : m_current_node->children) {
+                    if (child) m_queue.push(child);
                 }
             }
 
-            // 没有兄弟节点，需要更复杂的层序逻辑
-            // 这里用简化版本：直接结束
-            m_current_node = nullptr;
+            // ③ 设置下一个节点（或结束遍历）
+            if (!m_queue.empty())
+                m_current_node = m_queue.front();
+            else
+                m_current_node = nullptr;
         }
 
         //Tree<T>实现部分
