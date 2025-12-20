@@ -2,6 +2,8 @@
 
 **Other Language:** [Chinese](README-CN.md)
 
+[Changelog](UpdateLog.md)
+
 ### 🎉 The project is back under active development!
 
 **An open-source library with many strange and wonderful features**

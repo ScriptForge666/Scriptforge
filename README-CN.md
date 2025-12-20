@@ -2,6 +2,8 @@
 
 **[README主版本(English)](README.md)**
 
+[更新日志](UpdateLog-CN.md)
+
 ### 🎉 项目重新开始维护！
 
 **一个有着许许多多奇奇怪怪功能的开源库**
