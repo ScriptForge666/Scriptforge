@@ -102,6 +102,7 @@ namespace Scriptforge::Tree {
 }
 
 module :private;
+import Scriptforge.Err;
 
 namespace Scriptforge::Tree {
     //ConstTreeIterator实现部分
