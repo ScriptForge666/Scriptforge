@@ -2,7 +2,7 @@
 
 [README主版本(English)](README.md)
 
-[更新日志](UpdateLog-CN.md)
+[更新日志](CHANGELOG-CN.md)
 
 ### 🎉 项目重新开始维护！
 
@@ -11,7 +11,7 @@
 ---
 
 
-**Scriptforge::Err::Error 错误码对应：**
+**Scriptforge\:\:Err\:\:Error 错误码对应：**
 - Tree0001 [函数]:Node not found
 - Tree0002 [函数]:Empty node  
 - Tree0003 [函数]:Orphaned node
@@ -29,6 +29,7 @@ Scriptforge/
 ├── UpdateLog-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.ixx
+│    ├── Scriptforge.AntiDebug.ixx
 │    ├── Scriptforge.BitPack.ixx
 │    ├── Scriptforge.Err.ixx
 │    ├── Scriptforge.Log.ixx

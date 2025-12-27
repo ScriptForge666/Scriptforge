@@ -2,7 +2,7 @@
 
 **Other Language:** [Chinese](README-CN.md)
 
-[Changelog](UpdateLog.md)
+[Changelog](CHANGELOG.md)
 
 
 ### 🎉 The project is back under active development!
@@ -11,7 +11,7 @@
 
 ---
 
-**Scriptforge::Err::Error error codes:**
+**Scriptforge\:\:Err\:\:Error error codes:**
 - Tree0001 [Function]:Node not found
 - Tree0002 [Function]:Empty node  
 - Tree0003 [Function]:Orphaned node
@@ -29,6 +29,7 @@ Scriptforge/
 ├── UpdateLog-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.ixx
+│    ├── Scriptforge.AntiDebug.ixx
 │    ├── Scriptforge.BitPack.ixx
 │    ├── Scriptforge.Err.ixx
 │    ├── Scriptforge.Log.ixx

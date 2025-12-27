@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Scriptforge.AntiDebug.ixx" />
     <ClCompile Include="Scriptforge.BitPack.ixx" />
     <ClCompile Include="Scriptforge.Err.ixx" />
     <ClCompile Include="Scriptforge.ixx" />

@@ -1,6 +1,9 @@
 # Scriptforge Library Changelog
 
-[更新文件主版本(English)](UpdateLog.md)
+[更新文件主版本(English)](CHANGELOG.md)
+
+# v0.1.1
+添加了[Scriptforge.AntiDebug.ixx](ScriptforgeLib/Scriptforge.AntiDebug.ixx),实现了反调试功能。
 
 # v0.1.0
 所有实现文件已被移除并合并到模块文件中，从而消除了显式模板实例化的需要。

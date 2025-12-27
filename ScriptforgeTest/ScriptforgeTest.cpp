@@ -10,8 +10,8 @@
 // limitations under the License.
 import Scriptforge;
 
-#include <iostream>
-#include <random>
+#include <time.h>
+import std;
 using namespace std;
 using namespace Scriptforge;
 
@@ -40,7 +40,42 @@ inline double random_normal(double mean = 0.0, double stddev = 1.0)
     return dist(engine);
 }
 
+//Made By Qwen3:8b and Myself
+bool is2026NewYearsDay() {
+    auto now = std::chrono::system_clock::now();
+    time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm local_tm;
+    errno_t err = 0;
+
+#ifdef _MSC_VER
+    err = localtime_s(&local_tm, &now_c);
+#else
+    std::tm* local_tm_ptr = std::localtime(&now_c);
+    if (!local_tm_ptr) {
+        return false;
+    }
+    local_tm = *local_tm_ptr;
+#endif
+
+    if (err != 0) {
+        return false;
+    }
+
+    int year = local_tm.tm_year + 1900;
+    int month = local_tm.tm_mon + 1;
+    int day = local_tm.tm_mday;
+    return year == 2026 && month == 1 && day <= 5 && day >= 1;
+}
+
+
 int main() {
+#if defined(_WIN32) || defined(_WIN64)
+    AntiDebugger debug;
+    debug.start();
+#else
+#pragma message("Because Scriptforge.AntiDebug.ixx is only compatible with Windows,it will not compile.")
+#endif
+    if(is2026NewYearsDay())cout<<"Happy New Year!🎉(A surprise)";
     Logger logger{ "log.log" };
     cout << versionInfo.getCopyright() << endl;
     logger.log("[main]print\"" + versionInfo.getCopyright() + "\"\n");

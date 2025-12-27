@@ -1,6 +1,9 @@
 # Scriptforge Library Changelog
 
-**Other Language:**[Chinese](UpdateLog-CN.md)
+**Other Language:**[Chinese](CHANGELOG-CN.md)
+
+# v0.1.1
+Added [Scriptforge.AntiDebug.ixx](ScriptforgeLib/Scriptforge.AntiDebug.ixx), which implements anti-debugging features.
 
 # v0.1.0
 All implementation files have been removed and merged into the module file, thereby eliminating the need for explicit template instantiation.

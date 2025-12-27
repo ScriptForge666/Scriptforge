@@ -10,15 +10,20 @@
 // limitations under the License.
 export module Scriptforge;
 
+export import Scriptforge.AntiDebug;
 export import Scriptforge.Err;
 export import Scriptforge.Log;
 export import Scriptforge.Tree;
 export import Scriptforge.Version;
+#if defined(_WIN32) || defined(_WIN64)
 export import Scriptforge.BitPack;
+#else
+#pragma message("Because Scriptforge.AntiDebug.ixx is only compatible with Windows, it will not be included.")
+#endif
 
 import std;
 constexpr std::string_view ProjectName = "Scriptforge";
-constexpr std::string_view ProjectVersion = "0.1.0";
+constexpr std::string_view ProjectVersion = "0.1.1";
 constexpr std::string_view ProjectContributor = "Scriptforge";
 constexpr std::string_view ProjectLicense = "Apache License 2.0";
 constexpr std::string_view ProjectStartYear = "2025";
