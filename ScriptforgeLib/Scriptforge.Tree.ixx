@@ -334,16 +334,16 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
-            if (!node) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + "Empty node" };
+            if (!node) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
             nodeptr father = node->father.lock();
             if (!father) {
-                if (node != m_root) throw Scriptforge::Err::Error{ "Tree0003", std::string(__func__) + "Orphaned node" };
+                if (node != m_root) throw Scriptforge::Err::Error{ "Tree0003", std::string(__func__) + ":Orphaned node" };
                 else m_root.reset();
                 return nullptr;
             }
             auto& vec = father->children;
             auto it = std::find(vec.begin(), vec.end(), node);
-            if (it == vec.end()) throw Scriptforge::Err::Error{ "Tree0001", std::string(__func__) + "Node not found" };
+            if (it == vec.end()) throw Scriptforge::Err::Error{ "Tree0001", std::string(__func__) + ":Node not found" };
 
             vec.erase(it);
             return father;
@@ -353,7 +353,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father) {
-            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + "Empty node" };
+            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
             nodeptr newnode = create_node(T());
             newnode->father = father;
             father->children.push_back(newnode);
@@ -363,7 +363,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, T& node) {
-            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + "Empty node" };
+            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
@@ -373,7 +373,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, const T& node) {
-            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + "Empty node" };
+            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
