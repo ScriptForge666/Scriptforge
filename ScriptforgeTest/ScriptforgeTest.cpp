@@ -47,11 +47,11 @@ int main() {
     ThreadError t{"t1",logger};
     double random = random_normal(1.0, 200.0);
     logger.log("[main]log random number\"" + to_string(random) + "\"\n");
-    auto tlamada = [&]() {threadcheck(static_cast<int>(random)); };
+    auto tlamada = [random]() {threadcheck(static_cast<int>(random)); };
     try {
         t.threadStart(tlamada);
     }
-    catch (Error e) {
+    catch (const Error& e) {
         logger.log("[main]caught exception:" + string{ e.what() });
         cout << e<<endl;
     }
