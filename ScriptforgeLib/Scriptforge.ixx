@@ -22,10 +22,16 @@ constexpr std::string_view ProjectVersion = "0.1.0";
 constexpr std::string_view ProjectContributor = "Scriptforge";
 constexpr std::string_view ProjectLicense = "Apache License 2.0";
 constexpr std::string_view ProjectStartYear = "2025";
-export Scriptforge::Version::VersionInfo versionInfo{
-	ProjectName,
-	ProjectVersion,
-	ProjectContributor,
-	ProjectLicense,
-	ProjectStartYear
-};
+namespace Scriptforge {
+		inline namespace Version {
+			export Scriptforge::Version::VersionInfo versionInfo{
+				ProjectName,
+				ProjectVersion,
+				ProjectContributor,
+				ProjectLicense,
+				ProjectStartYear
+			};
+
+	}
+
+}

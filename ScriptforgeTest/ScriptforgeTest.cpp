@@ -11,25 +11,49 @@
 import Scriptforge;
 
 #include <iostream>
-using namespace Scriptforge::Err;
-using namespace Scriptforge::Log;
-int asd(){
-	return 0;
+#include <random>
+using namespace std;
+using namespace Scriptforge;
+
+int threadcheck(int i) {
+    if (i % 2 == 0) {
+        return i;
+    }
+    else {
+        throw Error{ "E01","It's a singular!" };
+    }
 }
+//Made By GPT-oss:120b
+inline double random_normal(double mean = 0.0, double stddev = 1.0)
+{
+    thread_local std::mt19937 engine([]() -> std::mt19937 {
+        std::random_device rd;
+        std::seed_seq seq{
+            rd(), rd(), rd(),
+            static_cast<unsigned>(std::chrono::high_resolution_clock::now().
+                                 time_since_epoch().count())
+        };
+        return std::mt19937{ seq };
+        }());
+    std::normal_distribution<double> dist(mean, stddev);
+
+    return dist(engine);
+}
+
 int main() {
-		try{
-			throw Error{};
-		}catch (Error e){
-			std::cout << e;
-		}
-		auto* a{ asd };
-		Logger logger{ "log.log" };
-		ThreadError t{ "thread",logger };
-		try {
-			t.threadStart(a);
-		}
-		catch (Error e) {
-			std::cout << e;
-		}
-        return 0;
+    Logger logger{ "log.log" };
+    cout << versionInfo.getCopyright() << endl;
+    logger.log("[main]print\"" + versionInfo.getCopyright() + "\"\n");
+    ThreadError t{"t1",logger};
+    double random = random_normal(1.0, 200.0);
+    logger.log("[main]log random number\"" + to_string(random) + "\"\n");
+    auto tlamada = [&]() {threadcheck(static_cast<int>(random)); };
+    try {
+        t.threadStart(tlamada);
+    }
+    catch (Error e) {
+        logger.log("[main]caught exception:" + string{ e.what() });
+        cout << e<<endl;
+    }
+     return 0;
  }
