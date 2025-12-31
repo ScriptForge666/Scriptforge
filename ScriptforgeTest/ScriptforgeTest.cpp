@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -75,11 +75,14 @@ int main() {
 #else
 #pragma message("Because Scriptforge.AntiDebug.ixx is only compatible with Windows,it will not compile.")
 #endif
-    if(is2026NewYearsDay())cout<<"Happy New Year!🎉(A surprise)";
     Logger logger{ "log.log" };
+    if (is2026NewYearsDay()) {
+        cout << "Happy New Year!🎉(A surprise)\n";
+        logger.log("[main]print\"Happy New Year!🎉(A surprise)\"\n");
+    }
     cout << versionInfo.getCopyright() << endl;
     logger.log("[main]print\"" + versionInfo.getCopyright() + "\"\n");
-    ThreadError t{"t1",logger};
+    ThreadErrorL t{"t1",logger};
     double random = random_normal(1.0, 200.0);
     logger.log("[main]log random number\"" + to_string(random) + "\"\n");
     auto tlamada = [random]() {threadcheck(static_cast<int>(random)); };

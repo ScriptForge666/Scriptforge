@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -22,11 +22,11 @@ export import Scriptforge.BitPack;
 #endif
 
 import std;
-constexpr std::string_view ProjectName = "Scriptforge";
-constexpr std::string_view ProjectVersion = "0.1.1";
-constexpr std::string_view ProjectContributor = "Scriptforge";
-constexpr std::string_view ProjectLicense = "Apache License 2.0";
-constexpr std::string_view ProjectStartYear = "2025";
+constexpr std::string_view ProjectName{ "Scriptforge" };
+constexpr std::string_view ProjectVersion{ "0.1.1" };
+constexpr std::string_view ProjectContributor{ "Scriptforge" };
+constexpr std::string_view ProjectLicense{ "Apache License 2.0"};
+constexpr std::chrono::year ProjectStartYear{ 2025 };
 namespace Scriptforge {
 		inline namespace Version {
 			export Scriptforge::Version::VersionInfo versionInfo{

@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -33,8 +33,18 @@ export namespace Scriptforge {
 
         export class ThreadError {
         public:
-            ThreadError(std::string_view name, Scriptforge::Log::Logger& logger);
-            ThreadError() = delete;
+            ThreadError() = default;
+            template <typename T>
+            void threadStart(T run);
+        private:
+            template <typename T>
+            void threadFunc(std::exception_ptr& err, T run);
+        };
+
+        export class ThreadErrorL {
+        public:
+            ThreadErrorL(std::string_view name, Scriptforge::Log::Logger& logger);
+            ThreadErrorL() = delete;
             template <typename T>
             void threadStart(T run);
         private:
@@ -43,6 +53,7 @@ export namespace Scriptforge {
             std::string_view m_name;
             Scriptforge::Log::Logger& m_logger;
         };
+
     }
 }
 
@@ -60,12 +71,31 @@ namespace Scriptforge {
             os.put('[') << err.code() << ']' << " " << err.what();
             return os;
         }
-        class Err;
-
-        ThreadError::ThreadError(std::string_view name, Scriptforge::Log::Logger& logger) :m_name(name), m_logger(logger) { m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Create a new TreadError."); }
 
         template <typename T>
         void ThreadError::threadFunc(std::exception_ptr& err, T run) {
+            try {
+                run();
+            }
+            catch (...) {
+                err = std::current_exception();
+            }
+        }
+        template <typename T>
+        void ThreadError::threadStart(T run) {
+            std::exception_ptr err;
+            std::thread t(&ThreadErrorL::threadFunc<T>, this,
+                std::ref(err), std::forward<decltype(run)>(run));
+            t.join();
+            if (err) {
+                std::rethrow_exception(err);
+            }
+        }
+
+        ThreadErrorL::ThreadErrorL(std::string_view name, Scriptforge::Log::Logger& logger) :m_name(name), m_logger(logger) { m_logger.log("[" + static_cast<std::string>(m_name) + "]" + "Create a new TreadError."); }
+
+        template <typename T>
+        void ThreadErrorL::threadFunc(std::exception_ptr& err, T run) {
             try {
                 run();
             }
@@ -75,9 +105,9 @@ namespace Scriptforge {
             }
         }
         template <typename T>
-        void ThreadError::threadStart(T run) {
+        void ThreadErrorL::threadStart(T run) {
             std::exception_ptr err;
-            std::thread t(&ThreadError::threadFunc<T>, this,
+            std::thread t(&ThreadErrorL::threadFunc<T>, this,
                 std::ref(err), std::forward<decltype(run)>(run));
             t.join();
             if (err) {
