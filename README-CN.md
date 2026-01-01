@@ -1,12 +1,16 @@
-# Scriptforge
+<center>
+  <img src="src/ScriptForge.png" alt="Scriptforge" width="100"/>
+  <h1>Scriptforge</h1>
+  <h2>一个有着许许多多奇奇怪怪功能的开源库</h2>
 
 [README主版本(English)](README.md)
 
 [更新日志](CHANGELOG-CN.md)
 
+</center>
+
 ### 🎉 项目重新开始维护！
 
-**一个有着许许多多奇奇怪怪功能的开源库**
 
 ---
 
@@ -19,6 +23,9 @@
 - BitPack0002 [函数]:where must be less than 8.
 
 ---
+
+
+
 ### 项目结构：
 ```
 Scriptforge/
@@ -35,8 +42,9 @@ Scriptforge/
 │    ├── Scriptforge.Log.ixx
 │    ├── Scriptforge.Tree.ixx
 │    └── Scriptforge.Version.ixx
-└── ScriptforgeTest/
-        └── ScriptforgeTest.cpp
+├── ScriptforgeTest/
+│    └── ScriptforgeTest.cpp
+└── src/
 
 ```
 ---

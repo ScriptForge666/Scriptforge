@@ -1,13 +1,18 @@
-# Scriptforge
+<center>
+  <img src="src/ScriptForge.png" alt="Scriptforge" width="100"/>
+  <h1>Scriptforge</h1>
+  <h2>An open-source library with many strange and wonderful features</h2>
 
 **Other Language:** [Chinese](README-CN.md)
 
 [Changelog](CHANGELOG.md)
 
+</center>
+
+
+
 
 ### 🎉 The project is back under active development!
-
-**An open-source library with many strange and wonderful features**
 
 ---
 
@@ -35,8 +40,9 @@ Scriptforge/
 │    ├── Scriptforge.Log.ixx
 │    ├── Scriptforge.Tree.ixx
 │    └── Scriptforge.Version.ixx
-└── ScriptforgeTest/
-        └── ScriptforgeTest.cpp
+├── ScriptforgeTest/
+│    └── ScriptforgeTest.cpp
+└── src/
 
 ```
 ---

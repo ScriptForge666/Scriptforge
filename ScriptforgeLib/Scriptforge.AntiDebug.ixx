@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -29,26 +29,21 @@ namespace Scriptforge {
             std::atomic<bool> stop_flag;
             std::atomic<bool> debugger;
             std::unique_ptr<std::thread> antiDebugThread;
-            std::unique_ptr<std::thread> debugStopperThread;
             std::mutex mtx;
-            std::condition_variable cv;
             void anti_debug();
-            void debug_stopper();
         };
 	}
 }
 
 namespace Scriptforge {
     inline namespace AntiDebug {
-        AntiDebugger::AntiDebugger() : stop_flag(false), debugger(false), antiDebugThread(nullptr), debugStopperThread(nullptr) {}
+        AntiDebugger::AntiDebugger() : stop_flag(false), debugger(false), antiDebugThread(nullptr) {}
         AntiDebugger::~AntiDebugger() {
             stop();
         }
         void AntiDebugger::start() {
             std::thread antiDebug(&AntiDebugger::anti_debug, this);
-            std::thread debugStopper(&AntiDebugger::debug_stopper,this);
             antiDebug.detach();
-            debugStopper.detach();
         }
         void AntiDebugger::stop() {
             stop_flag.store(true);
@@ -62,19 +57,12 @@ namespace Scriptforge {
                if (IsDebuggerPresent()) {
                     std::lock_guard<std::mutex> lock(mtx);
                     debugger.store(true);
-                    stop_flag.store(true);
-                    cv.notify_all(); // 触发 debug_stopper 线程
+                    OutputDebugString(L"Program detected debugger, performing anti-debug operations\n");
+                    TerminateProcess(GetCurrentProcess(), 1);
+                    std::exit(1);
+                    DebugBreak();
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
-        }
-        void AntiDebugger::debug_stopper() {
-            while (true) {
-                std::unique_lock<std::mutex> lock(mtx);
-                cv.wait(lock, [&] { return stop_flag.load() || debugger.load(); });
-                if (stop_flag.load() || debugger.load()) {
-                std::exit(1);
-                }
             }
         }
     }
