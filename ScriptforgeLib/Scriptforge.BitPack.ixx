@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -127,6 +127,35 @@ namespace Scriptforge {
 		void BoolBitPack::write(const size_type&& where, const value_type what) {
 			write(where, what);
 		}
+
+		BoolBitPack::value_type BoolBitPack::read(const size_type& where) const {
+			if (where >= 8)
+				throw Scriptforge::Err::Error{ "BoolBit002",std::string(__func__) + ":where must be less than 8." };
+			auto bits = std::to_integer<unsigned char>(m_bools);
+			return static_cast<value_type>(bits & (1 << where));
+		}
+		BoolBitPack::value_type BoolBitPack::read(const size_type&& where) const {
+			return read(where);
+		}
+
+		void BoolBitPack::change(const size_type& where) {
+			write(where, !read(where));
+		}
+
+		void BoolBitPack::change(const size_type&& where) {
+			change(where);
+		}
+
+		void BoolBitPack::clear(const value_type what) {
+			for (size_type i = 0; i < 8; ++i) {
+				write(i, what);
+			}
+		}
+
+		std::byte BoolBitPack::toByte() const {
+			return m_bools;
+		}
+
 		inline void BoolBitPack::set_bit(std::byte& b, size_type pos, value_type val) {
 			auto bits = std::to_integer<unsigned char>(b);
 			if (val)

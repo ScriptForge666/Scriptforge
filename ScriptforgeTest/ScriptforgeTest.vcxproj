@@ -159,6 +159,15 @@
       <Project>{ee5cc680-18b4-4ea7-8899-c8aab8ab2c6f}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CHANGELOG-CN.md" />
+    <None Include="..\CHANGELOG.md" />
+    <None Include="..\README-CN.md" />
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -57,7 +57,7 @@ namespace Scriptforge {
                if (IsDebuggerPresent()) {
                     std::lock_guard<std::mutex> lock(mtx);
                     debugger.store(true);
-                    OutputDebugString(L"Program detected debugger, performing anti-debug operations\n");
+                    OutputDebugStringA("Program detected debugger, performing anti-debug operations\n");
                     TerminateProcess(GetCurrentProcess(), 1);
                     std::exit(1);
                     DebugBreak();
