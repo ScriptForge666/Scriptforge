@@ -2,6 +2,9 @@
 
 [更新文件主版本(English)](CHANGELOG.md)
 
+# v0.1.2
+将版本系统更新到 v0.1.2，修改了[Scriptforge.Tree.ixx](ScriptforgeLib/Scriptforge.Tree.ixx)和[Scriptforge.ixx](ScriptforgeLib/Scriptforge.ixx)中的版本号。
+
 # v0.1.1
 添加了[Scriptforge.AntiDebug.ixx](ScriptforgeLib/Scriptforge.AntiDebug.ixx),实现了反调试功能。
 

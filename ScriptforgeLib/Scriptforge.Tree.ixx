@@ -86,7 +86,7 @@ export namespace Scriptforge {
             using const_reference = const value_type&;
             using size_type = std::size_t;
             using iterator = int;
-            using const_iterator = ConstTreeIterator<TreeType>;
+            using const_iterator = ConstTreeIterator<value_type>;
             using difference_type = std::ptrdiff_t;
             using allocator_type = Alloc;
             using nodeptr = std::shared_ptr<TreeNode>;
@@ -302,7 +302,7 @@ namespace Scriptforge {
 
 		//构造函数
 		template<typename TreeType>
-        explicit TreeIterator<TreeType>::TreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder)
+        TreeIterator<TreeType>::TreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order)
             : ConstTreeIterator<TreeType>(node, order) {}
 
 		//前置递增操作符

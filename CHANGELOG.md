@@ -2,6 +2,9 @@
 
 **Other Language:**[Chinese](CHANGELOG-CN.md)
 
+# v0.1.2
+Updated version system to v0.1.2 in [Scriptforge.Tree.ixx](ScriptforgeLib/Scriptforge.Tree.ixx) and [Scriptforge.ixx](ScriptforgeLib/Scriptforge.ixx)
+
 # v0.1.1
 Added [Scriptforge.AntiDebug.ixx](ScriptforgeLib/Scriptforge.AntiDebug.ixx), which implements anti-debugging features.
 

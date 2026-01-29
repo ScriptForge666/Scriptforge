@@ -15,27 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ScriptforgeTest.cpp">
+    <ClCompile Include="LogTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\CHANGELOG.md">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="..\CHANGELOG-CN.md">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="..\README.md">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="..\README-CN.md">
-      <Filter>资源文件</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\LICENSE.txt">
-      <Filter>资源文件</Filter>
-    </Text>
+    <ClInclude Include="LogTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
