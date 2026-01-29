@@ -34,10 +34,10 @@ export namespace Scriptforge {
             explicit ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
             reference operator*() const;
             pointer operator->() const;
-            ConstTreeIterator& operator++();
-            ConstTreeIterator operator++(int);
-            bool operator==(const ConstTreeIterator& other) const;
-            bool operator!=(const ConstTreeIterator& other) const;
+            ConstTreeIterator<TreeType>& operator++();
+            ConstTreeIterator<TreeType> operator++(int);
+            bool operator==(const ConstTreeIterator<TreeType>& other) const;
+            bool operator!=(const ConstTreeIterator<TreeType>& other) const;
             TreeType::nodeptr current_node() const;
         private:
             typename TreeType::nodeptr m_current_node;
@@ -56,6 +56,25 @@ export namespace Scriptforge {
         };
 
         export
+            template <typename TreeType>
+		class TreeIterator : ConstTreeIterator<TreeType> {
+        public:
+            using value_type = typename TreeType::value_type;
+            using reference = const value_type&;
+            using pointer = const value_type*;
+            using size_type = std::size_t;
+            using difference_type = std::ptrdiff_t;
+            using iterator_category = std::forward_iterator_tag;
+            TreeIterator() = default;
+            explicit TreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
+            TreeIterator<TreeType>& operator++();
+            TreeIterator<TreeType> operator++(int);
+            bool operator==(const ConstTreeIterator<TreeType>& other) const;
+            bool operator!=(const ConstTreeIterator<TreeType>& other) const;
+        private:
+        };
+
+        export
             template<typename T, typename Alloc = std::allocator<T>>
             requires requires(T t1, T t2) { t1 = t2; }
         class Tree {
@@ -67,7 +86,7 @@ export namespace Scriptforge {
             using const_reference = const value_type&;
             using size_type = std::size_t;
             using iterator = int;
-            using const_iterator = ConstTreeIterator;
+            using const_iterator = ConstTreeIterator<TreeType>;
             using difference_type = std::ptrdiff_t;
             using allocator_type = Alloc;
             using nodeptr = std::shared_ptr<TreeNode>;
@@ -163,12 +182,12 @@ namespace Scriptforge {
         }
         //相等比较操作符
         template<typename TreeType>
-        bool ConstTreeIterator<TreeType>::operator==(const ConstTreeIterator& other) const {
+        bool ConstTreeIterator<TreeType>::operator==(const ConstTreeIterator<TreeType>& other) const {
             return m_current_node == other.m_current_node;
         }
         //不等比较操作符
         template<typename TreeType>
-        bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator& other) const {
+        bool ConstTreeIterator<TreeType>::operator!=(const ConstTreeIterator<TreeType>& other) const {
             return !(*this == other);
         }
         //返回树指针
@@ -210,7 +229,7 @@ namespace Scriptforge {
                     break;
                 }
 
-                temp = father; // 继续向上回溯
+                temp = father;
             }
 
             if (!temp) {
@@ -238,26 +257,21 @@ namespace Scriptforge {
             while (temp) {
                 auto father = temp->father.lock();
                 if (!father) {
-                    // 到达根节点，遍历结束
                     m_current_node = nullptr;
                     return;
                 }
-
                 auto& siblings = father->children;
                 auto it = std::find(siblings.begin(), siblings.end(), temp);
                 if (it != siblings.end()) {
-                    ++it; // 移动到下一个兄弟
+                    ++it;
                     if (it != siblings.end()) {
-                        // 找到下一个兄弟，需要找到该兄弟子树的最左节点
                         m_current_node = *it;
-                        // 一直往下找最左边的叶子节点
                         while (!m_current_node->children.empty()) {
                             m_current_node = m_current_node->children.front();
                         }
                         return;
                     }
                     else {
-                        // 当前是父节点的最后一个子节点，访问父节点
                         m_current_node = father;
                         return;
                     }
@@ -272,19 +286,38 @@ namespace Scriptforge {
         template <typename TreeType>
         void ConstTreeIterator<TreeType>::advance_levelorder() {
             if (!m_queue.empty())
-                m_queue.pop();                         // ① 弹出已访问的节点
-
-            if (m_current_node) {                      // ② 把子节点压入队列
+                m_queue.pop();
+            if (m_current_node) {
                 for (const auto& child : m_current_node->children) {
                     if (child) m_queue.push(child);
                 }
             }
-
-            // ③ 设置下一个节点（或结束遍历）
             if (!m_queue.empty())
                 m_current_node = m_queue.front();
             else
                 m_current_node = nullptr;
+        }
+
+		//TreeIterator实现部分
+
+		//构造函数
+		template<typename TreeType>
+        explicit TreeIterator<TreeType>::TreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder)
+            : ConstTreeIterator<TreeType>(node, order) {}
+
+		//前置递增操作符
+		template<typename TreeType>
+        TreeIterator<TreeType>&
+            TreeIterator<TreeType>::operator++() {
+            ConstTreeIterator<TreeType>::operator++();
+            return *this;
+		}
+		template<typename TreeType>
+        TreeIterator<TreeType>
+            TreeIterator<TreeType>::operator++(int) {
+            TreeIterator temp = *this;
+            ++(*this);
+            return temp;
         }
 
         //Tree<T>实现部分
