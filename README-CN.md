@@ -32,8 +32,8 @@ Scriptforge/
 ├── Scriptforge.sln
 ├── README.md
 ├── README-CN.md
-├── UpdateLog.md
-├── UpdateLog-CN.md
+├── CHANGELOG.md
+├── CHANGELOG-CN.md
 ├── ScriptforgeLib/
 │    ├── Scriptforge.ixx
 │    ├── Scriptforge.AntiDebug.ixx
