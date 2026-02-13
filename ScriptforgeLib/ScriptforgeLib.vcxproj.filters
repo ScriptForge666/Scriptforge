@@ -37,4 +37,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CHANGELOG.md">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\CHANGELOG-CN.md">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\README-CN.md">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\更新方向.md">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

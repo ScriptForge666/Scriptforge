@@ -27,6 +27,13 @@
     <ClCompile Include="Scriptforge.Tree.ixx" />
     <ClCompile Include="Scriptforge.Version.ixx" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CHANGELOG-CN.md" />
+    <None Include="..\CHANGELOG.md" />
+    <None Include="..\README-CN.md" />
+    <None Include="..\README.md" />
+    <None Include="..\更新方向.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
