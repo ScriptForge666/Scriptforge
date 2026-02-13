@@ -81,6 +81,7 @@ namespace Scriptforge {
 
 		std::ostream& operator<<(std::ostream& os, const Msg& msg) {
 			os << msg.getMessage();
+			return os;
 		}
 
 		void Logger::process() {

@@ -41,9 +41,6 @@
     <ClCompile Include="Scriptforge.Local.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="json.ixx">
-      <Filter>头文件</Filter>
-    </ClCompile>
     <ClCompile Include="Scriptforge.ThreadError.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="..\LICENSE.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="json.ixx" />
     <ClCompile Include="Scriptforge.AntiDebug.ixx" />
     <ClCompile Include="Scriptforge.BitPack.ixx" />
     <ClCompile Include="Scriptforge.Err.ixx" />
@@ -40,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt" />
+    <Text Include="..\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="json.hpp">
@@ -147,6 +147,7 @@
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
       <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -166,7 +167,8 @@
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
+      <AdditionalHeaderUnitDependencies>
+      </AdditionalHeaderUnitDependencies>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
