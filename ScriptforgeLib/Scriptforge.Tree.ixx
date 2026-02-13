@@ -11,6 +11,7 @@
 export module Scriptforge.Tree;
 
 import Scriptforge.Err;
+import Scriptforge.ErrCode;
 import std;
 
 export namespace Scriptforge {
@@ -25,15 +26,16 @@ export namespace Scriptforge {
         class ConstTreeIterator {
         public:
             using value_type = typename TreeType::value_type;
-            using reference = const value_type&;
-            using pointer = const value_type*;
+            using reference = value_type&;
+            using const_reference = const reference;
+            using const_pointer = const value_type*;
             using size_type = std::size_t;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::forward_iterator_tag;
             ConstTreeIterator() = default;
             explicit ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
-            reference operator*() const;
-            pointer operator->() const;
+            const_reference operator*() const;
+            const_pointer operator->() const;
             ConstTreeIterator<TreeType>& operator++();
             ConstTreeIterator<TreeType> operator++(int);
             bool operator==(const ConstTreeIterator<TreeType>& other) const;
@@ -60,17 +62,17 @@ export namespace Scriptforge {
 		class TreeIterator : ConstTreeIterator<TreeType> {
         public:
             using value_type = typename TreeType::value_type;
-            using reference = const value_type&;
-            using pointer = const value_type*;
+            using reference = value_type&;
+            using pointer = value_type*;
             using size_type = std::size_t;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::forward_iterator_tag;
             TreeIterator() = default;
             explicit TreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
+			reference operator*();
+			pointer operator->();
             TreeIterator<TreeType>& operator++();
             TreeIterator<TreeType> operator++(int);
-            bool operator==(const ConstTreeIterator<TreeType>& other) const;
-            bool operator!=(const ConstTreeIterator<TreeType>& other) const;
         private:
         };
 
@@ -145,13 +147,13 @@ namespace Scriptforge {
         }
         //解引用操作符
         template<typename TreeType>
-        typename ConstTreeIterator<TreeType>::reference
+        typename ConstTreeIterator<TreeType>::const_reference
             ConstTreeIterator<TreeType>::operator*() const {
             return m_current_node->node;
         }
         //箭头操作符
         template<typename TreeType>
-        typename ConstTreeIterator<TreeType>::pointer
+        typename ConstTreeIterator<TreeType>::const_pointer
             ConstTreeIterator<TreeType>::operator->() const {
             return &(m_current_node->node);
         }
@@ -298,6 +300,19 @@ namespace Scriptforge {
                 m_current_node = nullptr;
         }
 
+        //TreeIterator实现
+		template<typename TreeType>
+        typename TreeIterator<TreeType>::reference
+            TreeIterator<TreeType>::operator*() {
+            return const_cast<typename TreeType::reference>(ConstTreeIterator<TreeType>::operator*());
+		}
+        
+        template<typename TreeType>
+        typename TreeIterator<TreeType>::pointer
+            TreeIterator<TreeType>::operator->() {
+            return const_cast<typename TreeType::pointer>(ConstTreeIterator<TreeType>::operator->());
+		}
+
 		//TreeIterator实现部分
 
 		//构造函数
@@ -367,16 +382,16 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
-            if (!node) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
+            if (!node) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
             nodeptr father = node->father.lock();
             if (!father) {
-                if (node != m_root) throw Scriptforge::Err::Error{ "Tree0003", std::string(__func__) + ":Orphaned node" };
+                if (node != m_root) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::Tree0003), std::string(__func__) + ":Orphaned node" };
                 else m_root.reset();
                 return nullptr;
             }
             auto& vec = father->children;
             auto it = std::find(vec.begin(), vec.end(), node);
-            if (it == vec.end()) throw Scriptforge::Err::Error{ "Tree0001", std::string(__func__) + ":Node not found" };
+            if (it == vec.end()) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::Tree0001), std::string(__func__) + ":Node not found"};
 
             vec.erase(it);
             return father;
@@ -386,7 +401,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father) {
-            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
+            if (!father) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
             nodeptr newnode = create_node(T());
             newnode->father = father;
             father->children.push_back(newnode);
@@ -396,7 +411,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, T& node) {
-            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
+            if (!father) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
@@ -406,7 +421,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, const T& node) {
-            if (!father) throw Scriptforge::Err::Error{ "Tree0002", std::string(__func__) + ":Empty node" };
+            if (!father) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);

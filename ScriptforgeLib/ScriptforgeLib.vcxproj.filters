@@ -36,6 +36,9 @@
     <ClCompile Include="Scriptforge.AntiDebug.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptForge.ErrCode.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CHANGELOG.md">

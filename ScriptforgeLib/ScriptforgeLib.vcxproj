@@ -22,6 +22,7 @@
     <ClCompile Include="Scriptforge.AntiDebug.ixx" />
     <ClCompile Include="Scriptforge.BitPack.ixx" />
     <ClCompile Include="Scriptforge.Err.ixx" />
+    <ClCompile Include="ScriptForge.ErrCode.ixx" />
     <ClCompile Include="Scriptforge.ixx" />
     <ClCompile Include="Scriptforge.Log.ixx" />
     <ClCompile Include="Scriptforge.Tree.ixx" />
