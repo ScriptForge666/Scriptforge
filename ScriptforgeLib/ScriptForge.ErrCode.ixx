@@ -10,7 +10,6 @@ namespace Scriptforge::ErrCode {
 		Log0001 = 20002,       // Log0001: Cannot open log file
 		BitPack0001 = 30001, //BitPack0001: Invalid size for packing
 		BitPack0002 = 30002, //BitPack0002: Value too large to pack
-		ErrCode0001 = 00001, //ErrCode0001: Unknown error code type
 	};
 	std::string toString(ErrCode code) {
 		std::string result;
