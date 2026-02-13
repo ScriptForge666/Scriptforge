@@ -19,12 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="json.ixx" />
     <ClCompile Include="Scriptforge.AntiDebug.ixx" />
     <ClCompile Include="Scriptforge.BitPack.ixx" />
     <ClCompile Include="Scriptforge.Err.ixx" />
-    <ClCompile Include="ScriptForge.ErrCode.ixx" />
+    <ClCompile Include="Scriptforge.ErrCode.ixx" />
     <ClCompile Include="Scriptforge.ixx" />
+    <ClCompile Include="Scriptforge.Local.ixx" />
     <ClCompile Include="Scriptforge.Log.ixx" />
+    <ClCompile Include="Scriptforge.ThreadError.ixx" />
     <ClCompile Include="Scriptforge.Tree.ixx" />
     <ClCompile Include="Scriptforge.Version.ixx" />
   </ItemGroup>
@@ -34,6 +37,14 @@
     <None Include="..\README-CN.md" />
     <None Include="..\README.md" />
     <None Include="..\更新方向.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\LICENSE-THIRD-PARTY.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="json.hpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsHeaderUnit</CompileAs>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -98,6 +109,7 @@
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
       <PrecompiledHeaderFile />
+      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -117,6 +129,7 @@
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
       <PrecompiledHeaderFile />
+      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -133,6 +146,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
+      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -152,6 +166,7 @@
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -1,4 +1,4 @@
-export module ScriptForge.ErrCode;
+export module Scriptforge.ErrCode;
 import std;
 import Scriptforge.Err;
 
@@ -10,8 +10,9 @@ namespace Scriptforge::ErrCode {
 		Log0001 = 20002,       // Log0001: Cannot open log file
 		BitPack0001 = 30001, //BitPack0001: Invalid size for packing
 		BitPack0002 = 30002, //BitPack0002: Value too large to pack
+		Local0001 = 40001    // Local0001: Language file not found
 	};
-	std::string toString(ErrCode code) {
+	export std::string toString(ErrCode code) {
 		std::string result;
 		int codeType = static_cast<int>(code) / 10000;
 		switch (codeType) {
@@ -26,6 +27,9 @@ namespace Scriptforge::ErrCode {
 			break;
 		case 3:
 			result += "BitPack";
+			break;
+		case 4:
+			result += "Local";
 			break;
 		default:
 			return "Unknown error";
