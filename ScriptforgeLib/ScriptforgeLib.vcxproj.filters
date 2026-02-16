@@ -47,6 +47,12 @@
     <ClCompile Include="json.hpp">
       <Filter>头文件</Filter>
     </ClCompile>
+    <ClCompile Include="Scriptforge.RingBuffer.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.ErrCode.throwTreeError.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CHANGELOG.md">
@@ -62,6 +68,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="..\更新方向.md">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lang\en-US.json">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lang\zh-CN.json">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

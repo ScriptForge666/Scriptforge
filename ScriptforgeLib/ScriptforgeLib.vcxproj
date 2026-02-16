@@ -23,9 +23,11 @@
     <ClCompile Include="Scriptforge.BitPack.ixx" />
     <ClCompile Include="Scriptforge.Err.ixx" />
     <ClCompile Include="Scriptforge.ErrCode.ixx" />
+    <ClCompile Include="Scriptforge.ErrCode.throwTreeError.ixx" />
     <ClCompile Include="Scriptforge.ixx" />
     <ClCompile Include="Scriptforge.Local.ixx" />
     <ClCompile Include="Scriptforge.Log.ixx" />
+    <ClCompile Include="Scriptforge.RingBuffer.ixx" />
     <ClCompile Include="Scriptforge.ThreadError.ixx" />
     <ClCompile Include="Scriptforge.Tree.ixx" />
     <ClCompile Include="Scriptforge.Version.ixx" />
@@ -36,6 +38,8 @@
     <None Include="..\README-CN.md" />
     <None Include="..\README.md" />
     <None Include="..\更新方向.md" />
+    <None Include="lang\en-US.json" />
+    <None Include="lang\zh-CN.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt" />

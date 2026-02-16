@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -100,7 +100,7 @@ namespace Scriptforge {
 			m_file = fs::path(filename);
 			logFile.open(m_file);
 			if (!logFile.is_open()) {
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Log0001), "Cannot open log file: " + filename };
+				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile), "Cannot open log file: " + filename };
 			}
 			logThread = std::thread(&Logger::process, this);
 		}
@@ -111,7 +111,7 @@ namespace Scriptforge {
 			m_file = fs::path(filename);
 			logFile.open(m_file);
 			if (!logFile.is_open()) {
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Log0001), "Cannot open log file: " + filename };
+				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile), "Cannot open log file: " + filename };
 			}
 			logThread = std::thread(&Logger::process, this);
 		}

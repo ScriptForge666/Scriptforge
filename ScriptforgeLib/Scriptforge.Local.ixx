@@ -1,3 +1,13 @@
+// Copyright 2026 Scriptforge
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//     http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 export module Scriptforge.Local;
 
 import Scriptforge.Err;
@@ -101,8 +111,8 @@ namespace Scriptforge{
 
                 if (!jsoninput.is_open()) {
                     throw Scriptforge::Error{
-                        Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Local0001),
-                        notfound(m_loc)
+                        Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LocalLanguageFileNotFound),
+                        notfound(m_loc, m_lang_path)
                     };
                 }
 
@@ -111,18 +121,26 @@ namespace Scriptforge{
                 }
                 catch (const json::parse_error& e) {
                     throw Scriptforge::Error{
-                        Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Local0001),
-                        "Failed to parse language file: " + std::string(e.what())
+                        Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LocalLanguageFileNotFound),
+                        notParseFile(m_loc)
                     };
                 }
             }
 
-            std::string notfound(const std::locale& loc) {
+            std::string notfound(const std::locale& loc, const fs::path path) {
                 if (loc.name().find("zh-CN") != std::string::npos)
                     return "无法找到lang/" + loc.name() + ".json";
                 else
                     return "cannot find lang/" + loc.name() + ".json";
             }
+
+			std::string notParseFile(const std::locale& loc) {
+                if (loc.name().find("zh-CN") != std::string::npos)
+                    return "无法解析语言文件: " + loc.name() + ".json";
+                else
+                    return "Failed to parse language file: " + loc.name() + ".json";
+            }
+
             std::locale m_loc;
             fs::path m_lang_path;
             json j;

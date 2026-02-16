@@ -1,4 +1,4 @@
-// Copyright 2025 Scriptforge
+// Copyright 2025-2026 Scriptforge
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -12,6 +12,7 @@ export module Scriptforge.Tree;
 
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.Local;
 import std;
 
 export namespace Scriptforge {
@@ -87,14 +88,14 @@ export namespace Scriptforge {
             using reference = value_type&;
             using const_reference = const value_type&;
             using size_type = std::size_t;
-            using iterator = int;
-            using const_iterator = ConstTreeIterator<value_type>;
+            using iterator = TreeIterator<Tree<value_type, Alloc>>;
+            using const_iterator = ConstTreeIterator<Tree<value_type, Alloc>>;
             using difference_type = std::ptrdiff_t;
             using allocator_type = Alloc;
             using nodeptr = std::shared_ptr<TreeNode>;
 
             //构造函数
-            Tree(const allocator_type& alloc = allocator_type());
+            Tree(const allocator_type& alloc = allocator_type(), Scriptforge::Lang lang = Lang{});
             explicit Tree(const T& node, const allocator_type& alloc = allocator_type());
             Tree(const Tree<T, Alloc>& other);
 
@@ -105,8 +106,12 @@ export namespace Scriptforge {
             nodeptr add(nodeptr father);
             nodeptr add(nodeptr father, T& node);
             nodeptr add(nodeptr father, const T& node);
+            
+            void setLang(Scriptforge::Lang lang);         //设置语言
 
-            allocator_type get_allocator() const noexcept;     //返回分配器
+            Scriptforge::Lang getLang() const noexcept;      //返回语言
+
+            allocator_type getAllocator() const noexcept;     //返回分配器
 
         private:
             struct TreeNode
@@ -120,6 +125,7 @@ export namespace Scriptforge {
                 T node;
             };
 
+            Scriptforge::Lang m_lang;
             nodeptr m_root;
             allocator_type alloc_;
 
@@ -337,11 +343,11 @@ namespace Scriptforge {
 
         //Tree<T>实现部分
 
-            //构造函数
+        //构造函数
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
-        Tree<T, Alloc>::Tree(const allocator_type& alloc)
-            : alloc_(alloc) {
+        Tree<T, Alloc>::Tree(const allocator_type& alloc, Scriptforge::Lang lang)
+            : alloc_(alloc), m_lang(lang) {
             m_root = create_node(T());
         }
 
@@ -382,16 +388,16 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
-            if (!node) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
+			if (!node) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr father = node->father.lock();
             if (!father) {
-                if (node != m_root) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Tree0003), std::string(__func__) + ":Orphaned node" };
+                if (node != m_root) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeOrphanedNode, __func__, m_lang);
                 else m_root.reset();
                 return nullptr;
             }
             auto& vec = father->children;
             auto it = std::find(vec.begin(), vec.end(), node);
-            if (it == vec.end()) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Tree0001), std::string(__func__) + ":Node not found"};
+			if (it == vec.end()) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeInvalidNode, __func__, m_lang);
 
             vec.erase(it);
             return father;
@@ -401,7 +407,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father) {
-            if (!father) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
+			if (!father) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(T());
             newnode->father = father;
             father->children.push_back(newnode);
@@ -411,7 +417,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, T& node) {
-            if (!father) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
+			if (!father) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
@@ -421,17 +427,32 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, const T& node) {
-            if (!father) throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::Tree0002), std::string(__func__) + ":Empty node" };
+			if (!father) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
             return newnode;
         }
 
+        //设置语言
+        template<typename T, typename Alloc>
+            requires requires(T t1, T t2) { t1 = t2; }
+        void Tree<T, Alloc>::setLang(Scriptforge::Lang lang) {
+            m_lang.setLocale(lang.getLocale());
+        }
+
+        //返回语言
+        template<typename T, typename Alloc>
+            requires requires(T t1, T t2) { t1 = t2; }
+        Scriptforge::Lang Tree<T, Alloc>::getLang() const noexcept {
+            return m_lang;
+        }
+
+
         //返回分配器
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
-        typename Tree<T, Alloc>::allocator_type Tree<T, Alloc>::get_allocator() const noexcept {
+        typename Tree<T, Alloc>::allocator_type Tree<T, Alloc>::getAllocator() const noexcept {
             return alloc_;
         }
 
