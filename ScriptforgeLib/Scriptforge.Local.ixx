@@ -12,9 +12,9 @@ export module Scriptforge.Local;
 
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.LanguageCode;
 import "json.hpp";
 import std;
-
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
@@ -23,7 +23,8 @@ namespace Scriptforge{
         export class Lang {
         public:
             // 构造函数
-            Lang(std::locale loc = std::locale{}, fs::path path = { "lang/" }) : m_loc{ loc }, m_lang_path{ path } {
+            Lang(std::string loc, fs::path path = { "lang/" }) : m_lang_path{ path } {
+				m_loc = getLanguageId(loc);
                 loadLanguageFile(path);
             }
             // 重新加载语言文件
@@ -31,12 +32,12 @@ namespace Scriptforge{
                 loadLanguageFile(m_lang_path);
             }
             // 切换到另一个语言
-            void setLocale(const std::locale& loc) {
-                m_loc = loc;
+            void setLocale(const std::string loc) {
+                m_loc = getLanguageId(loc);
                 loadLanguageFile(m_lang_path);
             }
             // 获取当前语言环境
-            std::locale getLocale() const { return m_loc; }
+            int getLocaleId() const { return m_loc; }
 
             //获取语言目录
             fs::path getLangPath() const { return m_lang_path; }
@@ -48,9 +49,16 @@ namespace Scriptforge{
             }
 
             // 获取语言名称（用于显示）
-            std::string getLanguageName() const {
-                return j.value("language_name", m_loc.name());
+            std::string getLanguageNameL() const {
+                return j.value("language_name", getLanguageName(m_loc));
             }
+
+            std::string getLanguageName() const {
+				return getLanguageName(m_loc);
+            }
+           
+
+
             // 基本文本获取
             std::string get(const std::string& key) const {
                 return j.value(key, key); // 默认返回key本身
@@ -106,7 +114,7 @@ namespace Scriptforge{
 
         private:
             void loadLanguageFile(fs::path path) {
-                fs::path filename = m_lang_path / (m_loc.name() + ".json");
+                fs::path filename = m_lang_path / (getLanguageName(m_loc) + ".json");
                 std::ifstream jsoninput{ filename };
 
                 if (!jsoninput.is_open()) {
@@ -127,21 +135,55 @@ namespace Scriptforge{
                 }
             }
 
-            std::string notfound(const std::locale& loc, const fs::path path) {
-                if (loc.name().find("zh-CN") != std::string::npos)
-                    return "无法找到lang/" + loc.name() + ".json";
-                else
-                    return "cannot find lang/" + loc.name() + ".json";
+            int getLanguageId(const std::string& loc) const {
+                auto it = LanguageCode::ISO639_1_TO_ID.find(loc);
+                if (it != LanguageCode::ISO639_1_TO_ID.end()) {
+                    return it->second;
+                }
+                else {
+                    throw Scriptforge::Error{
+                        Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode),
+                        invalidLanguageName(loc)
+                    };
+                }
             }
 
-			std::string notParseFile(const std::locale& loc) {
-                if (loc.name().find("zh-CN") != std::string::npos)
-                    return "无法解析语言文件: " + loc.name() + ".json";
-                else
-                    return "Failed to parse language file: " + loc.name() + ".json";
+            std::string getLanguageName(int id) const {
+                auto it = LanguageCode::ID_TO_ISO639_1.find(id);
+                if (it != LanguageCode::ID_TO_ISO639_1.end()) {
+                    return it->second;
+                }
+                else {
+                    throw Scriptforge::Error{
+                        Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode),
+                        invalidLanguageId(id)
+                    };
+                }
             }
 
-            std::locale m_loc;
+            std::string notfound(const int loc, const fs::path path) const {
+                if (loc == getLanguageId("zh"))
+                    return "无法找到" + getLanguageName(loc) + ".json";
+                else
+                    return "cannot find " + getLanguageName(loc) + ".json";
+            }
+
+            std::string notParseFile(const int loc) const {
+                if (loc == getLanguageId("zh"))
+                    return "无法解析语言文件: " + getLanguageName(loc) + ".json";
+                else
+                    return "Failed to parse language file: " + getLanguageName(loc) + ".json";
+            }
+
+            std::string invalidLanguageId(const int& loc) const {
+                return "Invalid language code: " + loc;
+			}
+
+            std::string invalidLanguageName(const std::string& name) const {
+                return "Invalid language ID: " + name;
+			}
+
+            int m_loc;
             fs::path m_lang_path;
             json j;
         };

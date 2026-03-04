@@ -388,16 +388,16 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
-			if (!node) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
+			if (!node) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr father = node->father.lock();
             if (!father) {
-                if (node != m_root) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeOrphanedNode, __func__, m_lang);
+                if (node != m_root) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeOrphanedNode, __func__, m_lang);
                 else m_root.reset();
                 return nullptr;
             }
             auto& vec = father->children;
             auto it = std::find(vec.begin(), vec.end(), node);
-			if (it == vec.end()) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeInvalidNode, __func__, m_lang);
+			if (it == vec.end()) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeInvalidNode, __func__, m_lang);
 
             vec.erase(it);
             return father;
@@ -407,7 +407,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father) {
-			if (!father) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
+			if (!father) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(T());
             newnode->father = father;
             father->children.push_back(newnode);
@@ -417,7 +417,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, T& node) {
-			if (!father) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
+			if (!father) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
@@ -427,7 +427,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, const T& node) {
-			if (!father) Scriptforge::ErrCode::throwTreeError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
+			if (!father) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(node);
             newnode->father = father;
             father->children.push_back(newnode);
@@ -438,7 +438,7 @@ namespace Scriptforge {
         template<typename T, typename Alloc>
             requires requires(T t1, T t2) { t1 = t2; }
         void Tree<T, Alloc>::setLang(Scriptforge::Lang lang) {
-            m_lang.setLocale(lang.getLocale());
+            m_lang.setLocale(lang.getLanguageName());
         }
 
         //返回语言

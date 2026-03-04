@@ -27,6 +27,7 @@ namespace Scriptforge::ErrCode {
 		BitPackInvalidSizeForPacking = 30001, //BitPack0001: Invalid size for packing
 		BitPackValueTooLargeToPack = 30002, //BitPack0002: Value too large to pack
 		LocalLanguageFileNotFound = 40001,    // Local0001: Language file not found
+		LocalInvalidLanguageCode = 40002,     // Local0002: Invalid language code
 		RingBufferCapacityBeZero = 50001        // RingBuffer0001: Capacity must be greater than 0
 	};
 	export std::string toString(ErrCode code) {
@@ -56,7 +57,7 @@ namespace Scriptforge::ErrCode {
 		result += std::to_string(static_cast<int>(code) % 10000);
 		return result;
 	}
-	export [[noreturn]] void throwTreeError(
+	export [[noreturn]] void throwError(
 		ErrCode code,
 		const std::string& func,
 		const Scriptforge::Local::Lang& lang,

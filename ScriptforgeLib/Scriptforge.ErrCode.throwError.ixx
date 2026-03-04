@@ -16,14 +16,14 @@ import std;
 
 
 namespace Scriptforge::ErrCode {
-    void throwTreeError(
+    void throwError(
         ErrCode code,
         const std::string& func,
         const Scriptforge::Local::Lang& lang,
         const std::vector <std::string> args
     ) {
 
-        Scriptforge::Local::Lang default_en_lang{ std::locale{"en-US"}, lang.getLangPath() };
+        Scriptforge::Local::Lang default_en_lang{ "en", lang.getLangPath() };
 
         std::string default_en_msg = default_en_lang.get(std::to_string(static_cast<int>(code)), toString(code));
 
