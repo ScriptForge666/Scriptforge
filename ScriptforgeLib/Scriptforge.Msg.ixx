@@ -12,12 +12,15 @@ namespace Scriptforge {
 			Critical
 		};
 
-		export 
-			template <typename T =std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
+		template <typename T , typename Clock>
+		concept MessageRequires = requires(T t1, T t2, Clock c) {
 			t1 = t2;
 			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+		};
+
+		export 
+			template <typename T =std::string, typename Clock = std::chrono::system_clock>
+			requires MessageRequires<T, Clock>
 		class Message {
 		public:
 			using TimePoint = typename Clock::time_point;
@@ -41,51 +44,33 @@ namespace Scriptforge {
 	inline namespace Msg {
 
 		template <typename T = std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+			requires MessageRequires<T, Clock>
 		Message<T, Clock>::Message(const T& msg, InformationLevel level, TimePoint tp) : m_msg(msg), m_level(level), m_time(tp) {}
 		
 		template <typename T = std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+			requires MessageRequires<T, Clock>
 		Message<T, Clock>::Message(const T&& msg, InformationLevel level, TimePoint tp) : m_msg(msg), m_level(level), m_time(tp) {}
 		
 		template <typename T = std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+			requires MessageRequires<T, Clock>
 		T Message<T, Clock>::getMessage() const {
 			return m_msg;
 		}
 
 		template <typename T = std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+			requires MessageRequires<T, Clock>
 		InformationLevel Message<T, Clock>::getLevel() const {
 			return m_level;
 		}
 
 		template <typename T = std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+			requires MessageRequires<T, Clock>
 		Message<T, Clock>::TimePoint Message<T, Clock>::getTime() const {
 			return m_time;
 		}
 
 		template <typename T = std::string, typename Clock = std::chrono::system_clock>
-			requires requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		}
+			requires MessageRequires<T, Clock>
 		std::ostream& operator<<(std::ostream& os, const Message<T, Clock>& msg) {
 			os << msg.getMessage();
 			return os;

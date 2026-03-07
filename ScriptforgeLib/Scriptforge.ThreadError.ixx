@@ -18,7 +18,7 @@ import std;
 namespace Scriptforge {
     inline namespace Err {
         export
-            template <bool Async = false>  // 给ThreadError也加上异步开关
+            template <bool Async = false>
         class ThreadError {
         public:
             ThreadError() = default;
@@ -42,15 +42,20 @@ namespace Scriptforge {
             std::exception_ptr m_storedException;
         };
 
+        template <typename T, //it only supports string type for now, but you can change it to any type that supports assignment 
+            typename Clock,
+            bool Async>
+		concept ThreadErrorLRequires = requires(T t1, T t2, Clock c) {
+            t1 = t2;
+			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
+            t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
+		};
+
         export
 			template <typename T = std::string, //it only supports string type for now, but you can change it to any type that supports assignment 
             typename Clock = std::chrono::system_clock,
             bool Async = false>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-			t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-        }
+			requires ThreadErrorLRequires<T, Clock, Async>
         class ThreadErrorL {
         public:
             ThreadErrorL(std::string_view name, Scriptforge::Log::Logger<T, Clock>& logger);
@@ -177,11 +182,7 @@ namespace Scriptforge::Err {
 
     // ThreadErrorL 实现（保持与之前类似）
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-		t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     ThreadErrorL<T, Clock, Async>::ThreadErrorL(std::string_view name,
         Scriptforge::Log::Logger<T, Clock>& logger)
         : m_name(name), m_logger(logger)
@@ -191,11 +192,7 @@ namespace Scriptforge::Err {
     }
 
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-		t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     ThreadErrorL<T, Clock, Async>::~ThreadErrorL() {
         if constexpr (Async) {
             if (m_isRunning) {
@@ -212,11 +209,7 @@ namespace Scriptforge::Err {
     }
 
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-		t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     template <typename U>
     void ThreadErrorL<T, Clock, Async>::threadFunc(std::exception_ptr& err, U run) {
         m_isRunning = true;
@@ -252,11 +245,7 @@ namespace Scriptforge::Err {
     }
 
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-		t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     template <typename U>
     void ThreadErrorL<T, Clock, Async>::threadStart(U run) {
         std::exception_ptr err;
@@ -286,11 +275,7 @@ namespace Scriptforge::Err {
     }
 
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-		t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     void ThreadErrorL<T, Clock, Async>::waitForCompletion() {
         static_assert(Async, "waitForCompletion() is only available in async mode");
 
@@ -307,21 +292,13 @@ namespace Scriptforge::Err {
     }
 
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     bool ThreadErrorL<T, Clock, Async>::isRunning() const {
         return m_isRunning;
     }
 
     template <typename T, typename Clock, bool Async>
-        requires requires(T t1, T t2, Clock c) {
-        t1 = t2;
-        { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-    }
+        requires ThreadErrorLRequires<T, Clock, Async>
     std::future<void> ThreadErrorL<T, Clock, Async>::getFuture() {
         static_assert(Async, "getFuture() is only available in async mode");
         return m_completionPromise.get_future();
