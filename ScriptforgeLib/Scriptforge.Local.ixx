@@ -23,7 +23,7 @@ namespace Scriptforge{
         export class Lang {
         public:
             // 构造函数
-            Lang(std::string loc, fs::path path = { "lang/" }) : m_lang_path{ path } {
+            Lang(std::string loc = {"en"}, fs::path path = {"lang/"}) : m_lang_path{path} {
 				m_loc = getLanguageId(loc);
                 loadLanguageFile(path);
             }

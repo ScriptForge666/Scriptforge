@@ -12,6 +12,7 @@ export module Scriptforge.BitPack;
 
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.Local;
 import std;
 
 export namespace Scriptforge {
@@ -22,8 +23,8 @@ export namespace Scriptforge {
 			using size_type = std::size_t;
 			using classItself = BoolBitPack;
 			BoolBitPack() = default;
-			BoolBitPack(const classItself& src) = default;
-			BoolBitPack(classItself&&) = default;
+			BoolBitPack(const BoolBitPack& src) = default;
+			BoolBitPack(BoolBitPack&&) = default;
 			explicit BoolBitPack(const value_type bool1,
 				const value_type bool2,
 				const value_type bool3,
@@ -31,13 +32,14 @@ export namespace Scriptforge {
 				const value_type bool5,
 				const value_type bool6,
 				const value_type bool7,
-				const value_type bool8);
-			explicit BoolBitPack(const std::span<bool> src);
-			classItself& operator=(const classItself& rhs);
+				const value_type bool8,
+				Scriptforge::Lang lang = Scriptforge::Lang{});
+			explicit BoolBitPack(const std::span<bool> src, Scriptforge::Lang lang = Scriptforge::Lang{});
+			classItself& operator=(const BoolBitPack& rhs);
 			classItself& operator=(const std::span<bool> rhs);
-			bool operator==(const classItself& rhs) const = default;
+			bool operator==(const BoolBitPack& rhs) const = default;
 			bool operator==(const std::span<bool> rhs) const;
-			bool operator!=(const classItself& rhs) const = default;
+			bool operator!=(const BoolBitPack& rhs) const = default;
 			bool operator!=(const std::span<bool> rhs) const;
 			value_type operator[](size_type x);
 			const value_type operator[](size_type x) const;
@@ -52,6 +54,7 @@ export namespace Scriptforge {
 		private:
 			inline void set_bit(std::byte& b, size_type pos, value_type val);
 			std::byte m_bools{ std::byte{ 0 } };
+			Scriptforge::Lang m_lang;
 		};
 	}
 }
@@ -65,7 +68,8 @@ namespace Scriptforge {
 			const value_type bool5,
 			const value_type bool6,
 			const value_type bool7,
-			const value_type bool8) {
+			const value_type bool8,
+			Scriptforge::Lang lang) {
 			write(0, bool1);
 			write(1, bool2);
 			write(2, bool3);
@@ -74,24 +78,25 @@ namespace Scriptforge {
 			write(5, bool6);
 			write(6, bool7);
 			write(7, bool8);
+			m_lang = lang;
 		}
-		BoolBitPack::BoolBitPack(const std::span<bool> src) {
+		BoolBitPack::BoolBitPack(const std::span<bool> src, Scriptforge::Lang lang) {
 			if (src.size() != 8) {
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking),std::string(__func__) + ":size must be 8." };
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking, __func__, m_lang);
 			}
 			for (size_type i = 0; i < 8; ++i) {
 				write(i, src[i]);
 			}
 		}
-		BoolBitPack::classItself& BoolBitPack::operator=(const BoolBitPack::classItself& rhs) {
+		BoolBitPack& BoolBitPack::operator=(const BoolBitPack& rhs) {
 			if (this == &rhs)
 				return *this;
 			m_bools = rhs.toByte();
 			return *this;
 		}
-		BoolBitPack::classItself& BoolBitPack::operator=(const std::span<bool> rhs) {
+		BoolBitPack& BoolBitPack::operator=(const std::span<bool> rhs) {
 			if (rhs.size() != 8) {
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking),std::string(__func__) + ":size must be 8." };
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking, __func__, m_lang);
 			}
 			for (size_type i = 0; i < 8; ++i) {
 				write(i, rhs[i]);
@@ -100,7 +105,7 @@ namespace Scriptforge {
 		}
 		bool BoolBitPack::operator==(const std::span<bool> rhs) const {
 			if (rhs.size() != 8) {
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking),std::string(__func__) + ":size must be 8." };
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking, __func__, m_lang);
 			}
 			for (size_type i = 0; i < 8; ++i) {
 				if (read(i) != rhs[i]) {
@@ -121,7 +126,7 @@ namespace Scriptforge {
 
 		void BoolBitPack::write(const size_type& where, const value_type what) {
 			if (where >= 8)
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::BitPackValueTooLargeToPack),std::string(__func__) + ":where must be less than 8." };
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::BitPackValueTooLargeToPack, __func__, m_lang);
 			set_bit(m_bools, where, what);
 		}
 
@@ -131,7 +136,7 @@ namespace Scriptforge {
 
 		BoolBitPack::value_type BoolBitPack::read(const size_type& where) const {
 			if (where >= 8)
-				throw Scriptforge::Err::Error{ Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::BitPackValueTooLargeToPack),std::string(__func__) + ":where must be less than 8." };
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::BitPackValueTooLargeToPack, __func__, m_lang);
 			auto bits = std::to_integer<unsigned char>(m_bools);
 			return static_cast<value_type>(bits & (1 << where));
 		}

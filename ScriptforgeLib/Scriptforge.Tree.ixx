@@ -42,7 +42,7 @@ export namespace Scriptforge {
             bool operator==(const ConstTreeIterator<TreeType>& other) const;
             bool operator!=(const ConstTreeIterator<TreeType>& other) const;
             TreeType::nodeptr current_node() const;
-        private:
+        protected:
             typename TreeType::nodeptr m_current_node;
             TreeTraversalOrder m_traversal_order;
             std::queue<typename TreeType::nodeptr> m_queue;
@@ -60,7 +60,7 @@ export namespace Scriptforge {
 
         export
             template <typename TreeType>
-		class TreeIterator : ConstTreeIterator<TreeType> {
+		class TreeIterator : public ConstTreeIterator<TreeType> {
         public:
             using value_type = typename TreeType::value_type;
             using reference = value_type&;
@@ -117,7 +117,6 @@ export namespace Scriptforge {
             struct TreeNode
             {
                 TreeNode() = default;
-                explicit TreeNode(T& v) : node(v) {}
                 explicit TreeNode(const T& v) : node(v) {}
                 std::weak_ptr<TreeNode> father;
 

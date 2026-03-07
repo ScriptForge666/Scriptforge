@@ -25,7 +25,7 @@ export namespace Scriptforge {
             friend std::ostream& operator<<(std::ostream& os, const Error& err);
 
         private:
-            std::string m_code{ "No Code" };
+            std::string m_code{ "" };
             std::string m_error{ "Unknown Error" };
         };
         export std::ostream& operator<<(std::ostream& os, const class Error& err);

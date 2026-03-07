@@ -65,10 +65,12 @@ namespace Scriptforge {
             m_file = fs::path(filename);
             logFile.open(m_file, std::ios::app);
             if (!logFile.is_open()) {
-                throw Scriptforge::Err::Error{
-                    Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile),
-                    "Cannot open log file: " + filename
-                };
+                Scriptforge::ErrCode::throwError(
+                    Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile,
+                    __func__,
+                    Scriptforge::Local::Lang("en"),
+                    { filename }
+				);
             }
             logThread = std::thread(&Logger<T, Clock>::process, this);
         }
