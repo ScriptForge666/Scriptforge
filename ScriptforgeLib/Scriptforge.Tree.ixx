@@ -29,7 +29,8 @@ export namespace Scriptforge {
             using value_type = typename TreeType::value_type;
             using reference = value_type&;
             using const_reference = const reference;
-            using const_pointer = const value_type*;
+			using pointer = value_type*;
+            using const_pointer = const pointer;
             using size_type = std::size_t;
             using difference_type = std::ptrdiff_t;
             using iterator_category = std::forward_iterator_tag;
@@ -39,8 +40,7 @@ export namespace Scriptforge {
             const_pointer operator->() const;
             ConstTreeIterator<TreeType>& operator++();
             ConstTreeIterator<TreeType> operator++(int);
-            bool operator==(const ConstTreeIterator<TreeType>& other) const;
-            bool operator!=(const ConstTreeIterator<TreeType>& other) const;
+            bool operator<=>(const ConstTreeIterator<TreeType>& other) const;
             TreeType::nodeptr current_node() const;
         protected:
             typename TreeType::nodeptr m_current_node;

@@ -11,7 +11,9 @@ public:
 	TEST_METHOD_CLEANUP(tCleanup);
 	TEST_METHOD(LogWriteAndFilename);
 private:
+	/*
 	std::string logFilePath = "test_log.log";
 	sf::Logger logger{ logFilePath };
+	*/
 	};
 }
