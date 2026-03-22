@@ -40,6 +40,7 @@ export namespace Scriptforge {
             const_pointer operator->() const;
             ConstTreeIterator<TreeType>& operator++();
             ConstTreeIterator<TreeType> operator++(int);
+            bool operator==(const SimpleIterator&) const = default;
             bool operator<=>(const ConstTreeIterator<TreeType>& other) const;
             TreeType::nodeptr current_node() const;
         protected:
