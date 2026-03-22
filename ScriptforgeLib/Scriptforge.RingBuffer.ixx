@@ -33,7 +33,7 @@ namespace Scriptforge {
 			using node_container_iterator = typename RingBufferType::node_container_iterator::const_iterator;
 			using size_type = typename RingBufferType::size_type;
 			bool operator==(const SimpleIterator&) const = default;
-			bool operator<=>(const ConstRingBufferIterator<RingBufferType>& other) const = default;
+			auto operator<=>(const ConstRingBufferIterator<RingBufferType>& other) const = default;
 			const_reference operator*() const;
 			const_pointer operator->() const;
 
