@@ -23,30 +23,19 @@ namespace Scriptforge{
         export class Lang {
         public:
             // 构造函数
-            Lang(std::string loc = {"en"}, fs::path path = {"lang/"}) : m_lang_path{path} {
-				m_loc = getLanguageId(loc);
-                loadLanguageFile(path);
-            }
+            Lang(std::string loc = { "en" }, fs::path path = { "lang/" });
             // 重新加载语言文件
-            void reload() {
-                loadLanguageFile(m_lang_path);
-            }
+            void reload();
             // 切换到另一个语言
-            void setLocale(const std::string loc) {
-                m_loc = getLanguageId(loc);
-                loadLanguageFile(m_lang_path);
-            }
+            void setLocale(const std::string loc);
             // 获取当前语言环境
-            int getLocaleId() const { return m_loc; }
+            int getLocaleId() const;
 
             //获取语言目录
-            fs::path getLangPath() const { return m_lang_path; }
+            fs::path getLangPath() const;
 
             // 设置语言目录
-            void setLangPath(const fs::path& path) {
-                m_lang_path = path;
-                loadLanguageFile(path);
-            }
+            void setLangPath(const fs::path& path);
 
             // 获取语言名称（用于显示）
             std::string getLanguageNameL() const {
@@ -127,7 +116,7 @@ namespace Scriptforge{
                 try {
                     jsoninput >> j;
                 }
-                catch (const json::parse_error& e) {
+                catch (const json::parse_error&) {
                     throw Scriptforge::Error{
                         Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LocalLanguageFileNotFound),
                         notParseFile(m_loc)
@@ -187,5 +176,31 @@ namespace Scriptforge{
             fs::path m_lang_path;
             json j;
         };
+    }
+}
+
+namespace Scriptforge {
+    inline namespace Local {
+        Lang::Lang(std::string loc, fs::path path) : m_lang_path{ path } {
+            m_loc = getLanguageId(loc);
+            loadLanguageFile(path);
+        }
+
+        void Lang::reload() {
+            loadLanguageFile(m_lang_path);
+        }
+
+        void Lang::setLocale(const std::string loc) {
+            m_loc = getLanguageId(loc);
+            loadLanguageFile(m_lang_path);
+        }
+
+        int Lang::getLocaleId() const { return m_loc; }
+        fs::path Lang::getLangPath() const { return m_lang_path; }
+
+        void Lang::setLangPath(const fs::path& path) {
+            m_lang_path = path;
+            loadLanguageFile(path);
+        }
     }
 }

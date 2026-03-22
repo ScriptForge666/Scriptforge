@@ -29,23 +29,56 @@
 ### 项目结构：
 ```
 Scriptforge/
-├── Scriptforge.sln
-├── README.md
-├── README-CN.md
-├── CHANGELOG.md
-├── CHANGELOG-CN.md
-├── ScriptforgeLib/
-│    ├── Scriptforge.ixx
-│    ├── Scriptforge.AntiDebug.ixx
-│    ├── Scriptforge.BitPack.ixx
-│    ├── Scriptforge.Err.ixx
-│    ├── Scriptforge.Log.ixx
-│    ├── Scriptforge.Tree.ixx
-│    └── Scriptforge.Version.ixx
-├── ScriptforgeTest/
-│    └── ScriptforgeTest.cpp
-└── src/
-
+│   .gitattributes
+│   .gitignore
+│   CHANGELOG-CN.md
+│   CHANGELOG.md
+│   LICENSE-THIRD-PARTY.txt
+│   LICENSE.txt
+│   README-CN.md
+│   README.md
+│   Scriptforge.sln
+│   Scriptforge.slnLaunch.user
+│   更新方向.md
+│
+├───ScriptforgeLib
+│   │   json.hpp
+│   │   Scriptforge.AntiDebug.ixx
+│   │   Scriptforge.BitPack.ixx
+│   │   Scriptforge.Err.ixx
+│   │   ScriptForge.ErrCode.ixx
+│   │   Scriptforge.ErrCode.throwError.ixx
+│   │   Scriptforge.ixx
+│   │   Scriptforge.LanguageCode.ixx
+│   │   Scriptforge.Local.ixx
+│   │   Scriptforge.Log.ixx
+│   │   Scriptforge.Msg.ixx
+│   │   Scriptforge.RingBuffer.ixx
+│   │   Scriptforge.ThreadError.ixx
+│   │   Scriptforge.Tree.ixx
+│   │   Scriptforge.Version.ixx
+│   │   ScriptforgeLib.vcxproj
+│   │   ScriptforgeLib.vcxproj.filters
+│   │   ScriptforgeLib.vcxproj.user
+│   │   统计代码行数.ps1
+│   │
+│   └───lang
+│            en.json
+│            zh.json
+│
+├───ScriptforgeTest
+│        LogTest.cpp
+│        LogTest.h
+│        ScriptforgeTest.vcxproj
+│        ScriptforgeTest.vcxproj.filters
+│        ScriptforgeTest.vcxproj.user
+│        Test.cpp
+│        Test.h
+│        TreeTest.cpp
+│        TreeTest.h
+│   
+└───src
+         ScriptForge.png
 ```
 ---
 

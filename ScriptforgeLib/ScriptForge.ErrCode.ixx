@@ -51,6 +51,7 @@ namespace Scriptforge::ErrCode {
 			break;
 		case 5:
 			result += "RingBuffer";
+			break;
 		default:
 			return "Unknown error";
 		}

@@ -48,7 +48,7 @@ namespace Scriptforge {
 		concept ThreadErrorLRequires = requires(T t1, T t2, Clock c) {
             t1 = t2;
 			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-            t1->std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
+            { t1 } -> std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
 		};
 
         export
