@@ -8,6 +8,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+ *@file Scriptforge.ErrCode.ixx
+ * @brief 定义了 `Scriptforge::ErrCode` 模块，其中包含了一个枚举类 `ErrCode`，用于表示不同类型的错误代码。该模块还提供了一个函数 `toString`，用于将错误代码转换为字符串表示，以及一个函数 `throwError`，用于抛出带有错误代码和相关信息的异常。通过使用这些定义，可以方便地处理和传递错误信息，提高代码的可读性和可维护性。
+ * author Scriptforge
+ * @data 2026/3/29
+*/
+
 module;
 namespace Scriptforge {
 	inline namespace Local {

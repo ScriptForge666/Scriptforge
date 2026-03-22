@@ -10,6 +10,7 @@
 // limitations under the License.
 export module Scriptforge.ThreadError;
 
+import Scriptforge.Local;
 import Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.Msg;
@@ -190,7 +191,6 @@ namespace Scriptforge::Err {
         m_logger.log(Scriptforge::Message<T, Clock>{ "[" + m_name + "] Create a new ThreadErrorL(Async = " +
             (Async ? "true" : "false") + ").", Scriptforge::InformationLevel::Info});
     }
-
     template <typename T, typename Clock, bool Async>
         requires ThreadErrorLRequires<T, Clock, Async>
     ThreadErrorL<T, Clock, Async>::~ThreadErrorL() {

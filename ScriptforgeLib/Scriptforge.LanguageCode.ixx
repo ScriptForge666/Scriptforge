@@ -1,196 +1,282 @@
+// Copyright 2026 Scriptforge
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//     http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @file Scriptforge.LanguageCode.ixx
+ * @brief 定义了一个枚举类 `Language`，包含了多种语言的枚举值，以及两个映射表：一个将语言名称字符串映射到枚举值，另一个将 ISO-639-1 代码映射到枚举值。这些定义可以用于在脚本中处理不同语言相关的功能，如本地化、翻译等。
+ * @author Scriptforge
+ * @date 2026/3/29
+ */
+
 export module Scriptforge.LanguageCode;
 
 import std;
 
 namespace Scriptforge::LanguageCode {
-    /* -------------------------------------------------------------
-     *  1) 语言宏名 → LCID (十六进制)
-     * ------------------------------------------------------------- */
-    export inline const std::map<std::string, int> LANG_NAME_TO_ID = {
-        {"LANG_NEUTRAL",                     0x00},
-        {"LANG_INVARIANT",                   0x7f},
 
-        {"LANG_AFRIKAANS",                   0x36},
-        {"LANG_ALBANIAN",                    0x1c},
-        {"LANG_ALSATIAN",                    0x84},
-        {"LANG_AMHARIC",                     0x5e},
-        {"LANG_ARABIC",                      0x01},
-        {"LANG_ARMENIAN",                    0x2b},
-        {"LANG_ASSAMESE",                    0x4d},
-        {"LANG_AZERBAIJANI",                 0x2c},
-        {"LANG_BANGLA",                      0x45},
-        {"LANG_BASQUE",                      0x2d},
-        {"LANG_BELARUSIAN",                  0x23},
-        {"LANG_BULGARIAN",                   0x02},
-        {"LANG_CATALAN",                     0x03},
-        {"LANG_CHEROKEE",                    0x5c},
-        {"LANG_CHINESE",                     0x04},
-        {"LANG_CORSICAN",                    0x83},
-        {"LANG_CROATIAN",                    0x1a},
-        {"LANG_CZECH",                       0x05},
-        {"LANG_DANISH",                      0x06},
-        {"LANG_DUTCH",                       0x13},
-        {"LANG_ENGLISH",                     0x09},
-        {"LANG_ESTONIAN",                    0x25},
-        {"LANG_FAEROESE",                    0x38},
-        {"LANG_FINNISH",                     0x0b},  // 添加芬兰语
-        {"LANG_FRENCH",                      0x0c},
-        {"LANG_FRISIAN",                     0x62},
-        {"LANG_FULAH",                       0x67},
-        {"LANG_GALICIAN",                    0x56},
-        {"LANG_GEORGIAN",                    0x37},
-        {"LANG_GERMAN",                      0x07},
-        {"LANG_GREEK",                       0x08},
-        {"LANG_GUJARATI",                    0x47},
-        {"LANG_HEBREW",                      0x0d},
-        {"LANG_HINDI",                       0x39},
-        {"LANG_HUNGARIAN",                   0x0e},
-        {"LANG_ICELANDIC",                   0x0f},
-        {"LANG_INDONESIAN",                  0x21},
-        {"LANG_IRISH",                       0x3c},
-        {"LANG_ITALIAN",                     0x10},
-        {"LANG_JAPANESE",                    0x11},
-        {"LANG_KANNADA",                     0x4b},
-        {"LANG_KAZAK",                       0x3f},
-        {"LANG_KHMER",                       0x53},
-        {"LANG_KOREAN",                      0x12},
-        {"LANG_KYRGYZ",                      0x40},
-        {"LANG_LATVIAN",                     0x26},
-        {"LANG_LITHUANIAN",                  0x27},
-        {"LANG_LOWER_SORBIAN",               0x2e},
-        {"LANG_LUXEMBOURGISH",               0x6e},
-        {"LANG_MACEDONIAN",                  0x2f},
-        {"LANG_MALAY",                       0x3e},
-        {"LANG_MALAYALAM",                   0x4c},
-        {"LANG_MALTESE",                     0x3a},
-        {"LANG_MARATHI",                     0x4e},
-        {"LANG_MONGOLIAN",                   0x50},
-        {"LANG_NEPALI",                      0x61},
-        {"LANG_NORWEGIAN",                   0x14},
-        {"LANG_OCCITAN",                     0x82},
-        {"LANG_ODIA",                        0x48},
-        {"LANG_PERSIAN",                     0x29},
-        {"LANG_POLISH",                      0x15},
-        {"LANG_PORTUGUESE",                  0x16},
-        {"LANG_PUNJABI",                     0x46},
-        {"LANG_ROMANIAN",                    0x18},
-        {"LANG_RUSSIAN",                     0x19},
-        {"LANG_SAMI",                        0x3b},
-        {"LANG_SERBIAN",                     0x1a},  // 添加塞尔维亚语，注意与克罗地亚语相同LCID
-        {"LANG_SLOVAK",                      0x1b},
-        {"LANG_SLOVENIAN",                   0x24},
-        {"LANG_SPANISH",                     0x0a},
-        {"LANG_SWAHILI",                     0x41},
-        {"LANG_SWEDISH",                     0x1d},
-        {"LANG_TAMIL",                       0x49},
-        {"LANG_TATAR",                       0x44},
-        {"LANG_TELUGU",                      0x4a},
-        {"LANG_THAI",                        0x1e},
-        {"LANG_TURKISH",                     0x1f},
-        {"LANG_UKRAINIAN",                   0x22},
-        {"LANG_URDU",                        0x20},
-        {"LANG_UZBEK",                       0x43},
-        {"LANG_VIETNAMESE",                  0x2a},
-        {"LANG_WELSH",                       0x52},
-        {"LANG_XHOSA",                       0x34},
-        {"LANG_YI",                          0x78},
-        {"LANG_YORUBA",                      0x6a},
-        {"LANG_ZULU",                        0x35}
+    /* -------------------------------------------------------------
+     *  语言枚举定义（完整版本）
+     * ------------------------------------------------------------- */
+    export enum class Language : int {
+        Neutral = 0x00,
+        Invariant = 0x7f,
+        Afrikaans = 0x36,
+        Albanian = 0x1c,
+        Amharic = 0x5e,
+        Arabic = 0x01,
+        Armenian = 0x2b,
+        Assamese = 0x4d,
+        Azerbaijani = 0x2c,
+        Basque = 0x2d,
+        Belarusian = 0x23,
+        Bulgarian = 0x02,
+        Catalan = 0x03,
+        Chinese = 0x04,
+        Croatian = 0x1a,
+        Czech = 0x05,
+        Danish = 0x06,
+        Dutch = 0x13,
+        English = 0x09,
+        Estonian = 0x25,
+        Faeroese = 0x38,
+        Finnish = 0x0b,
+        French = 0x0c,
+        Frisian = 0x62,
+        Galician = 0x56,
+        Georgian = 0x37,
+        German = 0x07,
+        Greek = 0x08,
+        Gujarati = 0x47,
+        Hebrew = 0x0d,
+        Hindi = 0x39,
+        Hungarian = 0x0e,
+        Icelandic = 0x0f,
+        Indonesian = 0x21,
+        Irish = 0x3c,
+        Italian = 0x10,
+        Japanese = 0x11,
+        Kannada = 0x4b,
+        Kazak = 0x3f,
+        Khmer = 0x53,
+        Korean = 0x12,
+        Kyrgyz = 0x40,
+        Latvian = 0x26,
+        Lithuanian = 0x27,
+        Macedonian = 0x2f,
+        Malay = 0x3e,
+        Malayalam = 0x4c,
+        Maltese = 0x3a,
+        Marathi = 0x4e,
+        Mongolian = 0x50,
+        Nepali = 0x61,
+        Norwegian = 0x14,
+        Persian = 0x29,
+        Polish = 0x15,
+        Portuguese = 0x16,
+        Punjabi = 0x46,
+        Romanian = 0x18,
+        Russian = 0x19,
+        Serbian = 0x1a,
+        Slovak = 0x1b,
+        Slovenian = 0x24,
+        Spanish = 0x0a,
+        Swahili = 0x41,
+        Swedish = 0x1d,
+        Tamil = 0x49,
+        Tatar = 0x44,
+        Telugu = 0x4a,
+        Thai = 0x1e,
+        Turkish = 0x1f,
+        Ukrainian = 0x22,
+        Urdu = 0x20,
+        Uzbek = 0x43,
+        Vietnamese = 0x2a,
+        Welsh = 0x52,
+        Xhosa = 0x34,
+        Yi = 0x78,
+        Yoruba = 0x6a,
+        Zulu = 0x35
     };
 
     /* -------------------------------------------------------------
-     *  2) ISO‑639‑1 两字母代码 → LCID
-     *  （注意：由于LCID中塞尔维亚语和克罗地亚语使用相同主语言ID，这里可能需要特殊处理）
+     *  语言名称到枚举的映射
      * ------------------------------------------------------------- */
-    export inline const std::map<std::string, int> ISO639_1_TO_ID = {
-        {"af", LANG_NAME_TO_ID.at("LANG_AFRIKAANS")},       // Afrikaans
-        {"sq", LANG_NAME_TO_ID.at("LANG_ALBANIAN")},        // Albanian
-        {"am", LANG_NAME_TO_ID.at("LANG_AMHARIC")},         // Amharic
-        {"ar", LANG_NAME_TO_ID.at("LANG_ARABIC")},          // Arabic
-        {"hy", LANG_NAME_TO_ID.at("LANG_ARMENIAN")},        // Armenian
-        {"as", LANG_NAME_TO_ID.at("LANG_ASSAMESE")},        // Assamese
-        {"az", LANG_NAME_TO_ID.at("LANG_AZERBAIJANI")},     // Azerbaijani
-        {"eu", LANG_NAME_TO_ID.at("LANG_BASQUE")},          // Basque
-        {"be", LANG_NAME_TO_ID.at("LANG_BELARUSIAN")},      // Belarusian
-        {"bg", LANG_NAME_TO_ID.at("LANG_BULGARIAN")},       // Bulgarian
-        {"ca", LANG_NAME_TO_ID.at("LANG_CATALAN")},         // Catalan
-        {"zh", LANG_NAME_TO_ID.at("LANG_CHINESE")},         // Chinese
-        {"hr", LANG_NAME_TO_ID.at("LANG_CROATIAN")},        // Croatian
-        {"cs", LANG_NAME_TO_ID.at("LANG_CZECH")},           // Czech
-        {"da", LANG_NAME_TO_ID.at("LANG_DANISH")},          // Danish
-        {"nl", LANG_NAME_TO_ID.at("LANG_DUTCH")},           // Dutch
-        {"en", LANG_NAME_TO_ID.at("LANG_ENGLISH")},         // English
-        {"et", LANG_NAME_TO_ID.at("LANG_ESTONIAN")},        // Estonian
-        {"fo", LANG_NAME_TO_ID.at("LANG_FAEROESE")},        // Faroese
-        {"fi", LANG_NAME_TO_ID.at("LANG_FINNISH")},         // Finnish
-        {"fr", LANG_NAME_TO_ID.at("LANG_FRENCH")},          // French
-        {"fy", LANG_NAME_TO_ID.at("LANG_FRISIAN")},         // Frisian
-        {"gl", LANG_NAME_TO_ID.at("LANG_GALICIAN")},        // Galician
-        {"ka", LANG_NAME_TO_ID.at("LANG_GEORGIAN")},        // Georgian
-        {"de", LANG_NAME_TO_ID.at("LANG_GERMAN")},          // German
-        {"el", LANG_NAME_TO_ID.at("LANG_GREEK")},           // Greek
-        {"gu", LANG_NAME_TO_ID.at("LANG_GUJARATI")},        // Gujarati
-        {"he", LANG_NAME_TO_ID.at("LANG_HEBREW")},          // Hebrew
-        {"hi", LANG_NAME_TO_ID.at("LANG_HINDI")},           // Hindi
-        {"hu", LANG_NAME_TO_ID.at("LANG_HUNGARIAN")},       // Hungarian
-        {"is", LANG_NAME_TO_ID.at("LANG_ICELANDIC")},       // Icelandic
-        {"id", LANG_NAME_TO_ID.at("LANG_INDONESIAN")},      // Indonesian
-        {"ga", LANG_NAME_TO_ID.at("LANG_IRISH")},           // Irish
-        {"it", LANG_NAME_TO_ID.at("LANG_ITALIAN")},         // Italian
-        {"ja", LANG_NAME_TO_ID.at("LANG_JAPANESE")},        // Japanese
-        {"kn", LANG_NAME_TO_ID.at("LANG_KANNADA")},         // Kannada
-        {"kk", LANG_NAME_TO_ID.at("LANG_KAZAK")},           // Kazakh
-        {"km", LANG_NAME_TO_ID.at("LANG_KHMER")},           // Khmer
-        {"ko", LANG_NAME_TO_ID.at("LANG_KOREAN")},          // Korean
-        {"ky", LANG_NAME_TO_ID.at("LANG_KYRGYZ")},          // Kyrgyz
-        {"lv", LANG_NAME_TO_ID.at("LANG_LATVIAN")},         // Latvian
-        {"lt", LANG_NAME_TO_ID.at("LANG_LITHUANIAN")},      // Lithuanian
-        {"mk", LANG_NAME_TO_ID.at("LANG_MACEDONIAN")},      // Macedonian
-        {"ms", LANG_NAME_TO_ID.at("LANG_MALAY")},           // Malay
-        {"ml", LANG_NAME_TO_ID.at("LANG_MALAYALAM")},       // Malayalam
-        {"mt", LANG_NAME_TO_ID.at("LANG_MALTESE")},         // Maltese
-        {"mr", LANG_NAME_TO_ID.at("LANG_MARATHI")},         // Marathi
-        {"mn", LANG_NAME_TO_ID.at("LANG_MONGOLIAN")},       // Mongolian
-        {"ne", LANG_NAME_TO_ID.at("LANG_NEPALI")},          // Nepali
-        {"no", LANG_NAME_TO_ID.at("LANG_NORWEGIAN")},       // Norwegian
-        {"fa", LANG_NAME_TO_ID.at("LANG_PERSIAN")},         // Persian (Farsi)
-        {"pl", LANG_NAME_TO_ID.at("LANG_POLISH")},          // Polish
-        {"pt", LANG_NAME_TO_ID.at("LANG_PORTUGUESE")},      // Portuguese
-        {"pa", LANG_NAME_TO_ID.at("LANG_PUNJABI")},         // Punjabi
-        {"ro", LANG_NAME_TO_ID.at("LANG_ROMANIAN")},        // Romanian
-        {"ru", LANG_NAME_TO_ID.at("LANG_RUSSIAN")},         // Russian
-        {"sr", LANG_NAME_TO_ID.at("LANG_SERBIAN")},         // Serbian
-        {"sk", LANG_NAME_TO_ID.at("LANG_SLOVAK")},          // Slovak
-        {"sl", LANG_NAME_TO_ID.at("LANG_SLOVENIAN")},       // Slovenian
-        {"es", LANG_NAME_TO_ID.at("LANG_SPANISH")},         // Spanish
-        {"sw", LANG_NAME_TO_ID.at("LANG_SWAHILI")},         // Swahili
-        {"sv", LANG_NAME_TO_ID.at("LANG_SWEDISH")},         // Swedish
-        {"ta", LANG_NAME_TO_ID.at("LANG_TAMIL")},           // Tamil
-        {"tt", LANG_NAME_TO_ID.at("LANG_TATAR")},           // Tatar
-        {"te", LANG_NAME_TO_ID.at("LANG_TELUGU")},          // Telugu
-        {"th", LANG_NAME_TO_ID.at("LANG_THAI")},            // Thai
-        {"tr", LANG_NAME_TO_ID.at("LANG_TURKISH")},         // Turkish
-        {"uk", LANG_NAME_TO_ID.at("LANG_UKRAINIAN")},       // Ukrainian
-        {"ur", LANG_NAME_TO_ID.at("LANG_URDU")},            // Urdu
-        {"uz", LANG_NAME_TO_ID.at("LANG_UZBEK")},           // Uzbek
-        {"vi", LANG_NAME_TO_ID.at("LANG_VIETNAMESE")},      // Vietnamese
-        {"cy", LANG_NAME_TO_ID.at("LANG_WELSH")},           // Welsh
-        {"xh", LANG_NAME_TO_ID.at("LANG_XHOSA")},           // Xhosa
-        {"yi", LANG_NAME_TO_ID.at("LANG_YI")},              // Yiddish
-        {"yo", LANG_NAME_TO_ID.at("LANG_YORUBA")},          // Yoruba
-        {"zu", LANG_NAME_TO_ID.at("LANG_ZULU")}             // Zulu
+    export inline const std::map<std::string, Language> LANG_NAME_TO_ENUM = {
+        {"LANG_NEUTRAL", Language::Neutral},
+        {"LANG_INVARIANT", Language::Invariant},
+        {"LANG_AFRIKAANS", Language::Afrikaans},
+        {"LANG_ALBANIAN", Language::Albanian},
+        {"LANG_AMHARIC", Language::Amharic},
+        {"LANG_ARABIC", Language::Arabic},
+        {"LANG_ARMENIAN", Language::Armenian},
+        {"LANG_ASSAMESE", Language::Assamese},
+        {"LANG_AZERBAIJANI", Language::Azerbaijani},
+        {"LANG_BASQUE", Language::Basque},
+        {"LANG_BELARUSIAN", Language::Belarusian},
+        {"LANG_BULGARIAN", Language::Bulgarian},
+        {"LANG_CATALAN", Language::Catalan},
+        {"LANG_CHINESE", Language::Chinese},
+        {"LANG_CROATIAN", Language::Croatian},
+        {"LANG_CZECH", Language::Czech},
+        {"LANG_DANISH", Language::Danish},
+        {"LANG_DUTCH", Language::Dutch},
+        {"LANG_ENGLISH", Language::English},
+        {"LANG_ESTONIAN", Language::Estonian},
+        {"LANG_FAEROESE", Language::Faeroese},
+        {"LANG_FINNISH", Language::Finnish},
+        {"LANG_FRENCH", Language::French},
+        {"LANG_FRISIAN", Language::Frisian},
+        {"LANG_GALICIAN", Language::Galician},
+        {"LANG_GEORGIAN", Language::Georgian},
+        {"LANG_GERMAN", Language::German},
+        {"LANG_GREEK", Language::Greek},
+        {"LANG_GUJARATI", Language::Gujarati},
+        {"LANG_HEBREW", Language::Hebrew},
+        {"LANG_HINDI", Language::Hindi},
+        {"LANG_HUNGARIAN", Language::Hungarian},
+        {"LANG_ICELANDIC", Language::Icelandic},
+        {"LANG_INDONESIAN", Language::Indonesian},
+        {"LANG_IRISH", Language::Irish},
+        {"LANG_ITALIAN", Language::Italian},
+        {"LANG_JAPANESE", Language::Japanese},
+        {"LANG_KANNADA", Language::Kannada},
+        {"LANG_KAZAK", Language::Kazak},
+        {"LANG_KHMER", Language::Khmer},
+        {"LANG_KOREAN", Language::Korean},
+        {"LANG_KYRGYZ", Language::Kyrgyz},
+        {"LANG_LATVIAN", Language::Latvian},
+        {"LANG_LITHUANIAN", Language::Lithuanian},
+        {"LANG_MACEDONIAN", Language::Macedonian},
+        {"LANG_MALAY", Language::Malay},
+        {"LANG_MALAYALAM", Language::Malayalam},
+        {"LANG_MALTESE", Language::Maltese},
+        {"LANG_MARATHI", Language::Marathi},
+        {"LANG_MONGOLIAN", Language::Mongolian},
+        {"LANG_NEPALI", Language::Nepali},
+        {"LANG_NORWEGIAN", Language::Norwegian},
+        {"LANG_PERSIAN", Language::Persian},
+        {"LANG_POLISH", Language::Polish},
+        {"LANG_PORTUGUESE", Language::Portuguese},
+        {"LANG_PUNJABI", Language::Punjabi},
+        {"LANG_ROMANIAN", Language::Romanian},
+        {"LANG_RUSSIAN", Language::Russian},
+        {"LANG_SERBIAN", Language::Serbian},
+        {"LANG_SLOVAK", Language::Slovak},
+        {"LANG_SLOVENIAN", Language::Slovenian},
+        {"LANG_SPANISH", Language::Spanish},
+        {"LANG_SWAHILI", Language::Swahili},
+        {"LANG_SWEDISH", Language::Swedish},
+        {"LANG_TAMIL", Language::Tamil},
+        {"LANG_TATAR", Language::Tatar},
+        {"LANG_TELUGU", Language::Telugu},
+        {"LANG_THAI", Language::Thai},
+        {"LANG_TURKISH", Language::Turkish},
+        {"LANG_UKRAINIAN", Language::Ukrainian},
+        {"LANG_URDU", Language::Urdu},
+        {"LANG_UZBEK", Language::Uzbek},
+        {"LANG_VIETNAMESE", Language::Vietnamese},
+        {"LANG_WELSH", Language::Welsh},
+        {"LANG_XHOSA", Language::Xhosa},
+        {"LANG_YI", Language::Yi},
+        {"LANG_YORUBA", Language::Yoruba},
+        {"LANG_ZULU", Language::Zulu}
     };
 
     /* -------------------------------------------------------------
-     *  3) （可选）LCID → ISO‑639‑1 反向映射
-     *  注意：由于多个语言可能共享同一个LCID主ID（如塞尔维亚语和克罗地亚语），
-     *  反向映射会丢失一些信息
+     *  ISO-639-1 代码到枚举的映射
      * ------------------------------------------------------------- */
-    export inline const std::map<int, std::string> ID_TO_ISO639_1 = [] {
-        std::map<int, std::string> rev;
-        for (const auto& p : ISO639_1_TO_ID) {
-            rev[p.second] = p.first;  // 后出现的会覆盖前面的
+    export inline const std::map<std::string, Language> ISO639_1_TO_ENUM = {
+        {"af", Language::Afrikaans},
+        {"sq", Language::Albanian},
+        {"am", Language::Amharic},
+        {"ar", Language::Arabic},
+        {"hy", Language::Armenian},
+        {"as", Language::Assamese},
+        {"az", Language::Azerbaijani},
+        {"eu", Language::Basque},
+        {"be", Language::Belarusian},
+        {"bg", Language::Bulgarian},
+        {"ca", Language::Catalan},
+        {"zh", Language::Chinese},
+        {"hr", Language::Croatian},
+        {"cs", Language::Czech},
+        {"da", Language::Danish},
+        {"nl", Language::Dutch},
+        {"en", Language::English},
+        {"et", Language::Estonian},
+        {"fo", Language::Faeroese},
+        {"fi", Language::Finnish},
+        {"fr", Language::French},
+        {"fy", Language::Frisian},
+        {"gl", Language::Galician},
+        {"ka", Language::Georgian},
+        {"de", Language::German},
+        {"el", Language::Greek},
+        {"gu", Language::Gujarati},
+        {"he", Language::Hebrew},
+        {"hi", Language::Hindi},
+        {"hu", Language::Hungarian},
+        {"is", Language::Icelandic},
+        {"id", Language::Indonesian},
+        {"ga", Language::Irish},
+        {"it", Language::Italian},
+        {"ja", Language::Japanese},
+        {"kn", Language::Kannada},
+        {"kk", Language::Kazak},
+        {"km", Language::Khmer},
+        {"ko", Language::Korean},
+        {"ky", Language::Kyrgyz},
+        {"lv", Language::Latvian},
+        {"lt", Language::Lithuanian},
+        {"mk", Language::Macedonian},
+        {"ms", Language::Malay},
+        {"ml", Language::Malayalam},
+        {"mt", Language::Maltese},
+        {"mr", Language::Marathi},
+        {"mn", Language::Mongolian},
+        {"ne", Language::Nepali},
+        {"no", Language::Norwegian},
+        {"fa", Language::Persian},
+        {"pl", Language::Polish},
+        {"pt", Language::Portuguese},
+        {"pa", Language::Punjabi},
+        {"ro", Language::Romanian},
+        {"ru", Language::Russian},
+        {"sr", Language::Serbian},
+        {"sk", Language::Slovak},
+        {"sl", Language::Slovenian},
+        {"es", Language::Spanish},
+        {"sw", Language::Swahili},
+        {"sv", Language::Swedish},
+        {"ta", Language::Tamil},
+        {"tt", Language::Tatar},
+        {"te", Language::Telugu},
+        {"th", Language::Thai},
+        {"tr", Language::Turkish},
+        {"uk", Language::Ukrainian},
+        {"ur", Language::Urdu},
+        {"uz", Language::Uzbek},
+        {"vi", Language::Vietnamese},
+        {"cy", Language::Welsh},
+        {"xh", Language::Xhosa},
+        {"yi", Language::Yi},
+        {"yo", Language::Yoruba},
+        {"zu", Language::Zulu}
+    };
+
+    export inline const std::map<Language, std::string> ENUM_TO_LANG_NAME = []() {
+        std::map<Language, std::string> m;
+        for (const auto& pair : LANG_NAME_TO_ENUM) {
+            m[pair.second] = pair.first;
         }
-        return rev;
-        }();
+        return m;
+		}();
 }

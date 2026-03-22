@@ -8,6 +8,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+ * @file Scriptforge.BitPack.ixx
+ * @brief 定义了 `Scriptforge::BitPack` 模块，其中包含了一个 `BoolBitPack` 类，用于将八个布尔值打包成一个字节。该类提供了构造函数、赋值运算符、比较运算符、索引运算符以及读写方法，可以方便地操作和访问打包的布尔值。此外，还提供了一个方法将打包的布尔值转换为字节类型。
+ * @author Scriptforge
+ * @date 2026/3/29
+ */
+
 export module Scriptforge.BitPack;
 
 import Scriptforge.Err;

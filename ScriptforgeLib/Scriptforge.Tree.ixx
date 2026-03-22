@@ -8,6 +8,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+ * @file Scriptforge.Tree.ixx
+ * @brief 定义了 `Scriptforge::Tree` 模块，其中包含了一个树结构的实现。该模块提供了一个 `Tree` 类，用于表示树结构，并包含了一个嵌套的 `TreeNode` 结构体来表示树节点。`Tree` 类提供了构造函数、添加节点、删除节点、设置语言和获取语言等成员函数，以及一个 `ConstTreeIterator` 类和一个 `TreeIterator` 类，用于遍历树结构。通过使用这些定义，可以方便地创建和操作树结构，提高代码的可读性和可维护性。
+ * @author Scriptforge
+ * @date 2026/3/29
+ */
+
 export module Scriptforge.Tree;
 
 import Scriptforge.Err;

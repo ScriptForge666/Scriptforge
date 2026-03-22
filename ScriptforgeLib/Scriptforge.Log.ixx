@@ -9,6 +9,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/**
+ * @file Scriptforge.Log.ixx
+ * @brief 定义了 `Scriptforge::Log` 模块，其中包含了一个 `Logger` 类，用于实现日志记录功能。该类提供了构造函数、析构函数、日志级别设置和获取方法，以及一个用于记录日志消息的方法。日志消息通过一个线程安全的队列进行处理，并写入指定的日志文件中。通过使用该类，可以方便地实现日志记录功能，提高代码的可读性和可维护性。
+ * @author Scriptforge
+ * @date 2026/3/29
+ */
+
 export module Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.ErrCode;

@@ -8,6 +8,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+ * @file Scriptforge.Version.ixx
+ * @brief 定义了 `Scriptforge::Version` 模块，其中包含了一个 `VersionInfo` 类，用于表示项目的版本信息。该类提供了多个构造函数，用于初始化项目名称、版本号、贡献者、许可证和起始年份等信息。还提供了成员函数来获取版本信息、版权信息和年份区间等内容。通过使用该类，可以方便地管理和展示项目的版本信息，提高代码的可读性和可维护性。
+ * @author Scriptforge
+ * @date 2026/3/29
+ */
+
 export module Scriptforge.Version;
 
 import std;

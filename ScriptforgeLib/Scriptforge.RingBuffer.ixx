@@ -27,10 +27,10 @@ namespace Scriptforge {
 			using difference_type = typename RingBufferType::difference_type;
 			using iterator_category = std::random_access_iterator_tag;
 			using reference = value_type&;
-			using const_reference = const reference;
+			using const_reference = const value_type&;
 			using pointer = value_type*;
-			using const_pointer = const pointer;
-			using node_container_iterator = typename RingBufferType::node_container_iterator::const_iterator;
+			using const_pointer = const value_type*;
+			using node_container_iterator = typename RingBufferType::node_container::const_iterator;
 			using size_type = typename RingBufferType::size_type;
 			bool operator==(const ConstRingBufferIterator<RingBufferType>&) const = default;
 			auto operator<=>(const ConstRingBufferIterator<RingBufferType>& other) const = default;
@@ -40,6 +40,10 @@ namespace Scriptforge {
 			ConstRingBufferIterator<RingBufferType> operator++(int);
 			ConstRingBufferIterator<RingBufferType>& operator--();
 			ConstRingBufferIterator<RingBufferType> operator--(int);
+			ConstRingBufferIterator<RingBufferType> operator+(const int src);
+			ConstRingBufferIterator<RingBufferType> operator+=(const int src);
+			ConstRingBufferIterator<RingBufferType> operator-(const int src);
+			ConstRingBufferIterator<RingBufferType> operator-=(const int src);
 		};
 
 		template<typename T,typename Alloc>
@@ -61,6 +65,7 @@ namespace Scriptforge {
 			using iterator = int;
 			using const_iterator = ConstRingBufferIterator<RingBuffer<value_type, Alloc>>;
 			using difference_type = std::ptrdiff_t;
+			using node_container = std::vector<value_type, Alloc>;
 
 			RingBuffer(const size_type capacity = 50, const Scriptforge::Lang lang = Scriptforge::Lang{});
 			value_type size() const noexcept;
@@ -77,7 +82,7 @@ namespace Scriptforge {
 			friend class ConstRingBufferIterator<RingBuffer<value_type, Alloc>>;
 			Scriptforge::Lang m_lang;
 			size_type m_capacity;
-			std::vector<T,Alloc> m_buffer;
+			node_container m_buffer;
 		};
 	}
 }

@@ -1,9 +1,6 @@
-#include"Test.h"
-namespace Test{
-	using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-	void Test::tSetup() {}
-	void Test::tCleanup() {}
-	void Test::tTestSimple() {
-		Assert::AreEqual(1, 1);
-	}
+#include "pch.h"
+
+TEST(TestCaseName, TestName) {
+  EXPECT_EQ(1, 1);
+  EXPECT_TRUE(true);
 }

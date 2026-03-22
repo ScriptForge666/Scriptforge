@@ -8,6 +8,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/**
+ * @file Scriptforge.Err.ixx
+ * @brief 定义了 `Scriptforge::Err` 模块，其中包含了一个 `Error` 类，用于表示错误信息。该类提供了构造函数、成员函数以及一个友元函数，用于获取错误信息和错误代码，并支持将错误信息输出到流中。通过使用该类，可以方便地处理和传递错误信息，提高代码的可读性和可维护性。
+ * @author Scriptforge
+ * @date 2026/3/29
+*/
+
 export module Scriptforge.Err;
 import std;
 
