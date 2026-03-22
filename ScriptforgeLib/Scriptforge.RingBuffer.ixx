@@ -36,12 +36,17 @@ namespace Scriptforge {
 			auto operator<=>(const ConstRingBufferIterator<RingBufferType>& other) const = default;
 			const_reference operator*() const;
 			const_pointer operator->() const;
-
+			ConstRingBufferIterator<RingBufferType>& operator++();
+			ConstRingBufferIterator<RingBufferType> operator++(int);
+			ConstRingBufferIterator<RingBufferType>& operator--();
+			ConstRingBufferIterator<RingBufferType> operator--(int);
 		};
 
 		template<typename T,typename Alloc>
 		concept RingBufferRequires = requires(T t, Alloc a) {
 			std::cout << t;
+			requires std::copyable<T>;
+			requires std::destructible<T>;
 		};
 
 		export
