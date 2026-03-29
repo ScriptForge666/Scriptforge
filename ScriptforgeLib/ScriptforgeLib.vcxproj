@@ -30,6 +30,7 @@
     <ClCompile Include="Scriptforge.Log.ixx" />
     <ClCompile Include="Scriptforge.Msg.ixx" />
     <ClCompile Include="Scriptforge.RingBuffer.ixx" />
+    <ClCompile Include="Scriptforge.StringConversion.ixx" />
     <ClCompile Include="Scriptforge.ThreadError.ixx" />
     <ClCompile Include="Scriptforge.Tree.ixx" />
     <ClCompile Include="Scriptforge.Version.ixx" />

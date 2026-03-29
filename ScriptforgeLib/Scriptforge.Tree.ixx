@@ -86,8 +86,13 @@ export namespace Scriptforge {
         private:
         };
 
-        template<typename T, typename Alloc>
-		concept TreeRequires = requires(T t1, T t2) { t1 = t2; };
+        template <typename T>
+        concept TreeValueType =
+            std::copy_constructible<T> &&
+            std::move_constructible<T> &&
+            requires(T a) {
+                { T{} } -> std::same_as<T>;
+        };
         export
             template<typename T, typename Alloc = std::allocator<T>>
 			requires TreeRequires<T, Alloc>
