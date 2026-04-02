@@ -49,7 +49,7 @@
     <Text Include="..\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="json.hpp">
+    <ClCompile Include="..\dependency\json.hpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsHeaderUnit</CompileAs>
     </ClCompile>
   </ItemGroup>

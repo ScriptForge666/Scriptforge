@@ -9,7 +9,16 @@
 
 </center>
 
+# ⚠️ Maintenance Notice
 
+The library is currently undergoing a major refactoring and update. 
+Please note that:
+
+- **Compilation errors** may occur in the current version
+- **API stability** is not guaranteed during this period  
+- **Some features** may be temporarily unavailable
+
+We recommend using the latest stable release until the update is complete.
 
 
 ### 🎉 The project is back under active development!

@@ -279,4 +279,11 @@ namespace Scriptforge::LanguageCode {
         }
         return m;
 		}();
+    export inline const std::map<Language, std::string> ENUM_TO_ISO639_1 = []() {
+        std::map<Language, std::string> m;
+        for (const auto& pair : ISO639_1_TO_ENUM) {
+            m[pair.second] = pair.first;
+        }
+        return m;
+        }();
 }

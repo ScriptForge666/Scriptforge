@@ -31,15 +31,17 @@ using namespace Scriptforge::StringConversion;
 namespace Scriptforge {
     inline namespace Local {
 
-        [[noreturn]] void throwFileNotFoundError(const fs::path& p, Scriptforge::LanguageCode::Language lang);
-        [[noreturn]] void throwInvalidFileError(const fs::path& p, Scriptforge::LanguageCode::Language lang);
+		[[noreturn]] void throwErrWithoutJson(Scriptforge::ErrCode::ErrCode code, const std::string& func, const std::string& message);
+        [[noreturn]] void throwFileNotFoundError(const fs::path& p, Scriptforge::LanguageCode::Language lang, const std::string& func);
+        [[noreturn]] void throwInvalidFileError(const fs::path& p, Scriptforge::LanguageCode::Language lang, const std::string& func);
 
         export class Lang {
         public:
-            Lang(Scriptforge::LanguageCode::Language lang{ Scriptforge::LanguageCode::Language::Neutral }, fs::path p{ "/lang" });
+            Lang(Scriptforge::LanguageCode::Language lang = { Scriptforge::LanguageCode::Language::Neutral }, fs::path p = { "/lang" });
             void reload();
             void setLocale(const Scriptforge::LanguageCode::Language lang);
             Scriptforge::LanguageCode::Language getLanguageCode() const;
+            std::string getLanguageNameISO639_1() const;
             template<typename T>
             T getLanguageName() const;
         private:
@@ -57,20 +59,23 @@ namespace Scriptforge {
 
 namespace Scriptforge {
     inline namespace Local {
-        [[noreturn]] void throwFileNotFoundError(const fs::path& p, Scriptforge::LanguageCode::Language lang) {
+        [[noreturn]] void throwErrWithoutJson(Scriptforge::ErrCode::ErrCode code, const std::string& func, const std::string& message) {
+            throw Scriptforge::Error{ Scriptforge::ErrCode::toString(code), func + ": " + message};
+		}
+        [[noreturn]] void throwFileNotFoundError(const fs::path& p, Scriptforge::LanguageCode::Language lang, const std::string& func) {
             if (lang == Scriptforge::LanguageCode::Language::Chinese) {
-                throw Scriptforge::Error{ Scriptforge::ErrCode::LocalLanguageFileNotFound, "指定的语言文件不存在: " + p.string() };
+				throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalLanguageFileNotFound, func, "指定的语言文件不存在: " + p.string());
             }
             else {
-                throw Scriptforge::Error{ Scriptforge::ErrCode::LocalLanguageFileNotFound, "The specified language file does not exist: " + p.string() };
+				throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalLanguageFileNotFound, func, "The specified language file does not exist: " + p.string());
             }
         }
-        [[noreturn]] void throwInvalidFileError(const fs::path& p, Scriptforge::LanguageCode::Language lang) {
+        [[noreturn]] void throwInvalidFileError(const fs::path& p, Scriptforge::LanguageCode::Language lang, const std::string& func) {
             if (lang == Scriptforge::LanguageCode::Language::Chinese) {
-                throw Scriptforge::Error{ Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageFile, "指定的语言文件无效: " + p.string() };
+				throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageFile, func, "指定的语言文件无效: " + p.string());
             }
             else {
-                throw Scriptforge::Error{ Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageFile, "The specified language file is invalid: " + p.string() };
+				throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageFile, func, "The specified language file is invalid: " + p.string());
             }
         }
         Lang::Lang(Scriptforge::LanguageCode::Language lang, fs::path p) {
@@ -86,35 +91,38 @@ namespace Scriptforge {
         Scriptforge::LanguageCode::Language Lang::getLanguageCode() const {
             return m_lang;
         }
+        std::string Lang::getLanguageNameISO639_1() const {
+			return Scriptforge::LanguageCode::ENUM_TO_ISO639_1.at(m_lang);
+		}
         template<typename T>
         T Lang::getLanguageName() const {
             return str_convert<T>(j.value("language_name", Scriptforge::LanguageCode::ENUM_TO_ISO639_1.get(m_lang)));
         }
         void Lang::loadLanguageFile(Scriptforge::LanguageCode::Language lang, fs::path path) {
-            fs::path filename = path / (getLanguageName(lang) + ".json");
+            fs::path filename = path / (getLanguageNameISO639_1() + ".json");
             m_lang = lang;
             std::ifstream jsoninput{ filename };
             m_path = filename;
 
             if (!jsoninput.is_open()) {
-                throwFileNotFoundError(filename, lang);
+                throwFileNotFoundError(filename, lang, __func__);
             }
             try {
                 jsoninput >> j;
             }
             catch (const json::parse_error&) {
-                throwFileNotFoundError(filename, lang);
+                throwFileNotFoundError(filename, lang, __func__);
             }
         }
         void Lang::isLegal() const {
             if (m_lang == Scriptforge::LanguageCode::Language::Neutral || m_lang == Scriptforge::LanguageCode::Language::Invariant) {
-                throw Scriptforge::Error{ Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageFile, "Neutral and Invariant languages are not valid for localization." };
+				throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode, __func__, "Neutral and Invariant are not valid language codes for loading language files.");
             }
             if (!fs::exists(m_path)) {
-                throwFileNotFoundError(m_path, m_lang);
+                throwFileNotFoundError(m_path, m_lang, __func__);
             }
             if (!fs::is_regular_file(m_path)) {
-                throwInvalidFileError(m_path, m_lang);
+                throwInvalidFileError(m_path, m_lang, __func__);
             }
         }
 
