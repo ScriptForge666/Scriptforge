@@ -29,6 +29,7 @@
     <ClCompile Include="Scriptforge.Local.ixx" />
     <ClCompile Include="Scriptforge.Log.ixx" />
     <ClCompile Include="Scriptforge.Msg.ixx" />
+    <ClCompile Include="Scriptforge.Pch.ixx" />
     <ClCompile Include="Scriptforge.RingBuffer.ixx" />
     <ClCompile Include="Scriptforge.StringConversion.ixx" />
     <ClCompile Include="Scriptforge.ThreadError.ixx" />
@@ -49,9 +50,7 @@
     <Text Include="..\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\dependency\json.hpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsHeaderUnit</CompileAs>
-    </ClCompile>
+    <ClInclude Include="..\dependency\json.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -144,7 +143,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -152,9 +151,11 @@
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
-      <BuildStlModules>true</BuildStlModules>
-      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
+      <BuildStlModules>false</BuildStlModules>
+      <AdditionalHeaderUnitDependencies>
+      </AdditionalHeaderUnitDependencies>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependency;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -162,7 +163,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -172,10 +173,11 @@
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>true</EnableModules>
-      <BuildStlModules>true</BuildStlModules>
+      <BuildStlModules>false</BuildStlModules>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalHeaderUnitDependencies>
       </AdditionalHeaderUnitDependencies>
+      <AdditionalIncludeDirectories>$(SolutionDir)dependency;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

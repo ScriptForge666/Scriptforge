@@ -18,7 +18,7 @@
 
 export module Scriptforge.LanguageCode;
 
-import std;
+import Scriptforge.Pch;
 
 namespace Scriptforge::LanguageCode {
 

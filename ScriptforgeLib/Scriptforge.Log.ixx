@@ -19,9 +19,11 @@
 export module Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.ErrCode.throwError;
 import Scriptforge.Msg;
-
-import std;
+import Scriptforge.Local;
+import Scriptforge.LanguageCode;
+import Scriptforge.Pch;
 
 namespace Scriptforge {
     inline namespace Log {
@@ -45,13 +47,13 @@ namespace Scriptforge {
             void setLogLevel(const Scriptforge::InformationLevel level);
             Scriptforge::InformationLevel getLogLevel() const;
 
-            void log(const Scriptforge::Message<T, Clock>& msg);
+            void log(const Scriptforge::BasicMessage<T, Clock>& msg);
             std::string getFilename() const;
             fs::path getPath() const;
 
         private:
             void process();
-            std::queue<Scriptforge::Message<T, Clock>> logQueue;
+            std::queue<Scriptforge::BasicMessage<T, Clock>> logQueue;
             std::mutex mtx;
             std::condition_variable cv;
             std::atomic<bool> running{ true };
@@ -75,7 +77,7 @@ namespace Scriptforge {
                 Scriptforge::ErrCode::throwError(
                     Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile,
                     __func__,
-                    Scriptforge::Local::Lang("en"),
+                    Scriptforge::Local::Lang(Scriptforge::LanguageCode::Language::English),
                     { filename }
 				);
             }
@@ -178,7 +180,7 @@ namespace Scriptforge {
             t1 = t2;
             { c.now() } -> std::convertible_to<typename Clock::time_point>;
         }
-        void Logger<T, Clock>::log(const Scriptforge::Message<T, Clock>& msg) {
+        void Logger<T, Clock>::log(const Scriptforge::BasicMessage<T, Clock>& msg) {
             std::lock_guard<std::mutex> lock(mtx);
             if (static_cast<int>(msg.getLevel()) >= static_cast<int>(m_logLevel)) {
                 logQueue.push(msg);

@@ -20,7 +20,7 @@
 #if defined(_WIN32) || defined(_WIN64)
 export module Scriptforge.AntiDebug;
 import <Windows.h>;
-import std;
+import Scriptforge.Pch;
 
 namespace Scriptforge {
 	inline namespace AntiDebug {
@@ -66,7 +66,7 @@ namespace Scriptforge {
                     debugger.store(true);
                     OutputDebugStringA("Program detected debugger, performing anti-debug operations\n");
                     TerminateProcess(GetCurrentProcess(), 1);
-                    std::exit(1);
+                    exit(1);
                     DebugBreak();
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));

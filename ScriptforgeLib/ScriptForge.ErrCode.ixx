@@ -10,21 +10,19 @@
 // limitations under the License.
 
 /**
- *@file Scriptforge.ErrCode.ixx
+ * @file Scriptforge.ErrCode.ixx
  * @brief 定义了 `Scriptforge::ErrCode` 模块，其中包含了一个枚举类 `ErrCode`，用于表示不同类型的错误代码。该模块还提供了一个函数 `toString`，用于将错误代码转换为字符串表示，以及一个函数 `throwError`，用于抛出带有错误代码和相关信息的异常。通过使用这些定义，可以方便地处理和传递错误信息，提高代码的可读性和可维护性。
  * author Scriptforge
  * @data 2026/3/29
 */
-
 module;
-namespace Scriptforge {
-	inline namespace Local {
-		class Lang;
-	}
-}
+
+
 export module Scriptforge.ErrCode;
-import std;
+import Scriptforge.Pch;
 import Scriptforge.Err;
+import Scriptforge.LanguageCode;
+
 
 namespace Scriptforge::ErrCode {
 	export enum class ErrCode {
@@ -35,7 +33,8 @@ namespace Scriptforge::ErrCode {
 		BitPackInvalidSizeForPacking = 30001, //BitPack0001: Invalid size for packing
 		BitPackValueTooLargeToPack = 30002, //BitPack0002: Value too large to pack
 		LocalLanguageFileNotFound = 40001,    // Local0001: Language file not found
-		LocalInvalidLanguageFile = 40002,     // Local0003: Invalid language file
+		LocalInvalidLanguageFile = 40002,     // Local0002: Invalid language file
+		LocalInvalidLanguageCode = 40003,     // Local0003: Invalid language code
 		RingBufferCapacityBeZero = 50001,       // RingBuffer0001: Capacity must be greater than 0
 
 	};
@@ -67,10 +66,4 @@ namespace Scriptforge::ErrCode {
 		result += std::to_string(static_cast<int>(code) % 10000);
 		return result;
 	}
-	export [[noreturn]] void throwError(
-		ErrCode code,
-		const std::string& func,
-		const Scriptforge::Local::Lang& lang,
-		const std::vector <std::string> args = {}
-	);
 }

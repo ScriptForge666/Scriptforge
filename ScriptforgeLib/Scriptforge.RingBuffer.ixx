@@ -8,15 +8,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+module;
+
+#include <cstddef>
+
 export module Scriptforge.RingBuffer;
 
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.ErrCode.throwError;
 import Scriptforge.Msg;
 import Scriptforge.Local;
 import Scriptforge.Log;
-import std;
-
+import Scriptforge.Pch;
 namespace Scriptforge {
 	inline namespace RingBuffer {
 		export 
@@ -24,7 +28,7 @@ namespace Scriptforge {
 		class ConstRingBufferIterator {
 		public:
 			using value_type = typename RingBufferType::value_type;
-			using difference_type = typename RingBufferType::difference_type;
+			using difference_type = std::ptrdiff_t;
 			using iterator_category = std::random_access_iterator_tag;
 			using reference = value_type&;
 			using const_reference = const value_type&;
@@ -54,17 +58,16 @@ namespace Scriptforge {
 		};
 
 		export
-			template <typename T = Scriptforge::Message<>, typename Alloc = std::allocator<T>>
+			template <typename T = Scriptforge::Message, typename Alloc = std::allocator<T>>
 			requires RingBufferRequires<T, Alloc>
 		class RingBuffer {
 		public:
 			using value_type = T;
 			using reference = value_type&;
 			using const_reference = const value_type&;
-			using size_type = std::size_t;
+			using size_type = size_t;
 			using iterator = int;
 			using const_iterator = ConstRingBufferIterator<RingBuffer<value_type, Alloc>>;
-			using difference_type = std::ptrdiff_t;
 			using node_container = std::vector<value_type, Alloc>;
 
 			RingBuffer(const size_type capacity = 50, const Scriptforge::Lang lang = Scriptforge::Lang{});

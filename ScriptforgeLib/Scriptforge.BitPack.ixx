@@ -20,15 +20,16 @@ export module Scriptforge.BitPack;
 
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.ErrCode.throwError;
 import Scriptforge.Local;
-import std;
+import Scriptforge.Pch;
 
 export namespace Scriptforge {
 	inline namespace BitPack {
 		export class BoolBitPack {
 		public:
 			using value_type = bool;
-			using size_type = std::size_t;
+			using size_type = size_t;
 			using classItself = BoolBitPack;
 			BoolBitPack() = default;
 			BoolBitPack(const BoolBitPack& src) = default;
@@ -88,7 +89,8 @@ namespace Scriptforge {
 			write(7, bool8);
 			m_lang = lang;
 		}
-		BoolBitPack::BoolBitPack(const std::span<bool> src, Scriptforge::Lang lang) {
+		BoolBitPack::BoolBitPack(const std::span<bool> src, Scriptforge::Lang lang) 
+			: m_lang(lang) {
 			if (src.size() != 8) {
 				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::BitPackInvalidSizeForPacking, __func__, m_lang);
 			}

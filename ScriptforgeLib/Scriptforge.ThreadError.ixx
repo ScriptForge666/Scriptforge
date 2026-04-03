@@ -14,7 +14,7 @@ import Scriptforge.Local;
 import Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.Msg;
-import std;
+import Scriptforge.Pch;
 
 namespace Scriptforge {
     inline namespace Err {
@@ -188,7 +188,7 @@ namespace Scriptforge::Err {
         Scriptforge::Log::Logger<T, Clock>& logger)
         : m_name(name), m_logger(logger)
     {
-        m_logger.log(Scriptforge::Message<T, Clock>{ "[" + m_name + "] Create a new ThreadErrorL(Async = " +
+        m_logger.log(Scriptforge::BasicMessage<T, Clock>{ "[" + m_name + "] Create a new ThreadErrorL(Async = " +
             (Async ? "true" : "false") + ").", Scriptforge::InformationLevel::Info});
     }
     template <typename T, typename Clock, bool Async>
@@ -196,7 +196,7 @@ namespace Scriptforge::Err {
     ThreadErrorL<T, Clock, Async>::~ThreadErrorL() {
         if constexpr (Async) {
             if (m_isRunning) {
-                m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Waiting for async task to complete...", Scriptforge::InformationLevel::Info});
+                m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Waiting for async task to complete...", Scriptforge::InformationLevel::Info});
                 waitForCompletion();
             }
         }
@@ -205,7 +205,7 @@ namespace Scriptforge::Err {
                 m_thread.join();
             }
         }
-        m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] ThreadErrorL destroyed.", Scriptforge::InformationLevel::Info});
+        m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] ThreadErrorL destroyed.", Scriptforge::InformationLevel::Info});
     }
 
     template <typename T, typename Clock, bool Async>
@@ -213,14 +213,14 @@ namespace Scriptforge::Err {
     template <typename U>
     void ThreadErrorL<T, Clock, Async>::threadFunc(std::exception_ptr& err, U run) {
         m_isRunning = true;
-        m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Thread started.", Scriptforge::InformationLevel::Info});
+        m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Thread started.", Scriptforge::InformationLevel::Info});
 
         try {
             run();
             if constexpr (Async) {
                 m_completionPromise.set_value();
             }
-            m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Thread completed successfully.", Scriptforge::InformationLevel::Info});
+            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Thread completed successfully.", Scriptforge::InformationLevel::Info});
         }
         catch (...) {
             err = std::current_exception();
@@ -238,7 +238,7 @@ namespace Scriptforge::Err {
                         std::runtime_error("Unknown exception")));
                 }
             }
-            m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Thread caught exception.", Scriptforge::InformationLevel::Info});
+            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Thread caught exception.", Scriptforge::InformationLevel::Info});
         }
 
         m_isRunning = false;
@@ -257,7 +257,7 @@ namespace Scriptforge::Err {
                 threadFunc(err, std::move(run));
                 });
 
-            m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Async task started.", Scriptforge::InformationLevel::Info});
+            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Async task started.", Scriptforge::InformationLevel::Info});
 
         }
         else {
@@ -268,7 +268,7 @@ namespace Scriptforge::Err {
             m_thread.join();
 
             if (err) {
-                m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Synchronous task failed.", Scriptforge::InformationLevel::Info});
+                m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Synchronous task failed.", Scriptforge::InformationLevel::Info});
                 std::rethrow_exception(err);
             }
         }
@@ -280,14 +280,14 @@ namespace Scriptforge::Err {
         static_assert(Async, "waitForCompletion() is only available in async mode");
 
         if (m_isRunning) {
-            m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Waiting for completion...", Scriptforge::InformationLevel::Info});
+            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Waiting for completion...", Scriptforge::InformationLevel::Info});
             getFuture().wait();
 
             if (m_storedException) {
-                m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Re-throwing stored exception.", Scriptforge::InformationLevel::Info});
+                m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Re-throwing stored exception.", Scriptforge::InformationLevel::Info});
                 std::rethrow_exception(m_storedException);
             }
-            m_logger.log(Scriptforge::Message<T, Clock>{"[" + m_name + "] Async task completed.", Scriptforge::InformationLevel::Info});
+            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Async task completed.", Scriptforge::InformationLevel::Info});
         }
     }
 

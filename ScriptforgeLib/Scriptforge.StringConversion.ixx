@@ -18,28 +18,21 @@
 
 export module Scriptforge.StringConversion;
 
-import std;
+import Scriptforge.Pch;
 
 namespace Scriptforge::StringConversion {
-    // ==============================================
-   // 概念：判断一个类型是否是 basic_string
-   // ==============================================
-    template <typename T>
+   export
+        template <typename T>
     concept is_basic_string = requires(T str) {
         requires std::same_as<T, std::basic_string<typename T::value_type>>;
     };
 
-    // ==============================================
-    // 概念：From 和 To 都必须是 basic_string
-    // ==============================================
+    
     template <class ToStr, class FromStr>
     concept convertible_basic_string =
         is_basic_string<FromStr> &&
         is_basic_string<ToStr>;
 
-    // ==============================================
-    // 通用转换函数（支持所有 basic_string）
-    // ==============================================
     export
         template <class ToStr, class FromStr>
         requires convertible_basic_string<ToStr, FromStr>

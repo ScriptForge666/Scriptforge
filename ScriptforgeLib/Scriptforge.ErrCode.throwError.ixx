@@ -10,44 +10,71 @@
 // limitations under the License.
 
 /**
- * @file Scriptforge.ErrCode.ixx
+ * @file Scriptforge.ErrCode.throwError.ixx
  * @brief 定义了 `Scriptforge::ErrCode` 模块，其中包含一个throwError函数的实现，以保证不出现循环依赖。该函数接受一个错误代码、函数名称、语言对象和参数列表，并根据提供的信息构建错误消息，然后抛出一个包含错误代码和消息的异常。通过使用该函数，可以方便地处理和传递错误信息，提高代码的可读性和可维护性。
  * @author Scriptforge
  * @date 2026/3/29
  */
 
-module Scriptforge.ErrCode;
+export module Scriptforge.ErrCode.throwError;
 import Scriptforge.ErrCode;
+import Scriptforge.Msg;
+import Scriptforge.LanguageCode;
 import Scriptforge.Local;
 import Scriptforge.Err;
-import std;
-
+import Scriptforge.Pch;
 
 namespace Scriptforge::ErrCode {
+    export
+        [[noreturn]] void throwError(
+            ErrCode code,
+            const std::string& func,
+            const Scriptforge::Local::Lang& lang,
+            Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Error
+        );
+    export
+        template <typename... Args>
+    [[noreturn]] void throwError(
+        ErrCode code,
+        const std::string& func,
+        const Scriptforge::Local::Lang& lang,
+        Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Error,
+        Args&&... args
+    );
+}
+
+namespace Scriptforge::ErrCode {
+    
     void throwError(
         ErrCode code,
         const std::string& func,
         const Scriptforge::Local::Lang& lang,
-        const std::vector <std::string> args
+        Scriptforge::Msg::InformationLevel level
     ) {
-
-        Scriptforge::Local::Lang default_en_lang{ "en", lang.getLangPath() };
-
-        std::string default_en_msg = default_en_lang.get(std::to_string(static_cast<int>(code)), toString(code));
-
-        std::string base_msg;
-        
-		if (args.empty()) {
-            base_msg = lang.get(std::to_string(static_cast<int>(code)), default_en_msg);
-        } else {
-            base_msg = lang.format(std::to_string(static_cast<int>(code)), args);
-            if (base_msg == std::to_string(static_cast<int>(code))) {
-                base_msg = default_en_lang.format(std::to_string(static_cast<int>(code)), args);
-            }
-        }
-
-        std::string full_msg = func + ":" + base_msg;
-
-        throw Scriptforge::Error{ toString(code), full_msg };
+        std::string codeStr = toString(code);
+        std::string baseStr = lang.atJ<std::string>("Error").at(std::to_string(int(code)));
+        throw Scriptforge::Err::Error{
+            codeStr,
+            func + ": " + baseStr,
+            level
+        };
     }
+
+    template <typename... Args>
+    void throwError(
+        ErrCode code,
+        const std::string& func,
+        const Scriptforge::Local::Lang& lang,
+        Scriptforge::Msg::InformationLevel level,
+        Args&&... args
+    ) {
+		std::string codeStr = toString(code);
+        std::string baseStr = lang.atJ<std::string>("Error").format<std::string>(std::to_string(int(code)), std::forward<Args>(args)...);
+        throw Scriptforge::Err::Error{
+            codeStr,
+            func + ": " + baseStr,
+			level
+		};
+    }
+
 }

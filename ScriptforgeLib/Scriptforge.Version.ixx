@@ -18,7 +18,7 @@
 
 export module Scriptforge.Version;
 
-import std;
+import Scriptforge.Pch;
 
 export namespace Scriptforge {
     inline namespace Version {

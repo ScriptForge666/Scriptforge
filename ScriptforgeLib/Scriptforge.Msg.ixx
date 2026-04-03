@@ -18,7 +18,7 @@
 
 export module Scriptforge.Msg;
 
-import std;
+import Scriptforge.Pch;
 
 namespace Scriptforge {
 	inline namespace Msg {
@@ -30,7 +30,25 @@ namespace Scriptforge {
 			Critical
 		};
 
-		template <typename T , typename Clock>
+		export std::string getInformationLevel(InformationLevel level) {
+			switch (level) {
+			case InformationLevel::Debug:
+				return "Debug";
+			case InformationLevel::Info:
+				return "Info";
+			case InformationLevel::Warning:
+				return "Warning";
+			case InformationLevel::Error:
+				return "Error";
+			case InformationLevel::Critical:
+				return "Critical";
+			default:
+				return "Unknown";
+			}
+		}
+
+		export
+			template <typename T, typename Clock>
 		concept MessageRequires = requires(T t1, T t2, Clock c) {
 			t1 = t2;
 			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
@@ -39,22 +57,22 @@ namespace Scriptforge {
 		export 
 			template <typename T =std::string, typename Clock = std::chrono::system_clock>
 			requires MessageRequires<T, Clock>
-		class Message {
+		class BasicMessage {
 		public:
 			using TimePoint = typename Clock::time_point;
-			Message(const T& msg = T{}, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock.now());
-			Message(const T&& msg, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock.now());
+			BasicMessage(const T& msg = T{}, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock.now());
+			BasicMessage(T&& msg, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock.now());
 			T getMessage() const;
 			InformationLevel getLevel() const;
 			TimePoint getTime() const;
-			friend std::ostream& operator<<(std::ostream& os, const Message<T, Clock>& msg);
+			friend std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
 		private:
 			T m_msg;
 			InformationLevel m_level;
 			TimePoint m_time;
 		};
 
-		using MessageD = Message<>;
+		export using Message = BasicMessage<>;
 	}
 }
 
@@ -63,34 +81,37 @@ namespace Scriptforge {
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		Message<T, Clock>::Message(const T& msg, InformationLevel level, TimePoint tp) : m_msg(msg), m_level(level), m_time(tp) {}
+		BasicMessage<T, Clock>::BasicMessage(const T& msg, InformationLevel level, TimePoint tp) : m_msg(msg), m_level(level), m_time(tp) {}
 		
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		Message<T, Clock>::Message(const T&& msg, InformationLevel level, TimePoint tp) : m_msg(msg), m_level(level), m_time(tp) {}
+		BasicMessage<T, Clock>::BasicMessage(T&& msg, InformationLevel level, TimePoint tp) : m_msg(std::move(msg)), m_level(level), m_time(tp) {}
 		
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		T Message<T, Clock>::getMessage() const {
+		T BasicMessage<T, Clock>::getMessage() const {
 			return m_msg;
 		}
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		InformationLevel Message<T, Clock>::getLevel() const {
+		InformationLevel BasicMessage<T, Clock>::getLevel() const {
 			return m_level;
 		}
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		Message<T, Clock>::TimePoint Message<T, Clock>::getTime() const {
+		typename BasicMessage<T, Clock>::TimePoint BasicMessage<T, Clock>::getTime() const {
 			return m_time;
 		}
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		std::ostream& operator<<(std::ostream& os, const Message<T, Clock>& msg) {
-			os << msg.getMessage();
+		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
+			auto time_t = std::chrono::system_clock::to_time_t(msg.getTime());
+			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
+				<< " | " << getInformationLevel(msg.getLevel())
+				<< "] " << msg.getMessage();
 			return os;
 		}
 	}

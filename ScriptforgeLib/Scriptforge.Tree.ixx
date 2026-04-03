@@ -15,13 +15,18 @@
  * @author Scriptforge
  * @date 2026/3/29
  */
+module;
+
+#include <cstddef>
 
 export module Scriptforge.Tree;
 
+import Scriptforge.Pch;
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
+import Scriptforge.ErrCode.throwError;
 import Scriptforge.Local;
-import std;
+
 
 export namespace Scriptforge {
     inline namespace Tree {
@@ -35,12 +40,12 @@ export namespace Scriptforge {
         class ConstTreeIterator {
         public:
             using value_type = typename TreeType::value_type;
+            using difference_type = std::ptrdiff_t;
             using reference = value_type&;
             using const_reference = const reference;
 			using pointer = value_type*;
             using const_pointer = const pointer;
-            using size_type = std::size_t;
-            using difference_type = std::ptrdiff_t;
+            using size_type = size_t;
             using iterator_category = std::forward_iterator_tag;
             ConstTreeIterator() = default;
             explicit ConstTreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
@@ -72,10 +77,10 @@ export namespace Scriptforge {
 		class TreeIterator : public ConstTreeIterator<TreeType> {
         public:
             using value_type = typename TreeType::value_type;
+            using difference_type = std::ptrdiff_t;
             using reference = value_type&;
             using pointer = value_type*;
-            using size_type = std::size_t;
-            using difference_type = std::ptrdiff_t;
+            using size_type = size_t;
             using iterator_category = std::forward_iterator_tag;
             TreeIterator() = default;
             explicit TreeIterator(typename TreeType::nodeptr node, TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
@@ -87,7 +92,7 @@ export namespace Scriptforge {
         };
 
         template <typename T>
-        concept TreeValueType =
+        concept TreeRequires =
             std::copy_constructible<T> &&
             std::move_constructible<T> &&
             requires(T a) {
@@ -95,7 +100,7 @@ export namespace Scriptforge {
         };
         export
             template<typename T, typename Alloc = std::allocator<T>>
-			requires TreeRequires<T, Alloc>
+			requires TreeRequires<T>
         class Tree {
         private:
             struct TreeNode;
@@ -103,10 +108,9 @@ export namespace Scriptforge {
             using value_type = T;
             using reference = value_type&;
             using const_reference = const value_type&;
-            using size_type = std::size_t;
+            using size_type = size_t;
             using iterator = TreeIterator<Tree<value_type, Alloc>>;
             using const_iterator = ConstTreeIterator<Tree<value_type, Alloc>>;
-            using difference_type = std::ptrdiff_t;
             using allocator_type = Alloc;
             using nodeptr = std::shared_ptr<TreeNode>;
 
@@ -360,21 +364,21 @@ namespace Scriptforge {
 
         //构造函数
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         Tree<T, Alloc>::Tree(const allocator_type& alloc, Scriptforge::Lang lang)
             : alloc_(alloc), m_lang(lang) {
             m_root = create_node(T());
         }
 
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         Tree<T, Alloc>::Tree(const T& node, const allocator_type& alloc)
             : alloc_(alloc) {
             m_root = create_node(node);
         }
 
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         Tree<T, Alloc>::Tree(const Tree<T, Alloc>& other)
             : alloc_(std::allocator_traits<allocator_type>::select_on_container_copy_construction(other.alloc_)) {
             auto deep_copy = [&](auto&& self, const nodeptr& original, const nodeptr& parent) -> nodeptr {
@@ -394,14 +398,14 @@ namespace Scriptforge {
 
         //返回根节点
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::root() const {
             return m_root;
         }
 
         //删除节点
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
 			if (!node) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr father = node->father.lock();
@@ -420,7 +424,7 @@ namespace Scriptforge {
 
         //添加节点
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father) {
 			if (!father) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(T());
@@ -430,7 +434,7 @@ namespace Scriptforge {
         }
 
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, T& node) {
 			if (!father) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(node);
@@ -440,7 +444,7 @@ namespace Scriptforge {
         }
 
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         typename Tree<T, Alloc>::nodeptr Tree<T, Alloc>::add(nodeptr father, const T& node) {
 			if (!father) Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
             nodeptr newnode = create_node(node);
@@ -451,14 +455,14 @@ namespace Scriptforge {
 
         //设置语言
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         void Tree<T, Alloc>::setLang(Scriptforge::Lang lang) {
             m_lang.setLocale(lang.getLanguageName());
         }
 
         //返回语言
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         Scriptforge::Lang Tree<T, Alloc>::getLang() const noexcept {
             return m_lang;
         }
@@ -466,14 +470,14 @@ namespace Scriptforge {
 
         //返回分配器
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         typename Tree<T, Alloc>::allocator_type Tree<T, Alloc>::getAllocator() const noexcept {
             return alloc_;
         }
 
         //创建新节点
         template<typename T, typename Alloc>
-            requires TreeRequires<T, Alloc>
+            requires TreeRequires<T>
         template<typename U>
         typename Tree<T, Alloc>::nodeptr
             Tree<T, Alloc>::create_node(U&& value) {

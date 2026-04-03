@@ -17,40 +17,61 @@
 */
 
 export module Scriptforge.Err;
-import std;
+import Scriptforge.Msg;
+import Scriptforge.Pch;
 
-export namespace Scriptforge {
+namespace Scriptforge {
     inline namespace Err {
-        export class Error {
+        export 
+			template<typename CodeT = std::string, typename T = std::string, typename Clock = std::chrono::system_clock>
+			requires Scriptforge::Msg::MessageRequires<T, Clock>
+        class BasicError : public Scriptforge::Msg::BasicMessage<T, Clock> {
         public:
-            Error() = default;
-            Error(std::string_view error);
-            Error(std::string_view code, std::string_view error);
+            BasicError(const CodeT& code = CodeT{}, const T& msg = T{}, Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Error, typename Clock::time_point tp = Clock::now());
+			BasicError(CodeT&& code, T&& msg, Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Error, typename Clock::time_point tp = Clock::now());
 
-            std::string_view what() const;
-            std::string_view code() const;
+            CodeT getCode() const;
 
-            friend std::ostream& operator<<(std::ostream& os, const Error& err);
+            friend std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err);
 
         private:
-            std::string m_code{ "" };
-            std::string m_error{ "Unknown Error" };
+            CodeT m_code{ "" };
         };
-        export std::ostream& operator<<(std::ostream& os, const class Error& err);
+
+        export using Error = BasicError<>;
+
+        export
+			template <typename CodeT, typename T, typename Clock>
+            std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err);
 
     }
 }
 
 namespace Scriptforge {
     inline namespace Err {
-        Error::Error(std::string_view error) : m_error{ error } {}
-        Error::Error(std::string_view code, std::string_view error) :m_code{ code }, m_error{ error } {}
+		template<typename CodeT, typename T, typename Clock>
+			requires Scriptforge::Msg::MessageRequires<T, Clock>
+        BasicError<CodeT, T, Clock>::BasicError(const CodeT& code, const T& msg, Scriptforge::Msg::InformationLevel level, typename Clock::time_point tp)
+            : Scriptforge::Msg::BasicMessage<T, Clock>(msg, level, tp), m_code(code) {}
 
-        std::string_view Error::what() const { return m_error; }
-        std::string_view Error::code() const { return m_code; }
+        template<typename CodeT, typename T, typename Clock>
+            requires Scriptforge::Msg::MessageRequires<T, Clock>
+		BasicError<CodeT, T, Clock>::BasicError(CodeT&& code, T&& msg, Scriptforge::Msg::InformationLevel level, typename Clock::time_point tp)
+            : Scriptforge::Msg::BasicMessage<T, Clock>(std::move(msg), level, tp), m_code(std::move(code)) {}
 
-        std::ostream& operator<<(std::ostream& os, const Error& err) {
-            os.put('[') << err.code() << ']' << " " << err.what();
+        template<typename CodeT, typename T, typename Clock>
+			requires Scriptforge::Msg::MessageRequires<T, Clock>
+        CodeT BasicError<CodeT, T, Clock>::getCode() const {
+            return m_code;
+		}
+
+        template <typename CodeT, typename T, typename Clock>
+        std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err) {
+            auto time_t = std::chrono::system_clock::to_time_t(err.getTime());
+			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
+				<< " | " << getInformationLevel(err.getLevel())
+				<< " | " << err.getCode()
+				<< "] " << err.getMessage();
             return os;
         }
     }

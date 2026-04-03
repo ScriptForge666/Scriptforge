@@ -44,9 +44,6 @@
     <ClCompile Include="Scriptforge.ThreadError.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="json.hpp">
-      <Filter>头文件</Filter>
-    </ClCompile>
     <ClCompile Include="Scriptforge.RingBuffer.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -60,6 +57,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Scriptforge.StringConversion.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.Pch.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,5 +93,10 @@
     <Text Include="..\LICENSE.txt">
       <Filter>资源文件</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\dependency\json.hpp">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
