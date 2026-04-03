@@ -31,7 +31,7 @@ export import Scriptforge.BitPack;
 
 import std;
 constexpr std::string_view ProjectName{ "Scriptforge" };
-constexpr std::string_view ProjectVersion{ "0.1.2" };
+constexpr std::string_view ProjectVersion{ "0.1.2-dev-withBug" };
 constexpr std::string_view ProjectContributor{ "Scriptforge" };
 constexpr std::string_view ProjectLicense{ "Apache License 2.0"};
 constexpr std::chrono::year ProjectStartYear{ 2025 };
