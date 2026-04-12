@@ -1,33 +1,6 @@
+// Copyright 2006 Nemanja Trifunovic
 
-//json.hpp
-//Website:https://github.com/nlohmann/json
-
-MIT License 
-
-Copyright (c) 2013-2026 Niels Lohmann
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-//utf8/
-
-Boost Software License - Version 1.0 - August 17th, 2003
-
+/*
 Permission is hereby granted, free of charge, to any person or organization
 obtaining a copy of the software and accompanying documentation covered by
 this license (the "Software") to use, reproduce, display, distribute,
@@ -49,3 +22,25 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+*/
+
+
+#ifndef UTF8_FOR_CPP_2675DCD0_9480_4c0c_B92A_CC14C027B731
+#define UTF8_FOR_CPP_2675DCD0_9480_4c0c_B92A_CC14C027B731
+
+/*
+To control the C++ language version used by the library, you can define UTF_CPP_CPLUSPLUS macro
+and set it to one of the values used by the __cplusplus predefined macro.
+
+For instance,
+    #define UTF_CPP_CPLUSPLUS 199711L
+will cause the UTF-8 CPP library to use only types and language features available in the C++ 98 standard.
+Some library features will be disabled.
+
+If you leave UTF_CPP_CPLUSPLUS undefined, it will be internally assigned to __cplusplus.
+*/
+
+#include "utf8/checked.h"
+#include "utf8/unchecked.h"
+
+#endif // header guard

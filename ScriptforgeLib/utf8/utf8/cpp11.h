@@ -1,33 +1,6 @@
+// Copyright 2018 Nemanja Trifunovic
 
-//json.hpp
-//Website:https://github.com/nlohmann/json
-
-MIT License 
-
-Copyright (c) 2013-2026 Niels Lohmann
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-//utf8/
-
-Boost Software License - Version 1.0 - August 17th, 2003
-
+/*
 Permission is hereby granted, free of charge, to any person or organization
 obtaining a copy of the software and accompanying documentation covered by
 this license (the "Software") to use, reproduce, display, distribute,
@@ -49,3 +22,49 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+*/
+
+
+#ifndef UTF8_FOR_CPP_a184c22c_d012_11e8_a8d5_f2801f1b9fd1
+#define UTF8_FOR_CPP_a184c22c_d012_11e8_a8d5_f2801f1b9fd1
+
+#include "checked.h"
+
+namespace utf8
+{
+    inline void append16(utfchar32_t cp, std::u16string& s)
+    {
+        append16(cp, std::back_inserter(s));
+    }
+
+    inline std::string utf16to8(const std::u16string& s)
+    {
+        std::string result;
+        utf16to8(s.begin(), s.end(), std::back_inserter(result));
+        return result;
+    }
+
+    inline std::u16string utf8to16(const std::string& s)
+    {
+        std::u16string result;
+        utf8to16(s.begin(), s.end(), std::back_inserter(result));
+        return result;
+    }
+
+    inline std::string utf32to8(const std::u32string& s)
+    {
+        std::string result;
+        utf32to8(s.begin(), s.end(), std::back_inserter(result));
+        return result;
+    }
+
+    inline std::u32string utf8to32(const std::string& s)
+    {
+        std::u32string result;
+        utf8to32(s.begin(), s.end(), std::back_inserter(result));
+        return result;
+    }
+} // namespace utf8
+
+#endif // header guard
+

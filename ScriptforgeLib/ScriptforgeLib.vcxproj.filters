@@ -98,5 +98,26 @@
     <ClInclude Include="..\dependency\json.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="utf8\utf8.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utf8\utf8\checked.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utf8\utf8\core.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utf8\utf8\cpp11.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utf8\utf8\cpp17.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utf8\utf8\cpp20.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utf8\utf8\unchecked.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

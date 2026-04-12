@@ -51,6 +51,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependency\json.hpp" />
+    <ClInclude Include="utf8\utf8.h" />
+    <ClInclude Include="utf8\utf8\checked.h" />
+    <ClInclude Include="utf8\utf8\core.h" />
+    <ClInclude Include="utf8\utf8\cpp11.h" />
+    <ClInclude Include="utf8\utf8\cpp17.h" />
+    <ClInclude Include="utf8\utf8\cpp20.h" />
+    <ClInclude Include="utf8\utf8\unchecked.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

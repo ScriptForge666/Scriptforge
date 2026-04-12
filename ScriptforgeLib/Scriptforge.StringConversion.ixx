@@ -16,26 +16,29 @@
  * @date 2026/4/1
 */
 
+module;
+
+#include "utf8/utf8/cpp20.h"
+
 export module Scriptforge.StringConversion;
 
 import Scriptforge.Pch;
 
 namespace Scriptforge::StringConversion {
-   export
-        template <typename T>
+    export
+    template <typename T>
     concept is_basic_string = requires(T str) {
         requires std::same_as<T, std::basic_string<typename T::value_type>>;
     };
 
-    
     template <class ToStr, class FromStr>
     concept convertible_basic_string =
         is_basic_string<FromStr> &&
         is_basic_string<ToStr>;
 
     export
-        template <class ToStr, class FromStr>
-        requires convertible_basic_string<ToStr, FromStr>
+    template <class ToStr, class FromStr>
+    requires convertible_basic_string<ToStr, FromStr>
     ToStr str_convert(const FromStr& str);
 }
 
@@ -46,15 +49,93 @@ namespace Scriptforge::StringConversion {
         if constexpr (std::is_same_v<ToStr, FromStr>) {
             return str;
         }
-        else {
-            using ToChar = typename ToStr::value_type;
-            ToStr result;
-            result.reserve(str.size());
 
-            for (auto ch : str) {
-                result += static_cast<ToChar>(ch);
+        //------------------------------------------------------------------
+        // ✨ 任意类型 → string（自动中转 u8）
+        //------------------------------------------------------------------
+        else if constexpr (std::is_same_v<ToStr, std::string>) {
+            return str_convert<std::string, std::u8string>(
+                str_convert<std::u8string, FromStr>(str)
+            );
+        }
+
+        //------------------------------------------------------------------
+        // ✨ string → 任意类型（自动中转 u8）
+        //------------------------------------------------------------------
+        else if constexpr (std::is_same_v<FromStr, std::string>) {
+            return str_convert<ToStr, std::u8string>(
+                str_convert<std::u8string, std::string>(str)
+            );
+        }
+
+        //------------------------------------------------------------------
+        // u8 ↔ u16
+        //------------------------------------------------------------------
+        else if constexpr (std::is_same_v<ToStr, std::u16string> &&
+            std::is_same_v<FromStr, std::u8string>) {
+            return utf8::utf8to16(str);
+        }
+        else if constexpr (std::is_same_v<ToStr, std::u8string> &&
+            std::is_same_v<FromStr, std::u16string>) {
+            return utf8::utf16tou8(str);
+        }
+
+        //------------------------------------------------------------------
+        // u8 ↔ u32
+        //------------------------------------------------------------------
+        else if constexpr (std::is_same_v<ToStr, std::u32string> &&
+            std::is_same_v<FromStr, std::u8string>) {
+            return utf8::utf8to32(str);
+        }
+        else if constexpr (std::is_same_v<ToStr, std::u8string> &&
+            std::is_same_v<FromStr, std::u32string>) {
+            return utf8::utf32tou8(str);
+        }
+
+        //------------------------------------------------------------------
+        // string ↔ u8string（底层强转）
+        //------------------------------------------------------------------
+        else if constexpr (std::is_same_v<ToStr, std::u8string> &&
+            std::is_same_v<FromStr, std::string>) {
+            return std::u8string(reinterpret_cast<const char8_t*>(str.data()), str.size());
+        }
+        else if constexpr (std::is_same_v<ToStr, std::string> &&
+            std::is_same_v<FromStr, std::u8string>) {
+            return std::string(reinterpret_cast<const char*>(str.data()), str.size());
+        }
+
+        //------------------------------------------------------------------
+        // u8 ↔ wstring（跨平台）
+        //------------------------------------------------------------------
+        else if constexpr (std::is_same_v<ToStr, std::wstring> &&
+            std::is_same_v<FromStr, std::u8string>) {
+            if constexpr (sizeof(wchar_t) == 2) {
+                auto u16 = utf8::utf8to16(str);
+                return std::wstring(reinterpret_cast<const wchar_t*>(u16.data()), u16.size());
+            } else {
+                auto u32 = utf8::utf8to32(str);
+                return std::wstring(reinterpret_cast<const wchar_t*>(u32.data()), u32.size());
             }
-            return result;
+        }
+        else if constexpr (std::is_same_v<ToStr, std::u8string> &&
+            std::is_same_v<FromStr, std::wstring>) {
+            if constexpr (sizeof(wchar_t) == 2) {
+                std::u16string u16(reinterpret_cast<const char16_t*>(str.data()), str.size());
+                return utf8::utf16tou8(u16);
+            } else {
+                std::u32string u32(reinterpret_cast<const char32_t*>(str.data()), str.size());
+                return utf8::utf32tou8(u32);
+            }
+        }
+
+        //------------------------------------------------------------------
+        // ❌ 不支持的组合
+        //------------------------------------------------------------------
+        else {
+            static_assert(
+                !convertible_basic_string<ToStr, FromStr>,
+                "str_convert: 不支持该字符串类型组合"
+            );
         }
     }
 }
