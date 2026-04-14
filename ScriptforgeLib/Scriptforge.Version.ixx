@@ -11,7 +11,7 @@
 
 /**
  * @file Scriptforge.Version.ixx
- * @brief 定义了 `Scriptforge::Version` 模块，其中包含了一个 `VersionInfo` 类，用于表示项目的版本信息。该类提供了多个构造函数，用于初始化项目名称、版本号、贡献者、许可证和起始年份等信息。还提供了成员函数来获取版本信息、版权信息和年份区间等内容。通过使用该类，可以方便地管理和展示项目的版本信息，提高代码的可读性和可维护性。
+ * @brief 定义了 Scriptforge::Version 模块，包含 VersionInfo 类，用于管理项目版本、版权、许可证信息。
  * @author Scriptforge
  * @date 2026/3/29
  */
@@ -20,121 +20,89 @@ export module Scriptforge.Version;
 
 import Scriptforge.Pch;
 
-export namespace Scriptforge {
-    inline namespace Version {
-        class VersionInfo {
-        public:
-            VersionInfo() = delete;
-            VersionInfo(const VersionInfo&) = delete;
-            VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-                std::string_view ProjectContributor, std::string_view ProjectLicense,
-                unsigned short ProjectStartYear);
-            VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-                std::string_view ProjectContributor, std::string_view ProjectLicense,
-                std::chrono::year ProjectStartYear);
-            VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-                std::string_view ProjectContributor, std::string_view ProjectLicense,
-                unsigned short ProjectStartYear, unsigned short ProjectStopYear);
-            VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-                std::string_view ProjectContributor, std::string_view ProjectLicense,
-                std::chrono::year ProjectStartYear, std::chrono::year ProjectStopYear);
-            VersionInfo& operator=(const VersionInfo&) = delete;
-            std::string getVersion() const;
-            std::string getCopyright() const;
-            std::string getYearInterval() const;
-            ~VersionInfo() = default;
-        private:
-            std::chrono::year getYear() const;
-            std::string_view m_ProjectName;
-            std::string_view m_ProjectVersion;
-            std::string_view m_ProjectContributor;
-            std::string_view m_ProjectLicense;
-            std::chrono::year m_ProjectStartYear;
-            std::chrono::year m_ProjectStopYear;
-            bool m_alreadyStopped{ false };
-        };
-    }
-}
 namespace Scriptforge {
     inline namespace Version {
-        VersionInfo::VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-            std::string_view ProjectContributor, std::string_view ProjectLicense,
-            unsigned short ProjectStartYear)
-            : m_ProjectName(ProjectName),
-            m_ProjectVersion(ProjectVersion),
-            m_ProjectContributor(ProjectContributor),
-            m_ProjectLicense(ProjectLicense),
-            m_ProjectStartYear(ProjectStartYear),
-            m_alreadyStopped(false)
-        {
+        export class VersionInfo {
+        public:
+            // 构造函数
+            constexpr VersionInfo(
+                std::string_view projectName,
+                std::string_view projectVersion,
+                std::string_view projectContributor,
+                std::string_view projectLicense,
+                std::chrono::year projectStartYear
+            ) noexcept;
+
+            // 版本信息
+            std::string getVersion() const noexcept;
+            std::string getCopyright() const noexcept;
+            std::string getYearInterval() const noexcept;
+            std::string getFullInfo() const noexcept;
+
+        private:
+            static constexpr std::chrono::year getCompileYear() noexcept;
+
+            std::string_view m_projectName;
+            std::string_view m_projectVersion;
+            std::string_view m_projectContributor;
+            std::string_view m_projectLicense;
+            std::chrono::year m_projectStartYear;
+            std::chrono::year m_projectCurrentYear;
+        };
+
+        // 支持直接打印
+        export std::ostream& operator<<(std::ostream& os, const VersionInfo& info) {
+            return os << info.getFullInfo();
+        }
+    }
+}
+
+namespace Scriptforge {
+    inline namespace Version {
+        constexpr std::chrono::year VersionInfo::getCompileYear() noexcept {
+            constexpr std::string_view date = __DATE__;
+            // __DATE__ 格式：MMM DD YYYY 共 11 字符
+            constexpr auto yearPos = date.size() - 4;
+            const int year = std::stoi(std::string(date.substr(yearPos)));
+            return std::chrono::year{ year };
         }
 
-        VersionInfo::VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-            std::string_view ProjectContributor, std::string_view ProjectLicense,
-            std::chrono::year ProjectStartYear)
-            : m_ProjectName(ProjectName),
-            m_ProjectVersion(ProjectVersion),
-            m_ProjectContributor(ProjectContributor),
-            m_ProjectLicense(ProjectLicense),
-            m_ProjectStartYear(ProjectStartYear),
-            m_alreadyStopped(false)
-        {
-        }
+        constexpr VersionInfo::VersionInfo(
+            std::string_view projectName,
+            std::string_view projectVersion,
+            std::string_view projectContributor,
+            std::string_view projectLicense,
+            std::chrono::year projectStartYear
+        ) noexcept
+            : m_projectName(projectName)
+            , m_projectVersion(projectVersion)
+            , m_projectContributor(projectContributor)
+            , m_projectLicense(projectLicense)
+            , m_projectStartYear(projectStartYear)
+            , m_projectCurrentYear(getCompileYear())
+        {}
 
-        VersionInfo::VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-            std::string_view ProjectContributor, std::string_view ProjectLicense,
-            unsigned short ProjectStartYear, unsigned short ProjectStopYear)
-            : m_ProjectName(ProjectName),
-            m_ProjectVersion(ProjectVersion),
-            m_ProjectContributor(ProjectContributor),
-            m_ProjectLicense(ProjectLicense),
-            m_ProjectStartYear(ProjectStartYear),
-            m_ProjectStopYear(ProjectStopYear),
-            m_alreadyStopped(true)
-        {
-        }
+        std::string VersionInfo::getYearInterval() const noexcept {
+            const int start = static_cast<int>(m_projectStartYear);
+            const int current = static_cast<int>(m_projectCurrentYear);
 
-        VersionInfo::VersionInfo(std::string_view ProjectName, std::string_view ProjectVersion,
-            std::string_view ProjectContributor, std::string_view ProjectLicense,
-            std::chrono::year ProjectStartYear, std::chrono::year ProjectStopYear)
-            : m_ProjectName(ProjectName),
-            m_ProjectVersion(ProjectVersion),
-            m_ProjectContributor(ProjectContributor),
-            m_ProjectLicense(ProjectLicense),
-            m_ProjectStartYear(ProjectStartYear),
-            m_ProjectStopYear(ProjectStopYear),
-            m_alreadyStopped(true)
-        {
-        }
-
-        std::string VersionInfo::getVersion() const {
-            return std::string(m_ProjectName) + " version " + std::string(m_ProjectVersion);
-        }
-
-        std::chrono::year VersionInfo::getYear() const {
-            using namespace std::chrono;
-            auto now = system_clock::now();
-            auto dp = floor<days>(now);
-            year_month_day ymd{ dp };
-            return ymd.year();
-        }
-
-        std::string VersionInfo::getCopyright() const {
-            return "Copyright " + getYearInterval() + " " + 
-                std::string(m_ProjectContributor) + "\nLicensed under the " + 
-                std::string(m_ProjectLicense);
-        }
-        std::string VersionInfo::getYearInterval() const {
-            std::chrono::year currentYear;
-            if (m_alreadyStopped)currentYear = m_ProjectStopYear;
-            else currentYear = getYear();
-            std::chrono::year startYear = m_ProjectStartYear;
-            if (currentYear == startYear) {
-                return std::to_string(int(m_ProjectStartYear));
+            if (start >= current) {
+                return std::to_string(start);
             }
-            else {
-                return std::to_string(int(m_ProjectStartYear)) + "-" + std::to_string(int(currentYear));
-            }
+            return std::to_string(start) + "-" + std::to_string(current);
+        }
+
+        std::string VersionInfo::getVersion() const noexcept {
+            return std::string(m_projectName) + " version " + std::string(m_projectVersion);
+        }
+
+        std::string VersionInfo::getCopyright() const noexcept {
+            return "Copyright " + getYearInterval() + " " + std::string(m_projectContributor)
+                + "\nLicensed under the " + std::string(m_projectLicense);
+        }
+
+        std::string VersionInfo::getFullInfo() const noexcept {
+            return getVersion() + "\n" + getCopyright();
         }
     }
 }

@@ -66,4 +66,9 @@ namespace Scriptforge::ErrCode {
 		result += std::to_string(static_cast<int>(code) % 10000);
 		return result;
 	}
+
+	export std::ostream& operator<<(std::ostream& os, const ErrCode& errCode) {
+		os << toString(errCode);
+		return os;
+	}
 }

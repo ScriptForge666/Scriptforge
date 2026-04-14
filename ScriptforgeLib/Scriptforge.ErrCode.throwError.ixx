@@ -51,10 +51,9 @@ namespace Scriptforge::ErrCode {
         const Scriptforge::Local::Lang& lang,
         Scriptforge::Msg::InformationLevel level
     ) {
-        std::string codeStr = toString(code);
         std::string baseStr = lang.atJ<std::string>("Error").at(std::to_string(int(code)));
-        throw Scriptforge::Err::Error{
-            codeStr,
+        throw Scriptforge::Err::BasicError<ErrCode> {
+            code,
             func + ": " + baseStr,
             level
         };
@@ -68,10 +67,9 @@ namespace Scriptforge::ErrCode {
         Scriptforge::Msg::InformationLevel level,
         Args&&... args
     ) {
-		std::string codeStr = toString(code);
         std::string baseStr = lang.atJ<std::string>("Error").format<std::string>(std::to_string(int(code)), std::forward<Args>(args)...);
-        throw Scriptforge::Err::Error{
-            codeStr,
+        throw Scriptforge::Err::BasicError<ErrCode> {
+            code,
             func + ": " + baseStr,
 			level
 		};

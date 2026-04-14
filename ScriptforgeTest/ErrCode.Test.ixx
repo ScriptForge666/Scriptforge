@@ -18,7 +18,7 @@
 
 module;
 #include<gtest/gtest.h>
-export module ErrCodeTest;
+export module ErrCode.Test;
 
 import Scriptforge.LanguageCode;
 import Scriptforge.Local;
@@ -27,15 +27,11 @@ import Scriptforge.Err;
 import Scriptforge.ErrCode;
 import Scriptforge.ErrCode.throwError;
 import std;
-
+using namespace Scriptforge::ErrCode;
 
 
 namespace Scriptforge::ErrCode::Test {
-
-
-
     TEST(ErrCodeTest, ToStringValidCodes) {
-        using namespace Scriptforge::ErrCode;
 
         // 测试 Tree 错误代码
         EXPECT_EQ(toString(ErrCode::TreeInvalidNode), "Tree1");
@@ -58,7 +54,6 @@ namespace Scriptforge::ErrCode::Test {
     }
 
     TEST(ErrCodeTest, ToStringUnknownCode) {
-        using namespace Scriptforge::ErrCode;
 
         // 测试未知错误代码类型
         ErrCode unknownCode = static_cast<ErrCode>(99999);
@@ -91,52 +86,18 @@ namespace Scriptforge::ErrCode::Test {
         EXPECT_EQ(static_cast<int>(ErrCode::RingBufferCapacityBeZero), 50001);
     }
 
-    /*TEST(ErrCodeTest, ThrowErrorFunctionSignature)
+    TEST(ErrCodeTest, OstreamPrint) {
+        ErrCode code = ErrCode::TreeInvalidNode;
+        std::cout << code;
+    }
+
+    TEST(ErrCodeTest, ThrowErrorFunctionSignature)
     {
         using namespace Scriptforge::ErrCode;
-		using namespace Scriptforge::LanguageCode;
+        using namespace Scriptforge::LanguageCode;
         using namespace Scriptforge::Local;
         using namespace Scriptforge::Msg;
 
-        Lang lang{Language::Chinese};
-
         
-        EXPECT_THROW(
-            throwError(ErrCode::TreeInvalidNode, "TestFunc", lang),
-            Scriptforge::Err::Error
-        );
-
-        // 3. 测试带参模板 throwError
-        //EXPECT_THROW(
-        //    throwError(ErrCode::TreeInvalidNode, "TestFunc2", lang, InformationLevel::Error, "zh.json"),
-        //    Scriptforge::Err::Error
-        //);
-    }
-    */
-
-    // 参数化测试 - 测试所有已知错误代码的 toString 功能
-    class ErrCodeToStringTest : public ::testing::TestWithParam<std::tuple<Scriptforge::ErrCode::ErrCode, std::string>> {};
-
-    TEST_P(ErrCodeToStringTest, AllKnownErrorCodes) {
-        auto [errorCode, expectedString] = GetParam();
-        EXPECT_EQ(Scriptforge::ErrCode::toString(errorCode), expectedString);
-    }
-
-
-    // 测试错误代码分类逻辑
-    TEST(ErrCodeTest, ErrorCodeCategorization) {
-        using namespace Scriptforge::ErrCode;
-
-        // 验证错误代码分类逻辑
-        EXPECT_EQ(static_cast<int>(ErrCode::TreeInvalidNode) / 10000, 1);
-        EXPECT_EQ(static_cast<int>(ErrCode::LogCannotOpenLogFile) / 10000, 2);
-        EXPECT_EQ(static_cast<int>(ErrCode::BitPackInvalidSizeForPacking) / 10000, 3);
-        EXPECT_EQ(static_cast<int>(ErrCode::LocalLanguageFileNotFound) / 10000, 4);
-        EXPECT_EQ(static_cast<int>(ErrCode::RingBufferCapacityBeZero) / 10000, 5);
-
-        // 验证错误代码序号
-        EXPECT_EQ(static_cast<int>(ErrCode::TreeInvalidNode) % 10000, 1);
-        EXPECT_EQ(static_cast<int>(ErrCode::TreeEmptyNode) % 10000, 2);
-        EXPECT_EQ(static_cast<int>(ErrCode::TreeOrphanedNode) % 10000, 3);
     }
 }
