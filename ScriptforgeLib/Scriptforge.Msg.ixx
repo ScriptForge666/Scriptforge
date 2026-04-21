@@ -16,6 +16,10 @@
  * @date 2026/3/29
  */
 
+module;
+
+#include <ctime>
+
 export module Scriptforge.Msg;
 
 import Scriptforge.Pch;
@@ -49,10 +53,14 @@ namespace Scriptforge {
 
 		export
 			template <typename T, typename Clock>
-		concept MessageRequires = requires(T t1, T t2, Clock c) {
-			t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-		};
+		concept MessageRequires = 
+			std::copyable<T> &&
+			std::copyable<Clock> &&
+			requires {
+				typename Clock::time_point;
+				{ Clock::now() } -> std::convertible_to<typename Clock::time_point>;
+				//{ Clock::to_time_t(std::declval<typename Clock::time_point>()) } -> std::convertible_to<typename time_t>;
+			};
 
 		export 
 			template <typename T =std::string, typename Clock = std::chrono::system_clock>
@@ -60,12 +68,11 @@ namespace Scriptforge {
 		class BasicMessage {
 		public:
 			using TimePoint = typename Clock::time_point;
-			BasicMessage(const T& msg = T{}, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock.now());
-			BasicMessage(T&& msg, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock.now());
-			T getMessage() const noexcept;
+			BasicMessage(const T& msg = T{}, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock::now());
+			BasicMessage(T&& msg, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock::now());
+			const T& getMessage() const noexcept;
 			InformationLevel getLevel() const noexcept;
 			TimePoint getTime() const noexcept;
-			friend std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
 		private:
 			T m_msg;
 			InformationLevel m_level;
@@ -82,14 +89,14 @@ namespace Scriptforge {
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
 		BasicMessage<T, Clock>::BasicMessage(const T& msg, InformationLevel level, TimePoint tp) : m_msg(msg), m_level(level), m_time(tp) {}
-		
+
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
 		BasicMessage<T, Clock>::BasicMessage(T&& msg, InformationLevel level, TimePoint tp) : m_msg(std::move(msg)), m_level(level), m_time(tp) {}
-		
+
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		T BasicMessage<T, Clock>::getMessage() const noexcept {
+		const T& BasicMessage<T, Clock>::getMessage() const noexcept {
 			return m_msg;
 		}
 
@@ -106,10 +113,22 @@ namespace Scriptforge {
 		}
 
 		template <typename T, typename Clock>
-			requires MessageRequires<T, Clock>
+			requires MessageRequires<T, Clock> &&
+			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); } &&
+			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
 		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
-			auto time_t = std::chrono::system_clock::to_time_t(msg.getTime());
-			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
+			auto time_t = Clock::to_time_t(msg.getTime());
+			os << "[" << std::format("{:%Y-%m-%d %H:%M:%S}", time_t)
+				<< " | " << getInformationLevel(msg.getLevel())
+				<< "] " << msg.getMessage();
+			return os;
+		}
+
+		template <typename T, typename Clock>
+			requires MessageRequires<T, Clock>&&
+		std::same_as<Clock, std::chrono::steady_clock>
+			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
+			os << "[ " << msg.getTime().time_since_epoch().count()
 				<< " | " << getInformationLevel(msg.getLevel())
 				<< "] " << msg.getMessage();
 			return os;

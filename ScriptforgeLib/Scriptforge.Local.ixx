@@ -68,7 +68,7 @@ namespace Scriptforge {
             T at(const T& key) const;
             template<typename T>
                 requires is_basic_string<T>
-            const JsonWithFormat& atJ(const T& key) const;
+            const JsonWithFormat atJ(const T& key) const;
             template<typename T>
                 requires is_basic_string<T>
             T value(const T& key, const T& defaultValue) const;
@@ -85,7 +85,7 @@ namespace Scriptforge {
             bool isLoaded() const;
             template<typename T>
                 requires is_basic_string<T>
-            JsonWithFormat& operator[](const T& key);
+            JsonWithFormat operator[](const T& key);
         private:
             void loadLanguageFile(Scriptforge::LanguageCode::Language lang, fs::path path);
             void LanguageIsLegal(Scriptforge::LanguageCode::Language lang) const;
@@ -193,14 +193,14 @@ namespace Scriptforge {
 
         template<typename T>
             requires is_basic_string<T>
-        const JsonWithFormat& Lang::atJ(const T& key) const {
-            return j.at(key);
+        const JsonWithFormat Lang::atJ(const T& key) const {
+            return JsonWithFormat(j.at(str_convert<std::string>(key)));
         }
 
         template<typename T>
             requires is_basic_string<T>
         T Lang::value(const T& key, const T& defaultValue) const {
-            return sstr_convert<T, std::string>(j.value(str_convert<std::string, T>(key), str_convert<std::string, T>(defaultValue)));
+            return str_convert<T, std::string>(j.value(str_convert<std::string, T>(key), str_convert<std::string, T>(defaultValue)));
         }
 
 
@@ -214,7 +214,7 @@ namespace Scriptforge {
         template<typename T>
             requires is_basic_string<T>
         bool Lang::has(const T& key) const {
-            return j.contains(key);
+            return j.contains(str_convert<std::string>(key));
         }
 
 
@@ -245,8 +245,8 @@ namespace Scriptforge {
 
         template<typename T>
             requires is_basic_string<T>
-        JsonWithFormat& Lang::operator[](const T& key) {
-            return j[key];
+        JsonWithFormat Lang::operator[](const T& key) {
+            return JsonWithFormat(j[str_convert<std::string>(key)]);
         }
 
 

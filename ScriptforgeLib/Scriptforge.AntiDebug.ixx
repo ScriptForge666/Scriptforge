@@ -17,60 +17,51 @@
  */
 
 //Waring:It is only compatible with Windows!
+module;
+#include "random.h"
 #if defined(_WIN32) || defined(_WIN64)
 export module Scriptforge.AntiDebug;
 import <Windows.h>;
 import Scriptforge.Pch;
 
 namespace Scriptforge {
-	inline namespace AntiDebug {
-        export class AntiDebugger {
+	inline namespace ADNS {
+        export class ADCL {
         public:
-            AntiDebugger();
-            ~AntiDebugger();
+            ADCL();
+            ~ADCL();
             void start();
             void stop();
             bool is_debugger_present() const;
 
         private:
-            std::atomic<bool> stop_flag;
-            std::atomic<bool> debugger;
-            std::unique_ptr<std::thread> antiDebugThread;
-            std::mutex mtx;
-            void anti_debug();
+            std::atomic<bool> m_stopFlag;
+            std::atomic<bool> m_debugger;
+            std::unique_ptr<std::thread> m_antiDebugThread;
+            std::mutex m_mtx;
+            void antiDebug();
         };
+		using AntiDebuger = ADCL;
 	}
+	namespace AntiDebug = ADNS;
 }
 
 namespace Scriptforge {
-    inline namespace AntiDebug {
-        AntiDebugger::AntiDebugger() : stop_flag(false), debugger(false), antiDebugThread(nullptr) {}
-        AntiDebugger::~AntiDebugger() {
+    inline namespace ADNS {
+        ADCL::ADCL() : m_stopFlag(false), m_debugger(false), m_antiDebugThread(nullptr) {}
+        ADCL::~ADCL() {
             stop();
         }
-        void AntiDebugger::start() {
-            std::thread antiDebug(&AntiDebugger::anti_debug, this);
+        void ADCL::start() {
+            std::thread antiDebug(&ADCL::antiDebug, this);
             antiDebug.detach();
         }
-        void AntiDebugger::stop() {
-            stop_flag.store(true);
+        void ADCL::stop() {
+            m_stopFlag.store(true);
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-        bool AntiDebugger::is_debugger_present() const {
-            return debugger.load();
-        }
-        void AntiDebugger::anti_debug() {
-            while (!stop_flag.load()) {
-               if (IsDebuggerPresent()) {
-                    std::lock_guard<std::mutex> lock(mtx);
-                    debugger.store(true);
-                    OutputDebugStringA("Program detected debugger, performing anti-debug operations\n");
-                    TerminateProcess(GetCurrentProcess(), 1);
-                    exit(1);
-                    DebugBreak();
-                }
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
+        bool ADCL::is_debugger_present() const {
+            return m_debugger.load();
         }
     }
 }

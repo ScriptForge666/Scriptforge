@@ -27,9 +27,8 @@ namespace Scriptforge::Local::Test
                 e.getCode(),
                 Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode
             );
-
-            EXPECT_EQ(
-                e.what(),
+            EXPECT_STREQ(
+                e.what().c_str(),
                 "LanguageIsLegal: Neutral and Invariant are not valid language codes for loading language files."
             );
         }

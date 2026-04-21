@@ -44,8 +44,12 @@ module;
 
 export module Scriptforge.Pch;
 
+#ifdef _MSC_VER
+
 #pragma warning(push)
 #pragma warning(disable : 5244)
+
+#endif
 
 #include <algorithm>
 #include <any>
@@ -169,4 +173,8 @@ export module Scriptforge.Pch;
 #include <cwchar>
 #include <cwctype>
 
+#ifdef _MSC_VER
+
 #pragma warning(pop)
+
+#endif
