@@ -110,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="ErrCode.Test.ixx" />
     <ClCompile Include="Local.Test.ixx" />
+    <ClCompile Include="StringConversion.Test.ixx" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>

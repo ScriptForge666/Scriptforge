@@ -17,7 +17,9 @@
 */
 
 module;
+
 #include<gtest/gtest.h>
+
 export module ErrCode.Test;
 
 import Scriptforge.LanguageCode;
@@ -26,7 +28,7 @@ import Scriptforge.Msg;
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
 import Scriptforge.ErrCode.throwError;
-import std;
+import Scriptforge.Pch;
 using namespace Scriptforge::ErrCode;
 
 
