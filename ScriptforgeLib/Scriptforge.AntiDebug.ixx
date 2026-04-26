@@ -16,55 +16,46 @@
  * @date 2026/3/29
  */
 
-//Waring:It is only compatible with Windows!
+// Warning: Only compatible with Windows!
 module;
 #include "random.h"
+
 #if defined(_WIN32) || defined(_WIN64)
+
 export module Scriptforge.AntiDebug;
 import <Windows.h>;
 import Scriptforge.Pch;
 
 namespace Scriptforge {
-	inline namespace ADNS {
+    inline namespace ADNS {
         export class ADCL {
         public:
             ADCL();
             ~ADCL();
+
             void start();
             void stop();
-            bool is_debugger_present() const;
+            bool isDebuggerPresent() const;
 
         private:
+            bool isAntiDebug() noexcept;
+            void killProcess() noexcept;
+            void antiDebug();
+
             std::atomic<bool> m_stopFlag;
             std::atomic<bool> m_debugger;
-            std::unique_ptr<std::thread> m_antiDebugThread;
             std::mutex m_mtx;
-            void antiDebug();
         };
-		using AntiDebuger = ADCL;
-	}
-	namespace AntiDebug = ADNS;
+
+        export using AntiDebugger = ADCL;
+    }
+
+    namespace AntiDebug = ADNS;
 }
 
-namespace Scriptforge {
-    inline namespace ADNS {
-        ADCL::ADCL() : m_stopFlag(false), m_debugger(false), m_antiDebugThread(nullptr) {}
-        ADCL::~ADCL() {
-            stop();
-        }
-        void ADCL::start() {
-            std::thread antiDebug(&ADCL::antiDebug, this);
-            antiDebug.detach();
-        }
-        void ADCL::stop() {
-            m_stopFlag.store(true);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        bool ADCL::is_debugger_present() const {
-            return m_debugger.load();
-        }
-    }
-}
 #else
-#pragma message("Because Scriptforge.AntiDebug.ixx is only compatible with Windows,it will not be compiled.")
+#pragma message("Warning: Scriptforge.AntiDebug is Windows-only. Skipped compilation.")
+export module Scriptforge.AntiDebug;
+import Scriptforge.Pch;
+namespace Scriptforge::AntiDebug { export using AntiDebugger = void; }
 #endif
