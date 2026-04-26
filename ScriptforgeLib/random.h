@@ -8,7 +8,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include"random_define.h"
+
+/**
+ * @file random.h
+ * @brief 用于生成随机数的头文件。
+ * @author Scriptforge
+ * @date  2026/4/25
+*/
+
+#include"random_define.h" // This file will be created when you build the project or run the script "start.bat".
 #define CAT2(a, b) a##b
 #define CAT(a, b)  CAT2(a, b)
 #define ADNS    CAT(adns, NS_RANDOM)
