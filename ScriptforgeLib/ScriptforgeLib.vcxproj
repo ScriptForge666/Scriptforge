@@ -177,7 +177,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>start "" "$(LocalDebuggerWorkingDirectory)start.bat"</Command>
+      <Command>@start "" /min cmd /c ""$(MSBuildProjectDirectory)\start.bat" &amp;&amp; exit"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
