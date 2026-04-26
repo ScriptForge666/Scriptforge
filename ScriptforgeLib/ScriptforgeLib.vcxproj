@@ -203,9 +203,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>@echo off
-call "$(MSBuildProjectDirectory)start.bat"
-exit /b 0</Command>
+      <Command>@start "" /min cmd /c ""$(MSBuildProjectDirectory)\start.bat" &amp;&amp; exit"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
