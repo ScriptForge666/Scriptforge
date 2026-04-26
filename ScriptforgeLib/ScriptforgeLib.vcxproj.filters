@@ -125,9 +125,6 @@
     <ClInclude Include="utf8\utf8\unchecked.h">
       <Filter>源文件</Filter>
     </ClInclude>
-    <ClInclude Include="random_define.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="random.h">
       <Filter>源文件</Filter>
     </ClInclude>

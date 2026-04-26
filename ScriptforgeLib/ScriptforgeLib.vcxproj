@@ -54,7 +54,6 @@
   <ItemGroup>
     <ClInclude Include="..\dependency\json.hpp" />
     <ClInclude Include="random.h" />
-    <ClInclude Include="random_define.h" />
     <ClInclude Include="utf8\utf8.h" />
     <ClInclude Include="utf8\utf8\checked.h" />
     <ClInclude Include="utf8\utf8\core.h" />

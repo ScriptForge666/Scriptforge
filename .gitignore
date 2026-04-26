@@ -365,3 +365,6 @@ FodyWeavers.xsd
 #Doxyen Files
 latex/
 html/
+
+#radom_define.h
+random_define.h
