@@ -45,6 +45,7 @@
     <None Include="..\更新方向.md" />
     <None Include="lang\en.json" />
     <None Include="lang\zh.json" />
+    <None Include="start.bat" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt" />
@@ -177,9 +178,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>set "RND="
-set /a "RND= (%random% * %random% * %random%) &amp; 0x7FFFFFFF"
-echo #define RANDOM_NUMBER %RND% &gt; "$(ProjectDir)random_define.h"</Command>
+      <Command>start "" "$(LocalDebuggerWorkingDirectory)start.bat"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -204,9 +203,9 @@ echo #define RANDOM_NUMBER %RND% &gt; "$(ProjectDir)random_define.h"</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>set "RND="
-set /a "RND= (%random% * %random% * %random%) &amp; 0x7FFFFFFF"
-echo #define RANDOM_NUMBER %RND% &gt; "$(ProjectDir)random_define.h"</Command>
+      <Command>@echo off
+call "$(MSBuildProjectDirectory)start.bat"
+exit /b 0</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

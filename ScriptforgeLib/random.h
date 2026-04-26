@@ -11,5 +11,11 @@
 #include"random_define.h"
 #define CAT2(a, b) a##b
 #define CAT(a, b)  CAT2(a, b)
-#define ADNS    CAT(adns, RANDOM_NUMBER)
-#define ADCL      CAT(ad, RANDOM_NUMBER)
+#define ADNS    CAT(adns, NS_RANDOM)
+#define ADCL    CAT(ad, CLS_RANDOM)
+#define F1      CAT(f, F1_RANDOM)
+#define F2      CAT(f, F2_RANDOM)
+#define F3      CAT(f, F3_RANDOM)
+#define V1      CAT(v, V1_RANDOM)
+#define V2      CAT(v, V2_RANDOM)
+#define V3      CAT(v, V3_RANDOM)

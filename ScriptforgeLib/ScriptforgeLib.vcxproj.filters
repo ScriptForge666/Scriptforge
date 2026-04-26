@@ -88,6 +88,9 @@
     <None Include="lang\zh.json">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="start.bat">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt">
