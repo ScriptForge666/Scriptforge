@@ -31,15 +31,15 @@ namespace Scriptforge {
         export class ADCL {
         public:
             ADCL();
-            ~ADCL();
+            virtual ~ADCL();
 
             void start();
             void stop();
             bool isDebuggerPresent() const;
 
         private:
-            bool isAntiDebug() noexcept;
-            void killProcess() noexcept;
+            virtual bool isAntiDebug() noexcept;
+            virtual void killProcess() noexcept;
             void antiDebug();
 
             std::atomic<bool> m_stopFlag;
