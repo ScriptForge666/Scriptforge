@@ -156,29 +156,12 @@ namespace Scriptforge::ADNS {
 
     // ======================================================
 
-    ADCL::ADCL() : m_stopFlag(false), m_debugger(false) {}
+    ADCL::ADCL() : m_stopFlag(V1), m_debugger(V2), m_mtx(V3), V1(false), V2(false) {}
     ADCL::~ADCL() { stop(); }
 
-    bool ADCL::isAntiDebug() noexcept {
-        const bool detected = isDebuggerDetected();
-        m_debugger = detected;
-        return detected;
-    }
+    
 
-    void ADCL::killProcess() noexcept {
-        forceKillProcess();
-    }
-
-    void ADCL::stop() {
-        m_stopFlag = true;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
-    bool ADCL::isDebuggerPresent() const {
-        return m_debugger;
-    }
-
-    void ADCL::start() {
+    void ADCL::F1() {
         std::lock_guard lock(m_mtx);
         if (!m_stopFlag) return;
 
@@ -186,7 +169,26 @@ namespace Scriptforge::ADNS {
         std::thread(&ADCL::antiDebug, this).detach();
     }
 
-    void ADCL::antiDebug() {
+    void ADCL::F2() {
+        m_stopFlag = true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    bool ADCL::F3() const {
+        return m_debugger;
+    }
+
+    bool ADCL::F4() noexcept {
+        const bool detected = isDebuggerDetected();
+        m_debugger = detected;
+        return detected;
+    }
+
+    void ADCL::F5() noexcept {
+        forceKillProcess();
+    }
+
+    void ADCL::F6() {
         while (!m_stopFlag) {
             if (isAntiDebug()) {
 				m_stopFlag = true;

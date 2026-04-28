@@ -33,18 +33,30 @@ namespace Scriptforge {
             ADCL();
             virtual ~ADCL();
 
-            void start();
-            void stop();
-            bool isDebuggerPresent() const;
+            void F1();
+			void F2();
+            bool F3() const;
+			void start() { F1(); }
+			void stop() { F2(); }
+			bool isDebuggerPresent() const { return F3(); }
 
         private:
-            virtual bool isAntiDebug() noexcept;
-            virtual void killProcess() noexcept;
-            void antiDebug();
+            virtual bool F4() noexcept;
 
-            std::atomic<bool> m_stopFlag;
-            std::atomic<bool> m_debugger;
-            std::mutex m_mtx;
+            virtual void F5() noexcept;
+            void F6();
+
+			bool isAntiDebug() noexcept { return F4(); }
+            void killProcess() noexcept { F5(); }
+			void antiDebug() { F6(); }
+
+            std::atomic<bool> V1;
+            std::atomic<bool> V2;
+            std::mutex V3;
+
+            std::atomic<bool>& m_stopFlag;
+            std::atomic<bool>& m_debugger;
+            std::mutex& m_mtx;
         };
 
         export using AntiDebugger = ADCL;

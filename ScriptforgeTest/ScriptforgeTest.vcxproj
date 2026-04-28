@@ -114,6 +114,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AntiDebug.Test.ixx" />
     <ClCompile Include="ErrCode.Test.ixx" />
     <ClCompile Include="Local.Test.ixx" />
     <ClCompile Include="StringConversion.Test.ixx" />
