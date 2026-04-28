@@ -192,8 +192,9 @@ namespace Scriptforge::ADNS {
 				m_stopFlag = true;
                 killProcess();
             }
+
             if (m_stopFlag) {
-				killProcess();
+                return;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(97));
         }
