@@ -53,10 +53,6 @@ namespace Scriptforge {
             std::atomic<bool> V1;
             std::atomic<bool> V2;
             std::mutex V3;
-
-            std::atomic<bool>& m_stopFlag;
-            std::atomic<bool>& m_debugger;
-            std::mutex& m_mtx;
         };
 
         export using AntiDebugger = ADCL;
