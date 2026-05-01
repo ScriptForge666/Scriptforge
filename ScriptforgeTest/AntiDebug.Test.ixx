@@ -23,4 +23,38 @@ module;
 export module AntiDebug.Test;
 
 import Scriptforge.Pch;
+import Scriptforge.AntiDebug;
+import Scriptforge.AntiDebug.RandomDefine;
 
+namespace Scriptforge::AntiDebug::Test {
+	class AntiDebugTestFalse : public Scriptforge::AntiDebug::AntiDebugger {
+	private:
+		virtual bool F4() noexcept override {
+			return false; // 模拟没有调试器附加
+		}
+		virtual void F5() noexcept override {
+			return; // 模拟不执行任何操作
+		}
+	};
+	class AntiDebugTestTrue : public Scriptforge::AntiDebug::AntiDebugger {
+	private:
+		virtual bool F4() noexcept override {
+			return true; // 模拟有调试器附加
+		}
+		virtual void F5() noexcept override {
+			return; // 模拟不执行任何操作
+		}
+	};
+	TEST(AntiDebugTest, AntiDebuggerFalse) {
+		AntiDebugTestFalse ad;
+		ad.start();
+		EXPECT_FALSE(ad.isDebuggerPresent()); // 期望没有调试器附加
+		ad.stop();
+	}
+	TEST(AntiDebugTest, AntiDebuggerTrue) {
+		AntiDebugTestTrue ad;
+		ad.start();
+		EXPECT_TRUE(ad.isDebuggerPresent()); // 期望有调试器附加
+		ad.stop();
+	}
+}

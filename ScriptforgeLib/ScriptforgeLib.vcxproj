@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Scriptforge.AntiDebug.Random.ixx" />
+    <ClCompile Include="Scriptforge.AntiDebug.RandomDefine.ixx" />
     <ClCompile Include="Scriptforge.AntiDebug.cpp" />
     <ClCompile Include="Scriptforge.AntiDebug.ixx" />
     <ClCompile Include="Scriptforge.BitPack.ixx" />
@@ -53,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dependency\json.hpp" />
-    <ClInclude Include="random.h" />
     <ClInclude Include="utf8\utf8.h" />
     <ClInclude Include="utf8\utf8\checked.h" />
     <ClInclude Include="utf8\utf8\core.h" />

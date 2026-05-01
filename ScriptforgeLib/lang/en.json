@@ -7,6 +7,7 @@
     "20001": "Cannot open log file: {}",
     "30001": "Size must be 8",
     "30002": "Where must be less than 8",
-    "50001": "Capacity must be greater than 0"
+    "50001": "Capacity must be greater than 0",
+    "60001": "The Operation System is not supported"
   }
   }

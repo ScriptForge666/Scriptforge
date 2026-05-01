@@ -16,21 +16,23 @@
  * @date 2026/3/29
  */
 
-// Warning: Only compatible with Windows!
-module;
-#include "random.h"
-
-#if defined(_WIN32) || defined(_WIN64)
-
 export module Scriptforge.AntiDebug;
-import <Windows.h>;
+import Scriptforge.AntiDebug.RandomDefine;
 import Scriptforge.Pch;
+#if !(defined(_WIN32) || defined(_WIN64))
+import Scriptforge.Local;
+import Scriptforge.LanguageCode;
+#endif
 
 namespace Scriptforge {
     inline namespace ADNS {
         export class ADCL {
         public:
-            ADCL();
+#if defined(_WIN32) || defined(_WIN64)
+			ADCL();
+#else
+            ADCL(const Scriptforge::Local::Lang& lang = { Scriptforge::LanguageCode::Language::English });
+#endif
             virtual ~ADCL();
 
             void F1();
@@ -53,17 +55,14 @@ namespace Scriptforge {
             std::atomic<bool> V1;
             std::atomic<bool> V2;
             std::mutex V3;
+#if !(defined(_WIN32) || defined(_WIN64))
+			Scriptforge::Local::Lang m_lang{ Scriptforge::LanguageCode::Language::Neutral, "./lang" };
+#endif
         };
 
-        export using AntiDebugger = ADCL;
     }
-
-    namespace AntiDebug = ADNS;
+    namespace AntiDebug {
+        export using AntiDebugger = ADNS::ADCL;
+    }
+    
 }
-
-#else
-#pragma message("Warning: Scriptforge.AntiDebug is Windows-only. Skipped compilation.")
-export module Scriptforge.AntiDebug;
-import Scriptforge.Pch;
-namespace Scriptforge::AntiDebug { export using AntiDebugger = void; }
-#endif

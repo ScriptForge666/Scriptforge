@@ -36,6 +36,7 @@ namespace Scriptforge::ErrCode {
 		LocalInvalidLanguageFile = 40002,     // Local0002: Invalid language file
 		LocalInvalidLanguageCode = 40003,     // Local0003: Invalid language code
 		RingBufferCapacityBeZero = 50001,       // RingBuffer0001: Capacity must be greater than 0
+		AntiDebugOSNotSupported = 60001,       // AntiDebug0001: Operating system not supported
 
 	};
 	export std::string toString(ErrCode code) {

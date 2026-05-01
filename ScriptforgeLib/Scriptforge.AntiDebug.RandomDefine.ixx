@@ -10,13 +10,14 @@
 // limitations under the License.
 
 /**
- * @file random.h
+ * @file Scriptforge.AntiDebug.RandomDefine.ixx
  * @brief 用于生成随机数的头文件。
  * @author Scriptforge
  * @date  2026/4/25
 */
 
-#include"random_define.h" // This file will be created when you build the project or run the script "start.bat".
+export module Scriptforge.AntiDebug.RandomDefine;
+import Scriptforge.AntiDebug.Random; // This file will be created when you build the project or run the script "start.bat".
 #define CAT2(a, b) a##b
 #define CAT(a, b)  CAT2(a, b)
 #define ADNS    CAT(adns, NS_RANDOM)

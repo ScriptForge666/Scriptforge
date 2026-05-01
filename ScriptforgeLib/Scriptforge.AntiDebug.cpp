@@ -19,21 +19,21 @@
  // Warning: It is only compatible with Windows!
 module;
 #if defined(_WIN32) || defined(_WIN64)
-
-
 #include <Windows.h>
 #include <tlhelp32.h>
 #include <intrin.h>
 #include <psapi.h>
 #include <cstdint>
-#include "random.h"
 
 #ifndef NT_SUCCESS
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 #endif
+#endif
 
 module Scriptforge.AntiDebug;
+import Scriptforge.AntiDebug.RandomDefine;
 import Scriptforge.Pch;
+import Scriptforge.Local;
 
 namespace Scriptforge::ADNS {
 #ifdef _MSC_VER
@@ -41,6 +41,7 @@ namespace Scriptforge::ADNS {
 #pragma warning(disable: 4702)
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
     namespace {
         constexpr uint32_t hashConst(const char* str, uint32_t value = 0) noexcept {
             return *str ? hashConst(str + 1, value * 33 + static_cast<uint8_t>(*str)) : value;
@@ -153,10 +154,14 @@ namespace Scriptforge::ADNS {
                 || checkParentIsDebugger();
         }
     }
+#endif
 
     // ======================================================
-
+#if defined(_WIN32) || defined(_WIN64)
     ADCL::ADCL() : V1(false), V2(false) {}
+#else
+    ADCL::ADCL(const Scriptforge::Local::Lang& lang) : m_lang(lang), V1(false), V2(false) {}
+#endif
     ADCL::~ADCL() { stop(); }
 
     
@@ -177,7 +182,7 @@ namespace Scriptforge::ADNS {
     bool ADCL::F3() const {
         return V2;
     }
-
+#if defined(_WIN32) || defined(_WIN64)
     bool ADCL::F4() noexcept {
         const bool detected = isDebuggerDetected();
         V2 = detected;
@@ -187,7 +192,18 @@ namespace Scriptforge::ADNS {
     void ADCL::F5() noexcept {
         forceKillProcess();
     }
-
+#else
+#pragma message("The Operation System is not supported for the implementation of AntiDebugger")
+    import Scriptforge.Err;
+    import Scriptforge.ErrCode;
+    import Scriptforge.ErrCode.throwError;
+    bool ADCL::F4() noexcept {
+        Scriptforge::ErrCode::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::AntiDebugOSNotSupported, __func__, m_lang);
+        return false;
+    }
+	void ADCL::F5() noexcept {
+	}
+#endif
     void ADCL::F6() {
         while (!V1) {
             if (isAntiDebug()) {
@@ -206,7 +222,3 @@ namespace Scriptforge::ADNS {
 #pragma warning(pop)
 #endif
 }
-
-#else
-#pragma message("Windows-only module skipped.")
-#endif

@@ -65,6 +65,12 @@
     <ClCompile Include="Scriptforge.AntiDebug.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Scriptforge.AntiDebug.RandomDefine.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Scriptforge.AntiDebug.Random.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CHANGELOG.md">
@@ -123,9 +129,6 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="utf8\utf8\unchecked.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="random.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
