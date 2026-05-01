@@ -168,15 +168,17 @@ namespace Scriptforge::ADNS {
 
     void ADCL::F1() {
         std::lock_guard lock(V3);
-        if (!V1) return;
+        if (V4) return;
 
         V1 = false;
+        V4 = true;
         std::thread(&ADCL::antiDebug, this).detach();
     }
 
     void ADCL::F2() {
         V1 = true;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        V4 = false;
     }
 
     bool ADCL::F3() const {
@@ -184,9 +186,7 @@ namespace Scriptforge::ADNS {
     }
 #if defined(_WIN32) || defined(_WIN64)
     bool ADCL::F4() noexcept {
-        const bool detected = isDebuggerDetected();
-        V2 = detected;
-        return detected;
+        return isDebuggerDetected();
     }
 
     void ADCL::F5() noexcept {
@@ -208,6 +208,7 @@ namespace Scriptforge::ADNS {
         while (!V1) {
             if (isAntiDebug()) {
 				V1 = true;
+				V2 = true;
                 killProcess();
             }
 

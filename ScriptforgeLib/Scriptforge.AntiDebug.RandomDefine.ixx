@@ -31,3 +31,4 @@ import Scriptforge.AntiDebug.Random; // This file will be created when you build
 #define V1      CAT(v, V1_RANDOM)
 #define V2      CAT(v, V2_RANDOM)
 #define V3      CAT(v, V3_RANDOM)
+#define V4      CAT(v, V4_RANDOM)
