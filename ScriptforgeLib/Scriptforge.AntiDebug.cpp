@@ -157,14 +157,9 @@ namespace Scriptforge::ADNS {
 #endif
 
     // ======================================================
-#if defined(_WIN32) || defined(_WIN64)
-    ADCL::ADCL() : V1(false), V2(false) {}
-#else
-    ADCL::ADCL(const Scriptforge::Local::Lang& lang) : m_lang(lang), V1(false), V2(false) {}
-#endif
-    ADCL::~ADCL() { stop(); }
 
-    
+    ADCL::ADCL() : V1(false), V2(false) {}
+    ADCL::~ADCL() { stop(); }
 
     void ADCL::F1() {
         std::lock_guard lock(V3);
@@ -194,14 +189,11 @@ namespace Scriptforge::ADNS {
     }
 #else
 #pragma message("The Operation System is not supported for the implementation of AntiDebugger")
-    import Scriptforge.Err;
-    import Scriptforge.ErrCode;
-    import Scriptforge.ErrCode.throwError;
     bool ADCL::F4() noexcept {
-        Scriptforge::ErrCode::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::AntiDebugOSNotSupported, __func__, m_lang);
         return false;
     }
 	void ADCL::F5() noexcept {
+        return;
 	}
 #endif
     void ADCL::F6() {

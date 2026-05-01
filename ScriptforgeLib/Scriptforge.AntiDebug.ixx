@@ -28,11 +28,7 @@ namespace Scriptforge {
     inline namespace ADNS {
         export class ADCL {
         public:
-#if defined(_WIN32) || defined(_WIN64)
 			ADCL();
-#else
-            ADCL(const Scriptforge::Local::Lang& lang = { Scriptforge::LanguageCode::Language::English });
-#endif
             virtual ~ADCL();
 
             void F1();
@@ -56,9 +52,6 @@ namespace Scriptforge {
             std::atomic<bool> V2;
             std::mutex V3;
             std::atomic<bool> V4{ false };
-#if !(defined(_WIN32) || defined(_WIN64))
-			Scriptforge::Local::Lang m_lang{ Scriptforge::LanguageCode::Language::Neutral, "./lang" };
-#endif
         };
 
     }

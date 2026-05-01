@@ -27,36 +27,34 @@ import Scriptforge.AntiDebug;
 import Scriptforge.AntiDebug.RandomDefine;
 
 namespace Scriptforge::AntiDebug::Test {
-class AntiDebugTestFalse : public Scriptforge::AntiDebug::AntiDebugger {
-public:
-	AntiDebugTestFalse() { this->start(); }
-private:
-	virtual bool F4() noexcept override {
-		return false; // 模拟没有调试器附加
-	}
-	virtual void F5() noexcept override {
-		return; // 模拟不执行任何操作
-	}
-};
-class AntiDebugTestTrue : public Scriptforge::AntiDebug::AntiDebugger {
-public:
-	AntiDebugTestTrue() { this->start(); }
-private:
-	virtual bool F4() noexcept override {
-		return true; // 模拟有调试器附加
-	}
-	virtual void F5() noexcept override {
-		return; // 模拟不执行任何操作
-	}
-};
-    TEST(AntiDebugTest, AntiDebuggerFalse) {
+	class AntiDebugTestFalse : public Scriptforge::AntiDebug::AntiDebugger {
+	private:
+		virtual bool F4() noexcept override {
+			return false; // 模拟没有调试器附加
+		}
+		virtual void F5() noexcept override {
+			return; // 模拟不执行任何操作
+		}
+	};
+	class AntiDebugTestTrue : public Scriptforge::AntiDebug::AntiDebugger {
+	private:
+		virtual bool F4() noexcept override {
+			return true; // 模拟有调试器附加
+		}
+		virtual void F5() noexcept override {
+			return; // 模拟不执行任何操作
+		}
+	};
+	TEST(AntiDebugTest, AntiDebuggerFalse) {
 		AntiDebugTestFalse ad;
+		ad.start();
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		EXPECT_FALSE(ad.isDebuggerPresent()); // 期望没有调试器附加
 		ad.stop();
 	}
 	TEST(AntiDebugTest, AntiDebuggerTrue) {
 		AntiDebugTestTrue ad;
+		ad.start();
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 		EXPECT_TRUE(ad.isDebuggerPresent()); // 期望有调试器附加
 		ad.stop();
