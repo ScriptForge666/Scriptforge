@@ -69,7 +69,7 @@ namespace Scriptforge::Err::Test {
 
         // 固定时间点，避免时间变化导致测试失败
         auto tp = std::chrono::system_clock::time_point(std::chrono::seconds(1743264000));
-        Scriptforge::Err::Error err(test_code, test_msg, Msg::InformationLevel::Error, tp);
+        Scriptforge::Err::Error err(test_code, test_msg, Scriptforge::Msg::InformationLevel::Error, tp);
 
         // 2. 输出到 stringstream
         std::ostringstream oss;
@@ -89,7 +89,7 @@ namespace Scriptforge::Err::Test {
 
     // 测试移动构造版本 + 不同错误码类型（可选）
     TEST(ErrorTest, OstreamWithRvalueWorks) {
-        Err::Error err("code", "test", Msg::InformationLevel::Warning);
+        Scriptforge::Err::Error err("code", "test", Scriptforge::Msg::InformationLevel::Warning);
 
         std::ostringstream oss;
         oss << err;

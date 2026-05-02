@@ -79,6 +79,19 @@ namespace Scriptforge {
 			TimePoint m_time;
 		};
 
+		export 
+			template <typename T, typename Clock>
+			requires MessageRequires<T, Clock>&&
+			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); }&&
+			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
+		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
+
+		export 
+			template <typename T, typename Clock>
+			requires MessageRequires<T, Clock>&&
+		std::same_as<Clock, std::chrono::steady_clock>
+			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
+
 		export using Message = BasicMessage<>;
 	}
 }
@@ -117,10 +130,17 @@ namespace Scriptforge {
 			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); } &&
 			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
 		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
-			auto time_t = Clock::to_time_t(msg.getTime());
-			os << "[" << std::format("{:%Y-%m-%d %H:%M:%S}", time_t)
-				<< " | " << getInformationLevel(msg.getLevel())
-				<< "] " << msg.getMessage();
+			// ✅ 直接获取时间点，不做任何转换！
+			const auto tp = msg.time();
+
+			os << std::format("[{:%Y-%m-%d %H:%M:%S} | {}] {}",
+				std::chrono::current_zone()->to_local(
+					std::chrono::floor<std::chrono::seconds>(tp)
+				),
+				getInformationLevel(msg.level()),
+				msg.message()
+			);
+
 			return os;
 		}
 
@@ -128,9 +148,9 @@ namespace Scriptforge {
 			requires MessageRequires<T, Clock>&&
 		std::same_as<Clock, std::chrono::steady_clock>
 			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
-			os << "[ " << msg.getTime().time_since_epoch().count()
-				<< " | " << getInformationLevel(msg.getLevel())
-				<< "] " << msg.getMessage();
+			os << "[ " << msg.time().time_since_epoch().count()
+				<< " | " << getInformationLevel(msg.level())
+				<< "] " << msg.message();
 			return os;
 		}
 	}

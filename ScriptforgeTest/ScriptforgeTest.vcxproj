@@ -118,6 +118,7 @@
     <ClCompile Include="Err.Test.ixx" />
     <ClCompile Include="ErrCode.Test.ixx" />
     <ClCompile Include="Local.Test.ixx" />
+    <ClCompile Include="Msg.Test.ixx" />
     <ClCompile Include="StringConversion.Test.ixx" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
