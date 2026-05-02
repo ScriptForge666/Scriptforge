@@ -26,8 +26,11 @@ import Scriptforge.Pch;
 import Scriptforge.Err;
 
 namespace Scriptforge::Err::Test {
-
-	TEST(ErrTest, BasicErr) {
+    enum class TestErrCode {
+        Code1,
+        Code2
+	};
+	TEST(ErrorTest, NormalErr) {
 		try {
 			throw Scriptforge::Err::Error{ "code","test" };
 		}
@@ -35,6 +38,28 @@ namespace Scriptforge::Err::Test {
 			EXPECT_EQ(e.code(), "code");
 			EXPECT_EQ(e.what(), "test");
 		}
+	}
+
+    TEST(ErrorTest, TemplateErr) {
+        try {
+            throw Scriptforge::Err::BasicError<TestErrCode>{ TestErrCode::Code1, "test", Scriptforge::Msg::InformationLevel::Warning };
+
+        }
+        catch (const Scriptforge::Err::BasicError<TestErrCode>& e) {
+            EXPECT_EQ(e.level(), Scriptforge::Msg::InformationLevel::Warning);
+            EXPECT_EQ(e.code(), TestErrCode::Code1);
+            EXPECT_EQ(e.what(), "test");
+        }
+    }
+
+    TEST(ErrorTest, MoveCtorWorks) {
+        try {
+            throw Scriptforge::Err::Error{ "code", "test" };
+        }
+        catch (Scriptforge::Err::Error e) { // 通过值捕获触发移动构造
+            EXPECT_EQ(e.code(), "code");
+            EXPECT_EQ(e.what(), "test");
+        }
 	}
 
     TEST(ErrorTest, OstreamOperatorOutputFormatIsCorrect) {

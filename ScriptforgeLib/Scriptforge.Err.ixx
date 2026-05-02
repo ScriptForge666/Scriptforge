@@ -71,7 +71,7 @@ namespace Scriptforge {
         template<typename CodeT, typename T, typename Clock>
             requires ErrorRequires<CodeT, T, Clock>
         const T& BasicError<CodeT, T, Clock>::what() const noexcept {
-            return this->getMessage();
+            return this->message();
 		}
 
         template<typename CodeT, typename T, typename Clock>
@@ -81,11 +81,11 @@ namespace Scriptforge {
 		}
             template <typename CodeT, typename T, typename Clock>
         std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err) {
-            auto time_t = Clock::to_time_t(err.getTime());
+            auto time_t = Clock::to_time_t(err.time());
 			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
-				<< " | " << getInformationLevel(err.getLevel())
+				<< " | " << getInformationLevel(err.level())
 				<< " | " << err.code()
-				<< "] " << err.getMessage();
+				<< "] " << err.message();
             return os;
         }
     }

@@ -70,9 +70,9 @@ namespace Scriptforge {
 			using TimePoint = typename Clock::time_point;
 			BasicMessage(const T& msg = T{}, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock::now());
 			BasicMessage(T&& msg, InformationLevel level = InformationLevel::Info, TimePoint tp = Clock::now());
-			const T& getMessage() const noexcept;
-			InformationLevel getLevel() const noexcept;
-			TimePoint getTime() const noexcept;
+			const T& message() const noexcept;
+			InformationLevel level() const noexcept;
+			TimePoint time() const noexcept;
 		private:
 			T m_msg;
 			InformationLevel m_level;
@@ -96,19 +96,19 @@ namespace Scriptforge {
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		const T& BasicMessage<T, Clock>::getMessage() const noexcept {
+		const T& BasicMessage<T, Clock>::message() const noexcept {
 			return m_msg;
 		}
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		InformationLevel BasicMessage<T, Clock>::getLevel() const noexcept {
+		InformationLevel BasicMessage<T, Clock>::level() const noexcept {
 			return m_level;
 		}
 
 		template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>
-		typename BasicMessage<T, Clock>::TimePoint BasicMessage<T, Clock>::getTime() const noexcept {
+		typename BasicMessage<T, Clock>::TimePoint BasicMessage<T, Clock>::time() const noexcept {
 			return m_time;
 		}
 
