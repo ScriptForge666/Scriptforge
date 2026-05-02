@@ -26,6 +26,7 @@ import Scriptforge.Pch;
 import Scriptforge.Err;
 
 namespace Scriptforge::Err::Test {
+
 	TEST(ErrTest, BasicErr) {
 		try {
 			throw Scriptforge::Err::Error{ "code","test" };
@@ -73,4 +74,6 @@ namespace Scriptforge::Err::Test {
         EXPECT_TRUE(output.find("test") != std::string::npos);
         EXPECT_TRUE(output.find("Warning") != std::string::npos);
     }
+
+
 }
