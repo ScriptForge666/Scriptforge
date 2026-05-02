@@ -366,5 +366,8 @@ FodyWeavers.xsd
 latex/
 html/
 
-#radom_define.h
-random_define.h
+#Scriptforge.AntiDebug.Random.ixx
+Scriptforge.AntiDebug.Random.ixx
+
+#GeneratedTools
+GeneratedTools/

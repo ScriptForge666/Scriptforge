@@ -18,89 +18,39 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Scriptforge.AntiDebug.Random.ixx" />
-    <ClCompile Include="Scriptforge.AntiDebug.RandomDefine.ixx" />
-    <ClCompile Include="Scriptforge.AntiDebug.cpp" />
-    <ClCompile Include="Scriptforge.AntiDebug.ixx" />
-    <ClCompile Include="Scriptforge.BitPack.ixx" />
-    <ClCompile Include="Scriptforge.Err.ixx" />
-    <ClCompile Include="Scriptforge.ErrCode.ixx" />
-    <ClCompile Include="Scriptforge.ErrCode.throwError.ixx" />
-    <ClCompile Include="Scriptforge.ixx" />
-    <ClCompile Include="Scriptforge.LanguageCode.ixx" />
-    <ClCompile Include="Scriptforge.Local.ixx" />
-    <ClCompile Include="Scriptforge.Log.ixx" />
-    <ClCompile Include="Scriptforge.Msg.ixx" />
-    <ClCompile Include="Scriptforge.Pch.ixx" />
-    <ClCompile Include="Scriptforge.RingBuffer.ixx" />
-    <ClCompile Include="Scriptforge.StringConversion.ixx" />
-    <ClCompile Include="Scriptforge.ThreadError.ixx" />
-    <ClCompile Include="Scriptforge.Tree.ixx" />
-    <ClCompile Include="Scriptforge.Version.ixx" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\CHANGELOG-CN.md" />
-    <None Include="..\CHANGELOG.md" />
-    <None Include="..\README-CN.md" />
-    <None Include="..\README.md" />
-    <None Include="..\更新方向.md" />
-    <None Include="lang\en.json" />
-    <None Include="lang\zh.json" />
-    <None Include="start.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\LICENSE-THIRD-PARTY.txt" />
-    <Text Include="..\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\dependency\json.hpp" />
-    <ClInclude Include="utf8\utf8.h" />
-    <ClInclude Include="utf8\utf8\checked.h" />
-    <ClInclude Include="utf8\utf8\core.h" />
-    <ClInclude Include="utf8\utf8\cpp11.h" />
-    <ClInclude Include="utf8\utf8\cpp17.h" />
-    <ClInclude Include="utf8\utf8\cpp20.h" />
-    <ClInclude Include="utf8\utf8\unchecked.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>17.0</VCProjectVersion>
+    <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{543ccaf3-e212-4a60-a552-4405bc03507c}</ProjectGuid>
+    <RootNamespace>GenerateRandom</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectGuid>{EE5CC680-18B4-4EA7-8899-C8AAB8AB2C6F}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <VCToolsVersion>
-    </VCToolsVersion>
-    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <VCToolsVersion>
-    </VCToolsVersion>
-    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -122,90 +72,69 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>true</EnableModules>
-      <BuildStlModules>true</BuildStlModules>
-      <PrecompiledHeaderFile />
-      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>true</EnableModules>
-      <BuildStlModules>true</BuildStlModules>
-      <PrecompiledHeaderFile />
-      <AdditionalHeaderUnitDependencies>$(IntermediateOutputPath)json.hpp.ifc</AdditionalHeaderUnitDependencies>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>true</EnableModules>
-      <BuildStlModules>false</BuildStlModules>
-      <AdditionalHeaderUnitDependencies>
-      </AdditionalHeaderUnitDependencies>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependency;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>powershell -WindowStyle Hidden "$(SolutionDir)GeneratedTools\GenerateRandom.exe"</Command>
-    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -Command "if (-not (Test-Path '$(SolutionDir)GeneratedTools')) { New-Item -ItemType Directory -Path '$(SolutionDir)GeneratedTools' | Out-Null };Copy-Item -Path '$(TargetPath)' -Destination '$(SolutionDir)GeneratedTools\' -Force"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>true</EnableModules>
-      <BuildStlModules>false</BuildStlModules>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalHeaderUnitDependencies>
-      </AdditionalHeaderUnitDependencies>
-      <AdditionalIncludeDirectories>$(SolutionDir)dependency;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>powershell -WindowStyle Hidden "$(SolutionDir)GeneratedTools\GenerateRandom.exe"</Command>
-    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -Command "if (-not (Test-Path '$(SolutionDir)GeneratedTools')) { New-Item -ItemType Directory -Path '$(SolutionDir)GeneratedTools' | Out-Null };Copy-Item -Path '$(TargetPath)' -Destination '$(SolutionDir)GeneratedTools\' -Force"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
