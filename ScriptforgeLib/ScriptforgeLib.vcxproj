@@ -23,7 +23,6 @@
     <ClCompile Include="Scriptforge.AntiDebug.RandomDefine.ixx" />
     <ClCompile Include="Scriptforge.AntiDebug.cpp" />
     <ClCompile Include="Scriptforge.AntiDebug.ixx" />
-    <ClCompile Include="Scriptforge.BitPack.ixx" />
     <ClCompile Include="Scriptforge.Err.ixx" />
     <ClCompile Include="Scriptforge.ErrCode.ixx" />
     <ClCompile Include="Scriptforge.ErrCode.throwError.ixx" />
@@ -47,7 +46,6 @@
     <None Include="..\更新方向.md" />
     <None Include="lang\en.json" />
     <None Include="lang\zh.json" />
-    <None Include="start.bat" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt" />
@@ -62,6 +60,11 @@
     <ClInclude Include="utf8\utf8\cpp17.h" />
     <ClInclude Include="utf8\utf8\cpp20.h" />
     <ClInclude Include="utf8\utf8\unchecked.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GenerateRandom\GenerateRandom.vcxproj">
+      <Project>{543ccaf3-e212-4a60-a552-4405bc03507c}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

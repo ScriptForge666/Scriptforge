@@ -16,6 +16,10 @@
  * @date 2026/3/29
 */
 
+module;
+
+#include<ctime>
+
 export module Scriptforge.Err;
 import Scriptforge.Msg;
 import Scriptforge.Pch;
@@ -37,9 +41,7 @@ namespace Scriptforge {
 			BasicError(CodeT&& code, T&& msg, Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Error, typename Clock::time_point tp = Clock::now());
 
 			const T& what() const noexcept;
-            const CodeT& getCode() const;
-
-            friend std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err);
+            const CodeT& code() const;
 
         private:
             CodeT m_code;
@@ -74,16 +76,15 @@ namespace Scriptforge {
 
         template<typename CodeT, typename T, typename Clock>
 			requires ErrorRequires<CodeT, T, Clock>
-        const CodeT& BasicError<CodeT, T, Clock>::getCode() const {
+        const CodeT& BasicError<CodeT, T, Clock>::code() const {
             return m_code;
 		}
-
-        template <typename CodeT, typename T, typename Clock>
+            template <typename CodeT, typename T, typename Clock>
         std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err) {
             auto time_t = Clock::to_time_t(err.getTime());
 			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
 				<< " | " << getInformationLevel(err.getLevel())
-				<< " | " << err.getCode()
+				<< " | " << err.code()
 				<< "] " << err.getMessage();
             return os;
         }

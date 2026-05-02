@@ -24,7 +24,7 @@ namespace Scriptforge::Local::Test
         }
         catch (const Scriptforge::Err::BasicError<Scriptforge::ErrCode::ErrCode>& e) {
             EXPECT_EQ(
-                e.getCode(),
+                e.code(),
                 Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode
             );
             EXPECT_STREQ(
