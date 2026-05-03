@@ -54,7 +54,6 @@ namespace Scriptforge::Msg::Test {
     TEST(MsgTest, OstreamOperatorOutputFormatIsCorrect) {
         std::string test_msg = "test";
 
-        // 固定时间戳：2025-03-30 00:00:00
         auto tp = std::chrono::system_clock::time_point(std::chrono::seconds(1743264000));
         Scriptforge::Msg::Message msg(
             test_msg,
@@ -62,7 +61,6 @@ namespace Scriptforge::Msg::Test {
             tp
         );
 
-        // ✅ 修复：使用 ostringstream 接收输出
         std::ostringstream oss;
         oss << msg;
         std::string output = oss.str();

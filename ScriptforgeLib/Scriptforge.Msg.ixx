@@ -130,13 +130,20 @@ namespace Scriptforge {
 			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); } &&
 			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
 		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
-			// ✅ 直接获取时间点，不做任何转换！
 			const auto tp = msg.time();
 
-			os << std::format("[{:%Y-%m-%d %H:%M:%S} | {}] {}",
-				std::chrono::current_zone()->to_local(
-					std::chrono::floor<std::chrono::seconds>(tp)
-				),
+			std::time_t tt = Clock::to_time_t(tp);
+
+			std::tm local_tm{};
+			localtime_s(&local_tm, &tt);
+
+			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d} | {}] {}",
+				local_tm.tm_year + 1900,
+				local_tm.tm_mon + 1,
+				local_tm.tm_mday,
+				local_tm.tm_hour,
+				local_tm.tm_min,
+				local_tm.tm_sec,
 				getInformationLevel(msg.level()),
 				msg.message()
 			);
