@@ -30,13 +30,13 @@ namespace Scriptforge::ErrCode {
 		TreeEmptyNode = 10002,      // Tree0002: Empty node
 		TreeOrphanedNode = 10003,      // Tree0003: Orphaned node
 		LogCannotOpenLogFile = 20001,       // Log0001: Cannot open log file
-		BitPackInvalidSizeForPacking = 30001, //BitPack0001: Invalid size for packing
-		BitPackValueTooLargeToPack = 30002, //BitPack0002: Value too large to pack
+		LogIsNotRunning = 20002,       // Log0002: Logger is not running
+		AntiDebugOSNotSupported = 30001,       // AntiDebug0001: Operating system not supported
 		LocalLanguageFileNotFound = 40001,    // Local0001: Language file not found
 		LocalInvalidLanguageFile = 40002,     // Local0002: Invalid language file
 		LocalInvalidLanguageCode = 40003,     // Local0003: Invalid language code
 		RingBufferCapacityBeZero = 50001,       // RingBuffer0001: Capacity must be greater than 0
-		AntiDebugOSNotSupported = 60001,       // AntiDebug0001: Operating system not supported
+		ProcessPoolInvalidPoolSize = 60001,       // ProcessPool0002: Invalid pool size
 
 	};
 	export std::string toString(ErrCode code) {
@@ -53,13 +53,16 @@ namespace Scriptforge::ErrCode {
 			result += "Log";
 			break;
 		case 3:
-			result += "BitPack";
+			result += "AntiDebug";
 			break;
 		case 4:
 			result += "Local";
 			break;
 		case 5:
 			result += "RingBuffer";
+			break;
+		case 6:
+			result += "ProcessPool";
 			break;
 		default:
 			return "Unknown error";

@@ -43,8 +43,7 @@ namespace Scriptforge::ErrCode::Test {
         // 测试 Log 错误代码
         EXPECT_EQ(toString(ErrCode::LogCannotOpenLogFile), "Log1");
         // 测试 BitPack 错误代码
-        EXPECT_EQ(toString(ErrCode::BitPackInvalidSizeForPacking), "BitPack1");
-        EXPECT_EQ(toString(ErrCode::BitPackValueTooLargeToPack), "BitPack2");
+        EXPECT_EQ(toString(ErrCode::AntiDebugOSNotSupported), "AntiDebug1");
 
         // 测试 Local 错误代码
         EXPECT_EQ(toString(ErrCode::LocalLanguageFileNotFound), "Local1");
@@ -78,8 +77,7 @@ namespace Scriptforge::ErrCode::Test {
 
         EXPECT_EQ(static_cast<int>(ErrCode::LogCannotOpenLogFile), 20001);
 
-        EXPECT_EQ(static_cast<int>(ErrCode::BitPackInvalidSizeForPacking), 30001);
-        EXPECT_EQ(static_cast<int>(ErrCode::BitPackValueTooLargeToPack), 30002);
+        EXPECT_EQ(static_cast<int>(ErrCode::AntiDebugOSNotSupported), 30001);
 
         EXPECT_EQ(static_cast<int>(ErrCode::LocalLanguageFileNotFound), 40001);
         EXPECT_EQ(static_cast<int>(ErrCode::LocalInvalidLanguageFile), 40002);
@@ -91,15 +89,5 @@ namespace Scriptforge::ErrCode::Test {
     TEST(ErrCodeTest, OstreamPrint) {
         ErrCode code = ErrCode::TreeInvalidNode;
         std::cout << code;
-    }
-
-    TEST(ErrCodeTest, ThrowErrorFunctionSignature)
-    {
-        using namespace Scriptforge::ErrCode;
-        using namespace Scriptforge::LanguageCode;
-        using namespace Scriptforge::Local;
-        using namespace Scriptforge::Msg;
-
-        
     }
 }

@@ -68,6 +68,9 @@
     <ClCompile Include="Scriptforge.AntiDebug.Random.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Scriptforge.ProcessPool.ixx">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CHANGELOG.md">

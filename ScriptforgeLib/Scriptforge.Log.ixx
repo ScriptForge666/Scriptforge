@@ -11,7 +11,7 @@
 
 /**
  * @file Scriptforge.Log.ixx
- * @brief 定义了 `Scriptforge::Log` 模块，其中包含了一个 `Logger` 类，用于实现日志记录功能。该类提供了构造函数、析构函数、日志级别设置和获取方法，以及一个用于记录日志消息的方法。日志消息通过一个线程安全的队列进行处理，并写入指定的日志文件中。通过使用该类，可以方便地实现日志记录功能，提高代码的可读性和可维护性。
+ * @brief 定义了 Scriptforge::Log 模块，包含线程安全异步 Logger
  * @author Scriptforge
  * @date 2026/3/29
  */
@@ -20,6 +20,7 @@ export module Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
 import Scriptforge.ErrCode.throwError;
+import Scriptforge.ThreadError;
 import Scriptforge.Msg;
 import Scriptforge.Local;
 import Scriptforge.LanguageCode;
@@ -30,180 +31,216 @@ namespace Scriptforge {
         namespace fs = std::filesystem;
 
         export
+            template <typename T, typename Clock>
+        concept LoggerRequires = Scriptforge::Msg::MessageRequires<T, Clock>;
+
+        export
             template <typename T = std::string, typename Clock = std::chrono::system_clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
+            requires LoggerRequires<T, Clock>
         class Logger {
         public:
-            Logger(const std::string& filename = "log.log", const Scriptforge::InformationLevel level = Scriptforge::InformationLevel::Info);
-            Logger(const std::string&& filename, const Scriptforge::InformationLevel level = Scriptforge::InformationLevel::Info);
-            Logger(const fs::path& file, const Scriptforge::InformationLevel level = Scriptforge::InformationLevel::Info);
-            Logger(const Logger& logger) = delete;
-            Logger& operator=(const Logger& logger) = delete;
+            Logger(const fs::path& file, const Scriptforge::Local::Lang& lang,
+                Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Info);
+            Logger(fs::path&& file, const Scriptforge::Local::Lang& lang,
+                Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Info);
+            Logger(const Logger&) = delete;
+            Logger& operator=(const Logger&) = delete;
             ~Logger();
 
-            void setLogLevel(const Scriptforge::InformationLevel level);
-            Scriptforge::InformationLevel getLogLevel() const;
+            void start();
+            void stop();
+
+            void setLogLevel(Scriptforge::Msg::InformationLevel level);
+            Scriptforge::Msg::InformationLevel getLogLevel() const;
 
             void log(const Scriptforge::BasicMessage<T, Clock>& msg);
-            std::string getFilename() const;
             fs::path getPath() const;
 
         private:
             void process();
-            std::queue<Scriptforge::BasicMessage<T, Clock>> logQueue;
-            std::mutex mtx;
-            std::condition_variable cv;
-            std::atomic<bool> running{ true };
-            std::thread logThread;
-            std::ofstream logFile;
-            fs::path m_file;
-            Scriptforge::InformationLevel m_logLevel;
+            void fileIsLegal(const fs::path& file) const;
+            void writeMessageToFile(const Scriptforge::BasicMessage<T, Clock>& msg);
+
+        private:
+            fs::path m_path;
+            Scriptforge::Local::Lang m_lang;
+            Scriptforge::Msg::InformationLevel m_level;
+            mutable std::mutex m_mtx;
+            std::condition_variable m_cv;
+            std::thread m_thread;
+            bool m_isRunning = false;
+            bool m_stopFlag = true;
+            std::queue<Scriptforge::BasicMessage<T, Clock>> m_logQueue;
         };
 
-        // 实现部分
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        Logger<T, Clock>::Logger(const std::string& filename, const Scriptforge::InformationLevel level)
-            : m_logLevel(level) {
-            m_file = fs::path(filename);
-            logFile.open(m_file, std::ios::app);
-            if (!logFile.is_open()) {
-                Scriptforge::ErrCode::throwError(
-                    Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile,
-                    __func__,
-                    Scriptforge::Local::Lang(Scriptforge::LanguageCode::Language::English),
-                    { filename }
-				);
-            }
-            logThread = std::thread(&Logger<T, Clock>::process, this);
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        Logger<T, Clock>::Logger(const std::string&& filename, const Scriptforge::InformationLevel level)
-            : Logger(std::string(filename), level) {
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        Logger<T, Clock>::Logger(const fs::path& file, const Scriptforge::InformationLevel level)
-            : m_logLevel(level) {
-            m_file = file;
-            logFile.open(m_file, std::ios::app);
-            if (!logFile.is_open()) {
-                throw Scriptforge::Err::Error{
-                    Scriptforge::ErrCode::toString(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile),
-                    "Cannot open log file: " + m_file.string()
-                };
-            }
-            logThread = std::thread(&Logger<T, Clock>::process, this);
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        Logger<T, Clock>::~Logger() {
-            running = false;
-            cv.notify_all();
-            if (logThread.joinable()) {
-                logThread.join();
-            }
-            if (logFile.is_open()) {
-                logFile.close();
-            }
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        void Logger<T, Clock>::process() {
-            while (running) {
-                std::unique_lock<std::mutex> lock(mtx);
-                cv.wait(lock, [this] { return !logQueue.empty() || !running; });
-
-                while (!logQueue.empty()) {
-                    auto msg = logQueue.front();
-                    logFile << msg.getMessage() << std::endl;
-                    logQueue.pop();
-                }
-
-                logFile.flush();
-            }
-
-            // 处理剩余的消息
-            std::lock_guard<std::mutex> lock(mtx);
-            while (!logQueue.empty()) {
-                auto msg = logQueue.front();
-                logFile << msg.getMessage() << std::endl;
-                logQueue.pop();
-            }
-            logFile.flush();
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        void Logger<T, Clock>::setLogLevel(const Scriptforge::InformationLevel level) {
-            std::lock_guard<std::mutex> lock(mtx);
-            m_logLevel = level;
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        Scriptforge::InformationLevel Logger<T, Clock>::getLogLevel() const {
-            return m_logLevel;
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        void Logger<T, Clock>::log(const Scriptforge::BasicMessage<T, Clock>& msg) {
-            std::lock_guard<std::mutex> lock(mtx);
-            if (static_cast<int>(msg.getLevel()) >= static_cast<int>(m_logLevel)) {
-                logQueue.push(msg);
-                cv.notify_one();
-            }
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        std::string Logger<T, Clock>::getFilename() const {
-            return m_file.string();
-        }
-
-        template <typename T, typename Clock>
-            requires requires(T t1, T t2, Clock c) {
-            t1 = t2;
-            { c.now() } -> std::convertible_to<typename Clock::time_point>;
-        }
-        fs::path Logger<T, Clock>::getPath() const {
-            return m_file;
-        }
     }
 }
+
+namespace Scriptforge {
+	inline namespace Log {
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        Logger<T, Clock>::Logger(const fs::path& file, const Scriptforge::Local::Lang& lang,
+            Scriptforge::Msg::InformationLevel level)
+            : m_path(file), m_lang(lang), m_level(level) {
+            fileIsLegal(file);
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        Logger<T, Clock>::Logger(fs::path&& file, const Scriptforge::Local::Lang& lang,
+            Scriptforge::Msg::InformationLevel level)
+            : m_path(std::move(file)), m_lang(lang), m_level(level) {
+            fileIsLegal(m_path);
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        Logger<T, Clock>::~Logger() {
+            stop();
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::start() {
+            std::lock_guard lock(m_mtx);
+            if (m_isRunning) return;
+
+            m_stopFlag = false;
+            m_isRunning = true;
+            m_thread = std::thread(&Logger::process, this);
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::stop() {
+            std::unique_lock lock(m_mtx);
+            if (!m_isRunning) return;
+
+            m_stopFlag = true;
+            lock.unlock();
+            m_cv.notify_all();
+
+            if (m_thread.joinable())
+                m_thread.join();
+            m_isRunning = false;
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::setLogLevel(Scriptforge::Msg::InformationLevel level) {
+            std::lock_guard lock(m_mtx);
+            m_level = level;
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        Scriptforge::Msg::InformationLevel Logger<T, Clock>::getLogLevel() const {
+            std::lock_guard lock(m_mtx);
+            return m_level;
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::log(const Scriptforge::BasicMessage<T, Clock>& msg) {
+            std::unique_lock lock(m_mtx);
+            if (msg.getLevel() < m_level)
+                return;
+
+            if (!m_isRunning) {
+                Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::LogIsNotRunning, __func__, m_lang);
+            }
+
+            m_logQueue.push(msg);
+            lock.unlock();
+            m_cv.notify_one();
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        fs::path Logger<T, Clock>::getPath() const {
+            std::lock_guard lock(m_mtx);
+            return m_path;
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::process() {
+            try {
+                while (true) {
+                    std::unique_lock lock(m_mtx);
+                    // 带超时等待，避免永久阻塞
+                    if (!m_cv.wait_for(lock, std::chrono::milliseconds(100),
+                        [this] { return m_stopFlag || !m_logQueue.empty(); })) {
+                        continue;
+                    }
+
+                    if (m_stopFlag && m_logQueue.empty())
+                        break;
+
+                    // ✅ 批量取出消息，减少锁竞争
+                    std::queue<Scriptforge::BasicMessage<T, Clock>> tempQueue;
+                    tempQueue.swap(m_logQueue);
+
+                    lock.unlock();
+
+                    // ✅ 无锁批量写入
+                    while (!tempQueue.empty()) {
+                        auto msg = std::move(tempQueue.front());
+                        tempQueue.pop();
+                        writeMessageToFile(msg);
+                    }
+                }
+
+                // 退出前清空剩余日志
+                std::lock_guard lock(m_mtx);
+                while (!m_logQueue.empty()) {
+                    writeMessageToFile(m_logQueue.front());
+                    m_logQueue.pop();
+                }
+            }
+            catch (...) {
+                // 记录内部错误，不向外抛
+            }
+
+            std::lock_guard lock(m_mtx);
+            m_isRunning = false;
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::writeMessageToFile(const Scriptforge::BasicMessage<T, Clock>& msg) {
+            std::ofstream ofs(m_path, std::ios::app);
+            if (!ofs) {
+                Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile, __func__, m_lang);
+            }
+            ofs << msg << '\n';
+            ofs.flush();
+        }
+
+        template <typename T, typename Clock>
+            requires LoggerRequires<T, Clock>
+        void Logger<T, Clock>::fileIsLegal(const fs::path& file) const {
+            if (fs::exists(file)) {
+                if (!fs::is_regular_file(file)) {
+                    Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile, __func__, m_lang);
+                }
+            }
+            else {
+                if (file.has_parent_path()) {
+                    std::error_code ec;
+                    fs::create_directories(file.parent_path(), ec);
+                    if (ec) {
+                        Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile, __func__, m_lang);
+                    }
+                }
+                std::ofstream test(file);
+                if (!test) {
+                    Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::LogCannotOpenLogFile, __func__, m_lang);
+                }
+            }
+        }
+
+    } // namespace Log
+} // namespace Scriptforge

@@ -11,7 +11,6 @@
 export module Scriptforge.ThreadError;
 
 import Scriptforge.Local;
-import Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.Msg;
 import Scriptforge.Pch;
@@ -25,8 +24,9 @@ namespace Scriptforge {
             ThreadError() = default;
             ~ThreadError();
 
-            template <typename U>
-            void threadStart(U run);
+            void threadStart(std::function<void()> run);
+            void setThreadFunction(std::function<void()> run);
+            void start();
 
             // 异步模式特有方法
             void waitForCompletion();
@@ -34,273 +34,121 @@ namespace Scriptforge {
             std::future<void> getFuture();
 
         private:
-            template <typename U>
-            void threadFunc(std::exception_ptr& err, U run);
+            void threadFunc(std::exception_ptr& err, std::function<void()> run);
 
             std::jthread m_thread;
             std::promise<void> m_completionPromise;
             std::atomic<bool> m_isRunning{ false };
             std::exception_ptr m_storedException;
-        };
-
-        template <typename T, //it only supports string type for now, but you can change it to any type that supports assignment 
-            typename Clock,
-            bool Async>
-		concept ThreadErrorLRequires = requires(T t1, T t2, Clock c) {
-            t1 = t2;
-			{ c.now() } -> std::convertible_to<typename Clock::time_point>;
-            { t1 } -> std::convertible_to<std::string>; // Ensure T can be converted to std::string for logging
-		};
-
-        export
-			template <typename T = std::string, //it only supports string type for now, but you can change it to any type that supports assignment 
-            typename Clock = std::chrono::system_clock,
-            bool Async = false>
-			requires ThreadErrorLRequires<T, Clock, Async>
-        class ThreadErrorL {
-        public:
-            ThreadErrorL(std::string_view name, Scriptforge::Log::Logger<T, Clock>& logger);
-            ThreadErrorL() = delete;
-            ~ThreadErrorL();
-
-            template <typename U>
-            void threadStart(U run);
-
-            void waitForCompletion();
-            bool isRunning() const;
-            std::future<void> getFuture();
-
-        private:
-            template <typename U>
-            void threadFunc(std::exception_ptr& err, U run);
-
-            std::string m_name;
-            Scriptforge::Log::Logger<T, Clock>& m_logger;
-            std::jthread m_thread;
-            std::promise<void> m_completionPromise;
-            std::atomic<bool> m_isRunning{ false };
-            std::exception_ptr m_storedException;
+			std::function<void()> m_taskFunc;
         };
     }
 }
 
-namespace Scriptforge::Err {
-    // ThreadError 实现
-    template <bool Async>
-    ThreadError<Async>::~ThreadError() {
-        if constexpr (Async) {
-            if (m_isRunning) {
-                waitForCompletion();
+namespace Scriptforge {
+    inline namespace Err {
+        // ThreadError 实现
+        template <bool Async>
+        ThreadError<Async>::~ThreadError() {
+            if constexpr (Async) {
+                if (m_isRunning) {
+                    waitForCompletion();
+                }
+            }
+            else {
+                if (m_thread.joinable()) {
+                    m_thread.join();
+                }
             }
         }
-        else {
-            if (m_thread.joinable()) {
+
+        template <bool Async>
+        void ThreadError<Async>::threadFunc(std::exception_ptr& err, std::function<void()> run) {
+            m_isRunning = true;
+
+            try {
+                run();
+                if constexpr (Async) {
+                    m_completionPromise.set_value();
+                }
+            }
+            catch (...) {
+                err = std::current_exception();
+                m_storedException = err;  // 保存异常供后续使用
+
+                if constexpr (Async) {
+                    try {
+                        std::rethrow_exception(err);
+                    }
+                    catch (...) {
+                        m_completionPromise.set_exception(std::current_exception());
+                    }
+                }
+            }
+
+            m_isRunning = false;
+        }
+
+        template <bool Async>
+        void ThreadError<Async>::setThreadFunction(std::function<void()> run) {
+            m_taskFunc = std::move(run);
+        }
+
+        template <bool Async>
+        void ThreadError<Async>::threadStart(std::function<void()> run) {
+            std::exception_ptr err;
+			m_taskFunc = std::move(run);
+            if constexpr (Async) {
+                // 异步模式
+                m_completionPromise = std::promise<void>{};
+
+                m_thread = std::jthread([this, run = m_taskFunc, &err]() mutable {
+                    threadFunc(err, std::move(run));
+                    });
+
+            }
+            else {
+                // 同步模式
+                m_thread = std::jthread([this, run = m_taskFunc, &err]() mutable {
+                    threadFunc(err, std::move(run));
+                    });
+
                 m_thread.join();
-            }
-        }
-    }
 
-    template <bool Async>
-    template <typename U>
-    void ThreadError<Async>::threadFunc(std::exception_ptr& err, U run) {
-        m_isRunning = true;
-
-        try {
-            run();
-            if constexpr (Async) {
-                m_completionPromise.set_value();
-            }
-        }
-        catch (...) {
-            err = std::current_exception();
-            m_storedException = err;  // 保存异常供后续使用
-
-            if constexpr (Async) {
-                try {
+                if (err) {
                     std::rethrow_exception(err);
                 }
-                catch (...) {
-                    m_completionPromise.set_exception(std::current_exception());
-                }
             }
         }
 
-        m_isRunning = false;
-    }
-
-    template <bool Async>
-    template <typename U>
-    void ThreadError<Async>::threadStart(U run) {
-        std::exception_ptr err;
-
-        if constexpr (Async) {
-            // 异步模式
-            m_completionPromise = std::promise<void>{};
-
-            m_thread = std::jthread([this, run = std::forward<U>(run), &err]() mutable {
-                threadFunc(err, std::move(run));
-                });
-
+        template <bool Async>
+        void ThreadError<Async>::start() {
+            threadStart(m_taskFunc);
         }
-        else {
-            // 同步模式
-            m_thread = std::jthread([this, run = std::forward<U>(run), &err]() mutable {
-                threadFunc(err, std::move(run));
-                });
 
-            m_thread.join();
+        template <bool Async>
+        void ThreadError<Async>::waitForCompletion() {
+            static_assert(Async, "waitForCompletion() is only available in async mode");
 
-            if (err) {
-                std::rethrow_exception(err);
-            }
-        }
-    }
-
-    template <bool Async>
-    void ThreadError<Async>::waitForCompletion() {
-        static_assert(Async, "waitForCompletion() is only available in async mode");
-
-        if (m_isRunning) {
-            getFuture().wait();
-
-            // 如果有异常，重新抛出
-            if (m_storedException) {
-                std::rethrow_exception(m_storedException);
-            }
-        }
-    }
-
-    template <bool Async>
-    bool ThreadError<Async>::isRunning() const {
-        return m_isRunning;
-    }
-
-    template <bool Async>
-    std::future<void> ThreadError<Async>::getFuture() {
-        static_assert(Async, "getFuture() is only available in async mode");
-        return m_completionPromise.get_future();
-    }
-
-    // ThreadErrorL 实现（保持与之前类似）
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    ThreadErrorL<T, Clock, Async>::ThreadErrorL(std::string_view name,
-        Scriptforge::Log::Logger<T, Clock>& logger)
-        : m_name(name), m_logger(logger)
-    {
-        m_logger.log(Scriptforge::BasicMessage<T, Clock>{ "[" + m_name + "] Create a new ThreadErrorL(Async = " +
-            (Async ? "true" : "false") + ").", Scriptforge::InformationLevel::Info});
-    }
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    ThreadErrorL<T, Clock, Async>::~ThreadErrorL() {
-        if constexpr (Async) {
             if (m_isRunning) {
-                m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Waiting for async task to complete...", Scriptforge::InformationLevel::Info});
-                waitForCompletion();
-            }
-        }
-        else {
-            if (m_thread.joinable()) {
-                m_thread.join();
-            }
-        }
-        m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] ThreadErrorL destroyed.", Scriptforge::InformationLevel::Info});
-    }
+                getFuture().wait();
 
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    template <typename U>
-    void ThreadErrorL<T, Clock, Async>::threadFunc(std::exception_ptr& err, U run) {
-        m_isRunning = true;
-        m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Thread started.", Scriptforge::InformationLevel::Info});
-
-        try {
-            run();
-            if constexpr (Async) {
-                m_completionPromise.set_value();
-            }
-            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Thread completed successfully.", Scriptforge::InformationLevel::Info});
-        }
-        catch (...) {
-            err = std::current_exception();
-            m_storedException = err;
-
-            if constexpr (Async) {
-                try {
-                    std::rethrow_exception(err);
-                }
-                catch (const std::exception& e) {
-                    m_completionPromise.set_exception(std::current_exception());
-                }
-                catch (...) {
-                    m_completionPromise.set_exception(std::make_exception_ptr(
-                        std::runtime_error("Unknown exception")));
+                // 如果有异常，重新抛出
+                if (m_storedException) {
+                    std::rethrow_exception(m_storedException);
                 }
             }
-            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Thread caught exception.", Scriptforge::InformationLevel::Info});
         }
 
-        m_isRunning = false;
-    }
-
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    template <typename U>
-    void ThreadErrorL<T, Clock, Async>::threadStart(U run) {
-        std::exception_ptr err;
-
-        if constexpr (Async) {
-            m_completionPromise = std::promise<void>{};
-
-            m_thread = std::jthread([this, run = std::forward<U>(run), &err]() mutable {
-                threadFunc(err, std::move(run));
-                });
-
-            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Async task started.", Scriptforge::InformationLevel::Info});
-
+        template <bool Async>
+        bool ThreadError<Async>::isRunning() const {
+            return m_isRunning;
         }
-        else {
-            m_thread = std::jthread([this, run = std::forward<U>(run), &err]() mutable {
-                threadFunc(err, std::move(run));
-                });
 
-            m_thread.join();
-
-            if (err) {
-                m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Synchronous task failed.", Scriptforge::InformationLevel::Info});
-                std::rethrow_exception(err);
-            }
+        template <bool Async>
+        std::future<void> ThreadError<Async>::getFuture() {
+            static_assert(Async, "getFuture() is only available in async mode");
+            return m_completionPromise.get_future();
         }
-    }
-
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    void ThreadErrorL<T, Clock, Async>::waitForCompletion() {
-        static_assert(Async, "waitForCompletion() is only available in async mode");
-
-        if (m_isRunning) {
-            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Waiting for completion...", Scriptforge::InformationLevel::Info});
-            getFuture().wait();
-
-            if (m_storedException) {
-                m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Re-throwing stored exception.", Scriptforge::InformationLevel::Info});
-                std::rethrow_exception(m_storedException);
-            }
-            m_logger.log(Scriptforge::BasicMessage<T, Clock>{"[" + m_name + "] Async task completed.", Scriptforge::InformationLevel::Info});
-        }
-    }
-
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    bool ThreadErrorL<T, Clock, Async>::isRunning() const {
-        return m_isRunning;
-    }
-
-    template <typename T, typename Clock, bool Async>
-        requires ThreadErrorLRequires<T, Clock, Async>
-    std::future<void> ThreadErrorL<T, Clock, Async>::getFuture() {
-        static_assert(Async, "getFuture() is only available in async mode");
-        return m_completionPromise.get_future();
     }
 }

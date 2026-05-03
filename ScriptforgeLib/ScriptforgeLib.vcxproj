@@ -32,6 +32,7 @@
     <ClCompile Include="Scriptforge.Log.ixx" />
     <ClCompile Include="Scriptforge.Msg.ixx" />
     <ClCompile Include="Scriptforge.Pch.ixx" />
+    <ClCompile Include="Scriptforge.ProcessPool.ixx" />
     <ClCompile Include="Scriptforge.RingBuffer.ixx" />
     <ClCompile Include="Scriptforge.StringConversion.ixx" />
     <ClCompile Include="Scriptforge.ThreadError.ixx" />

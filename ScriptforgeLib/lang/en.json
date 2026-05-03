@@ -5,9 +5,8 @@
     "10002": "Empty node",
     "10003": "Orphaned node",
     "20001": "Cannot open log file: {}",
-    "30001": "Size must be 8",
-    "30002": "Where must be less than 8",
+    "20002": "Logger is not running",
     "50001": "Capacity must be greater than 0",
-    "60001": "The Operation System is not supported"
+    "60001": "Invalid pool size"
   }
   }
