@@ -19,10 +19,6 @@
 export module Scriptforge.AntiDebug;
 import Scriptforge.AntiDebug.RandomDefine;
 import Scriptforge.Pch;
-#if !(defined(_WIN32) || defined(_WIN64))
-import Scriptforge.Local;
-import Scriptforge.LanguageCode;
-#endif
 
 namespace Scriptforge {
     inline namespace ADNS {
@@ -55,7 +51,7 @@ namespace Scriptforge {
         };
 
     }
-    namespace AntiDebug {
+    inline namespace AntiDebug {
         export using AntiDebugger = ADNS::ADCL;
     }
     
