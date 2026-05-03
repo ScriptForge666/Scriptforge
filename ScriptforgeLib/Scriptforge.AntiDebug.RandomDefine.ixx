@@ -17,7 +17,7 @@
 */
 
 export module Scriptforge.AntiDebug.RandomDefine;
-import Scriptforge.AntiDebug.Random; // This file will be created when you build the project or run the script "start.bat".
+import Scriptforge.AntiDebug.Random; // This file will be created when you build the project or run the project "GenerateRandom".
 #define CAT2(a, b) a##b
 #define CAT(a, b)  CAT2(a, b)
 #define ADNS    CAT(adns, NS_RANDOM)
