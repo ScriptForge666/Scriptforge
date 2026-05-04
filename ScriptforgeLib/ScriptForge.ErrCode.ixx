@@ -37,6 +37,7 @@ namespace Scriptforge::ErrCode {
 		LocalInvalidLanguageCode = 40003,     // Local0003: Invalid language code
 		RingBufferCapacityBeZero = 50001,       // RingBuffer0001: Capacity must be greater than 0
 		ProcessPoolInvalidPoolSize = 60001,       // ProcessPool0002: Invalid pool size
+		ThreadErrorThreadAlreadyRunning = 70001,       // ThreadError0001: Thread is already running
 
 	};
 	export std::string toString(ErrCode code) {
@@ -63,6 +64,9 @@ namespace Scriptforge::ErrCode {
 			break;
 		case 6:
 			result += "ProcessPool";
+			break;
+		case 7:
+			result += "ThreadError";
 			break;
 		default:
 			return "Unknown error";

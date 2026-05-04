@@ -93,7 +93,63 @@ namespace Scriptforge {
 			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
 
 		export using Message = BasicMessage<>;
+
+		
 	}
+}
+
+template<typename T, typename Clock>
+	requires MessageRequires<T, Clock>
+class std::formatter<Scriptforge::Msg::BasicMessage<T, Clock>> {
+public:
+	enum class FormatType {
+		All,
+		TimeOnly,
+		LevelOnly,
+		MessageOnly,
+		Json
+	} m_formatType = FormatType::All;
+
+	constexpr auto parse(std::format_parse_context& ctx);
+
+	template<typename FormatContext>
+	auto format(const Scriptforge::Msg::BasicMessage<T, Clock>& msg, FormatContext& ctx) const;
+};
+
+template<typename T, typename Clock>
+	requires MessageRequires<T, Clock>
+constexpr auto std::formatter<Scriptforge::Msg::BasicMessage<T, Clock>>::parse(std::format_parse_context& ctx) {
+	auto it = ctx.begin();
+	auto end = ctx.end();
+	if (it != end && *it == ':') {
+		++it;
+		if (it != end) {
+			switch (*it) {
+			case 'a':
+				m_formatType = FormatType::All;
+				break;
+			case 't':
+				m_formatType = FormatType::TimeOnly;
+				break;
+			case 'l':
+				m_formatType = FormatType::LevelOnly;
+				break;
+			case 'm':
+				m_formatType = FormatType::MessageOnly;
+				break;
+			case 'j':
+				m_formatType = FormatType::Json;
+				break;
+			default:
+				throw std::format_error("Invalid format type");
+			}
+			++it;
+		}
+	}
+	if (it != end && *it != '}') {
+		throw std::format_error("Unexpected format specifier");
+	}
+	return it;
 }
 
 namespace Scriptforge {

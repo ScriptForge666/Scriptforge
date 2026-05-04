@@ -7,6 +7,7 @@
     "20001": "Cannot open log file: {}",
     "20002": "Logger is not running",
     "50001": "Capacity must be greater than 0",
-    "60001": "Invalid pool size"
+    "60001": "Invalid pool size",
+    "70001": "The thread has already been running",
   }
   }

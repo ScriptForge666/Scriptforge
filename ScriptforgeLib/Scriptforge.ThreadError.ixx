@@ -17,138 +17,64 @@ import Scriptforge.Pch;
 
 namespace Scriptforge {
     inline namespace Err {
-        export
-            template <bool Async = false>
-        class ThreadError {
-        public:
-            ThreadError() = default;
-            ~ThreadError();
 
-            void threadStart(std::function<void()> run);
-            void setThreadFunction(std::function<void()> run);
-            void start();
+        export template <bool Async = false>
+            class ThreadError {
+            public:
+                ThreadError(const Scriptforge::Local::Lang& lang);
+                ~ThreadError();
 
-            // 异步模式特有方法
-            void waitForCompletion();
-            bool isRunning() const;
-            std::future<void> getFuture();
+                // 禁止拷贝/移动，线程对象不安全
+                ThreadError(const ThreadError&) = delete;
+                ThreadError& operator=(const ThreadError&) = delete;
+                ThreadError(ThreadError&&) = delete;
+                ThreadError& operator=(ThreadError&&) = delete;
 
-        private:
-            void threadFunc(std::exception_ptr& err, std::function<void()> run);
+                void setThreadFunction(std::function<void()> run);
+                void start();
+				void stop();
 
-            std::jthread m_thread;
-            std::promise<void> m_completionPromise;
-            std::atomic<bool> m_isRunning{ false };
-            std::exception_ptr m_storedException;
-			std::function<void()> m_taskFunc;
+                // 异步模式接口
+                void waitForCompletion();
+                bool isRunning() const;
+                std::future<void> getFuture();
+
+            private:
+                void threadFunc(std::function<void()> run);
+				Scriptforge::Local::Lang m_lang;
+                std::jthread m_thread;
+                std::mutex m_mtx;
+                std::promise<void> m_completionPromise;
+                std::future<void> m_completionFuture;
+                std::atomic<bool> m_isRunning{ false };
+                std::exception_ptr m_storedException;
+                std::function<void()> m_taskFunc;
         };
     }
 }
-
 namespace Scriptforge {
-    inline namespace Err {
-        // ThreadError 实现
-        template <bool Async>
+	inline namespace Err {
+        template<bool Async>
+        ThreadError<Async>::ThreadError(const Scriptforge::Local::Lang& lang) : m_lang(lang) {}
+
+		template <bool Async>
         ThreadError<Async>::~ThreadError() {
-            if constexpr (Async) {
-                if (m_isRunning) {
-                    waitForCompletion();
-                }
-            }
-            else {
-                if (m_thread.joinable()) {
-                    m_thread.join();
-                }
-            }
-        }
+            stop();
+		}
 
-        template <bool Async>
-        void ThreadError<Async>::threadFunc(std::exception_ptr& err, std::function<void()> run) {
-            m_isRunning = true;
-
-            try {
-                run();
-                if constexpr (Async) {
-                    m_completionPromise.set_value();
-                }
-            }
-            catch (...) {
-                err = std::current_exception();
-                m_storedException = err;  // 保存异常供后续使用
-
-                if constexpr (Async) {
-                    try {
-                        std::rethrow_exception(err);
-                    }
-                    catch (...) {
-                        m_completionPromise.set_exception(std::current_exception());
-                    }
-                }
-            }
-
-            m_isRunning = false;
-        }
-
-        template <bool Async>
+        template<bool Async>
         void ThreadError<Async>::setThreadFunction(std::function<void()> run) {
+            std::lock_guard<std::mutex> lock(m_mtx);
             m_taskFunc = std::move(run);
-        }
+		}
 
-        template <bool Async>
-        void ThreadError<Async>::threadStart(std::function<void()> run) {
-            std::exception_ptr err;
-			m_taskFunc = std::move(run);
-            if constexpr (Async) {
-                // 异步模式
-                m_completionPromise = std::promise<void>{};
-
-                m_thread = std::jthread([this, run = m_taskFunc, &err]() mutable {
-                    threadFunc(err, std::move(run));
-                    });
-
-            }
-            else {
-                // 同步模式
-                m_thread = std::jthread([this, run = m_taskFunc, &err]() mutable {
-                    threadFunc(err, std::move(run));
-                    });
-
-                m_thread.join();
-
-                if (err) {
-                    std::rethrow_exception(err);
-                }
-            }
-        }
-
-        template <bool Async>
+		template<bool Async>
         void ThreadError<Async>::start() {
-            threadStart(m_taskFunc);
-        }
-
-        template <bool Async>
-        void ThreadError<Async>::waitForCompletion() {
-            static_assert(Async, "waitForCompletion() is only available in async mode");
-
-            if (m_isRunning) {
-                getFuture().wait();
-
-                // 如果有异常，重新抛出
-                if (m_storedException) {
-                    std::rethrow_exception(m_storedException);
-                }
+            std::lock_guard<std::mutex> lock(m_mtx);
+            if (m_taskFunc) {
+                m_completionFuture = m_completionPromise.get_future();
+                m_thread = std::jthread(&ThreadError::threadFunc, this, m_taskFunc);
             }
-        }
-
-        template <bool Async>
-        bool ThreadError<Async>::isRunning() const {
-            return m_isRunning;
-        }
-
-        template <bool Async>
-        std::future<void> ThreadError<Async>::getFuture() {
-            static_assert(Async, "getFuture() is only available in async mode");
-            return m_completionPromise.get_future();
-        }
+		}
     }
 }
