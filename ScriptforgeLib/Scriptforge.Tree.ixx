@@ -115,11 +115,10 @@ export namespace Scriptforge {
             using nodeptr = std::shared_ptr<TreeNode>;
 
             //构造函数
-            Tree(const allocator_type& alloc = allocator_type(), Scriptforge::Lang lang = Lang{});
-            explicit Tree(const T& node, const allocator_type& alloc = allocator_type());
+            Tree(const allocator_type& alloc = allocator_type(), const Scriptforge::Local::Lang& lang = Lang{});
             Tree(const Tree<T, Alloc>& other);
 
-            nodeptr root() const;                              //返回根节点
+            nodeptr root() const noexcept;                     //返回根节点
             nodeptr del(nodeptr node);                         //删除节点
 
             //添加节点
@@ -129,13 +128,12 @@ export namespace Scriptforge {
             
             void setLang(Scriptforge::Lang lang);         //设置语言
 
-            Scriptforge::Lang getLang() const noexcept;      //返回语言
+            Scriptforge::Lang lang() const noexcept;      //返回语言
 
-            allocator_type getAllocator() const noexcept;     //返回分配器
+            allocator_type allocator() const noexcept;     //返回分配器
 
         private:
-            struct TreeNode
-            {
+            struct TreeNode {
                 TreeNode() = default;
                 explicit TreeNode(const T& v) : node(v) {}
                 std::weak_ptr<TreeNode> father;
@@ -144,12 +142,12 @@ export namespace Scriptforge {
                 T node;
             };
 
-            Scriptforge::Lang m_lang;
+            Scriptforge::Local::Lang m_lang;
             nodeptr m_root;
-            allocator_type alloc_;
+            allocator_type m_alloc;
 
             template<typename U>
-            nodeptr create_node(U&& value);
+            nodeptr createNode(U&& value);
         };
     }
 }
@@ -158,6 +156,44 @@ export namespace Scriptforge {
 
 namespace Scriptforge {
     inline namespace Tree {
+		template<typename T, typename Alloc>
+			requires TreeRequires<T>
+        Tree<T, Alloc>::Tree(const allocator_type& alloc, const Scriptforge::Local::Lang& lang)
+            : m_alloc(alloc), m_lang(lang) {
+            m_root = createNode(T());
+		}
+
+		template<typename T, typename Alloc>
+			requires TreeRequires<T>
+        Tree<T, Alloc>::Tree(const Tree<T, Alloc>& other)
+            : m_alloc(other.allocator()), m_lang(other.lang()) {
+            auto deepCopy = [&](auto&& self, const nodeptr& original, const nodeptr& parent) -> nodeptr {
+                if (!original) return nullptr;
+                nodeptr copy_node = createNode(original->node);
+                copy_node->father = parent;
+                for (const auto& child : original->children) {
+                    auto child_copy = self(self, child, copy_node);
+                    if (child_copy) {
+                        copy_node->children.push_back(child_copy);
+                    }
+                }
+                return copy_node;
+				};
+            m_root = deepCopy(deepCopy, other.root(), nullptr);
+        }
+
+		template<typename T, typename Alloc>
+			requires TreeRequires<T>
+        Tree<T, Alloc>::nodeptr Tree<T, Alloc>::root() const  noexcept {
+            return m_root;
+		}
+
+		template<typename T, typename Alloc>
+			requires TreeRequires<T>
+        Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
+        }
+
+        /*
         //ConstTreeIterator实现部分
 
         //构造函数
@@ -499,6 +535,6 @@ namespace Scriptforge {
                     node_alloc.deallocate(p, 1);
                 }
                 });
-        }
+        }*/
     }
 }

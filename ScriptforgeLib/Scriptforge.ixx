@@ -11,7 +11,7 @@
 
 /**
  * @file Scriptforge.ixx
- * @brief 定义了 `Scriptforge` 模块，并导入了该模块下的多个子模块，包括 `AntiDebug`、`Err`、`Log`、`Tree` 和 `Version`。这些子模块分别提供了反调试功能、错误处理功能、日志记录功能、树结构操作功能和版本信息功能。通过使用这些子模块，可以方便地实现各种功能，提高代码的可读性和可维护性。
+ * @brief 定义了 `Scriptforge` 模块，并导入了该模块下的多个子模块。
  * @author Scriptforge
  * @date 2026/3/29
  */
@@ -23,8 +23,17 @@ export import Scriptforge.Err;
 export import Scriptforge.Log;
 export import Scriptforge.Tree;
 export import Scriptforge.Version;
+export import Scriptforge.Pch;
+export import Scriptforge.Msg;
+export import Scriptforge.ErrCode;
+export import Scriptforge.ErrCode.throwError;
+export import Scriptforge.Local;
+export import Scriptforge.ThreadError;
+export import Scriptforge.LanguageCode;
+export import Scriptforge.StringConversion;
+export import Scriptforge.RingBuffer;
 
-import std;
+
 constexpr std::string_view ProjectName{ "Scriptforge" };
 constexpr std::string_view ProjectVersion{ "0.1.2-dev-withBug" };
 constexpr std::string_view ProjectContributor{ "Scriptforge" };
