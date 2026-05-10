@@ -71,9 +71,12 @@ namespace Scriptforge {
 		template<bool Async>
         void ThreadError<Async>::start() {
             std::lock_guard<std::mutex> lock(m_mtx);
-            if (m_taskFunc) {
+            if constexpr(m_taskFunc) {
                 m_completionFuture = m_completionPromise.get_future();
                 m_thread = std::jthread(&ThreadError::threadFunc, this, m_taskFunc);
+            }
+            else {
+
             }
 		}
     }

@@ -132,6 +132,14 @@ export namespace Scriptforge {
 
             allocator_type allocator() const noexcept;     //返回分配器
 
+			//迭代器
+            iterator begin(TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
+			const_iterator begin(TreeTraversalOrder order = TreeTraversalOrder::LevelOrder) const;
+			const_iterator cbegin(TreeTraversalOrder order = TreeTraversalOrder::LevelOrder) const;
+			iterator end(TreeTraversalOrder order = TreeTraversalOrder::LevelOrder);
+            const_iterator end(TreeTraversalOrder order = TreeTraversalOrder::LevelOrder) const;
+            const_iterator cend(TreeTraversalOrder order = TreeTraversalOrder::LevelOrder) const;
+
         private:
             struct TreeNode {
                 TreeNode() = default;
@@ -191,6 +199,23 @@ namespace Scriptforge {
 		template<typename T, typename Alloc>
 			requires TreeRequires<T>
         Tree<T, Alloc>::nodeptr Tree<T, Alloc>::del(nodeptr node) {
+            if (!node) {
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeEmptyNode, __func__, m_lang);
+            }
+			if (!node.father.lock()) {
+                if (node != m_root) {
+                    Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::TreeOrphanedNode, __func__, m_lang);
+                } else {
+                    m_root.reset();
+                }
+                return nullptr;
+            }
+            auto& vec = node.father.lock()->children;
+			auto it = std::find(vec.begin(), vec.end(), node);
+			if (it != vec.end()) {
+				vec.erase(it);
+			}
+			return node;
         }
 
         /*

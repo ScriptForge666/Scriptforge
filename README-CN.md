@@ -1,6 +1,9 @@
 <center>
+
   <img src="src/ScriptForge.png" alt="Scriptforge" width="100"/>
+  
   <h1>Scriptforge</h1>
+  
   <h2>一个有着许许多多奇奇怪怪功能的开源库</h2>
 
 [README主版本(English)](README.md)

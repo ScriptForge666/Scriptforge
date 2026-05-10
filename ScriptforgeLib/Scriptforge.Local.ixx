@@ -279,8 +279,8 @@ namespace Scriptforge {
         }
 
         void Lang::LanguageIsLegal(Scriptforge::LanguageCode::Language lang) const {
-            if (lang == Scriptforge::LanguageCode::Language::Neutral || lang == Scriptforge::LanguageCode::Language::Invariant) {
-                throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode, __func__, "Neutral and Invariant are not valid language codes for loading language files.");
+            if (lang == Scriptforge::LanguageCode::Language::Invariant) {
+                throwErrWithoutJson(Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode, __func__, "Invariant is not valid language codes for loading language files.");
             }
         }
 

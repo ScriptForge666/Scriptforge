@@ -188,11 +188,23 @@ namespace Scriptforge {
 			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); } &&
 			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
 		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
-			auto time_t = Clock::to_time_t(msg.time());
-			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
-				<< " | " << getInformationLevel(msg.level())
-				<< "] " << msg.message();
+			auto tp = msg.time();
+			auto zt = std::chrono::zoned_time{ std::chrono::current_zone(), tp };
+			auto local = zt.get_local_time();
+			auto days = floor<std::chrono::days>(local);
+			std::chrono::year_month_day ymd{ days };
+			std::chrono::hh_mm_ss      hms{ local - days };
 
+			// 直接输出！安全！干净！
+			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d} | {}] {}",
+				static_cast<int>(ymd.year()),
+				static_cast<unsigned>(ymd.month()),
+				static_cast<unsigned>(ymd.day()),
+				hms.hours().count(),
+				hms.minutes().count(),
+				hms.seconds().count(),
+				getInformationLevel(msg.level()),
+				msg.message());
 			return os;
 		}
 

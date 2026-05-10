@@ -1,7 +1,10 @@
 <center>
-  <img src="src/ScriptForge.png" alt="Scriptforge" width="100"/>
-  <h1>Scriptforge</h1>
-  <h2>An open-source library with many strange and wonderful features</h2>
+ 
+ <img src="src/ScriptForge.png" alt="Scriptforge" width="100"/>
+ 
+ <h1>Scriptforge</h1>
+ 
+ <h2>An open-source library with many strange and wonderful features</h2>
 
 **Other Language:** [Chinese](README-CN.md)
 
