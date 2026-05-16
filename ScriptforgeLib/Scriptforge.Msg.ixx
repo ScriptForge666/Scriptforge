@@ -53,17 +53,17 @@ namespace Scriptforge {
 
 		export
 			template <typename T, typename Clock>
-		concept MessageRequires = 
+		concept MessageRequires =
 			std::copyable<T> &&
 			std::copyable<Clock> &&
 			requires {
-				typename Clock::time_point;
-				{ Clock::now() } -> std::convertible_to<typename Clock::time_point>;
-				//{ Clock::to_time_t(std::declval<typename Clock::time_point>()) } -> std::convertible_to<typename time_t>;
-			};
+			typename Clock::time_point;
+			{ Clock::now() } -> std::convertible_to<typename Clock::time_point>;
+			//{ Clock::to_time_t(std::declval<typename Clock::time_point>()) } -> std::convertible_to<typename time_t>;
+		};
 
-		export 
-			template <typename T =std::string, typename Clock = std::chrono::system_clock>
+		export
+			template <typename T = std::string, typename Clock = std::chrono::system_clock>
 			requires MessageRequires<T, Clock>
 		class BasicMessage {
 		public:
@@ -79,14 +79,14 @@ namespace Scriptforge {
 			TimePoint m_time;
 		};
 
-		export 
+		export
 			template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>&&
 			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); }&&
 			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
 		std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
 
-		export 
+		export
 			template <typename T, typename Clock>
 			requires MessageRequires<T, Clock>&&
 		std::same_as<Clock, std::chrono::steady_clock>
@@ -94,12 +94,11 @@ namespace Scriptforge {
 
 		export using Message = BasicMessage<>;
 
-		
-	}
-}
 
+	}
+
+}
 template<typename T, typename Clock>
-	requires MessageRequires<T, Clock>
 class std::formatter<Scriptforge::Msg::BasicMessage<T, Clock>> {
 public:
 	enum class FormatType {
@@ -116,8 +115,9 @@ public:
 	auto format(const Scriptforge::Msg::BasicMessage<T, Clock>& msg, FormatContext& ctx) const;
 };
 
+
+
 template<typename T, typename Clock>
-	requires MessageRequires<T, Clock>
 constexpr auto std::formatter<Scriptforge::Msg::BasicMessage<T, Clock>>::parse(std::format_parse_context& ctx) {
 	auto it = ctx.begin();
 	auto end = ctx.end();
@@ -151,7 +151,6 @@ constexpr auto std::formatter<Scriptforge::Msg::BasicMessage<T, Clock>>::parse(s
 	}
 	return it;
 }
-
 
 
 namespace Scriptforge {

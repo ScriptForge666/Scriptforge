@@ -49,9 +49,6 @@ namespace Scriptforge {
 
         export using Error = BasicError<>;
 
-        export
-			template <typename CodeT, typename T, typename Clock>
-            std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err);
 
     }
 }
@@ -79,14 +76,5 @@ namespace Scriptforge {
         const CodeT& BasicError<CodeT, T, Clock>::code() const {
             return m_code;
 		}
-            template <typename CodeT, typename T, typename Clock>
-        std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& err) {
-            auto time_t = Clock::to_time_t(err.time());
-			os << "[" << std::put_time(localtime(&time_t), "%Y-%m-%d %H:%M:%S")
-				<< " | " << getInformationLevel(err.level())
-				<< " | " << err.code()
-				<< "] " << err.message();
-            return os;
-        }
     }
 }
