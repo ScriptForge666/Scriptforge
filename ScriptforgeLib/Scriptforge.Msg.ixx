@@ -153,6 +153,8 @@ constexpr auto std::formatter<Scriptforge::Msg::BasicMessage<T, Clock>>::parse(s
 }
 
 
+
+
 namespace Scriptforge {
 	inline namespace Msg {
 

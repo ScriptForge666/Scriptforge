@@ -16,21 +16,15 @@
  * @date 2026/3/29
 */
 
-module;
-
-#include<ctime>
-
 export module Scriptforge.Err;
 import Scriptforge.Msg;
 import Scriptforge.Pch;
 
 namespace Scriptforge {
     inline namespace Err {
-		template <typename CodeT, typename T, typename Clock>
-		concept ErrorRequires = Scriptforge::Msg::MessageRequires<T, Clock>&& 
-            requires(CodeT code1, CodeT code2) {
-			code1 = code2;
-		};
+        template <typename CodeT, typename T, typename Clock>
+        concept ErrorRequires = Scriptforge::Msg::MessageRequires<T, Clock>&&
+            std::copyable<CodeT>;
 
         export 
 			template<typename CodeT = std::string, typename T = std::string, typename Clock = std::chrono::system_clock>
