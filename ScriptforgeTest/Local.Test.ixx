@@ -41,7 +41,7 @@ namespace Scriptforge::Local::Test
 
         for (auto lang : langs) {
             SCOPED_TRACE(("Test language: " +
-                ENUM_TO_ISO639_1.at(lang)).c_str());
+                ENUM_TO_ISO639_1().at(lang)).c_str());
 
             Lang loc(lang, "./lang");
 

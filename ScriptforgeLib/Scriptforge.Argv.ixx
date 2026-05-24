@@ -23,48 +23,50 @@ export module Scriptforge.Argv;
 import Scriptforge.Pch;
 
 namespace Scriptforge::Argv {
-    namespace internal {
-        export inline std::vector<std::string> args;
-    }
+	namespace internal {
+		export inline std::vector<std::string> args;
+	}
 
     export void init(int argc, char* argv[]);
     export std::optional<std::string> get(std::string_view key);
 
-    /**
-     * @details 一个用于检查类型是否为有效的 argv 命令的概念。
-     * 可以编写以下类型的命令结构体/类：
-     * ```cpp
-     * struct ArgvCommand {
-     *     static constexpr std::string_view name = "command";
-     *     static constexpr std::string_view shortName = "c";
-     *     static void run() {
-     *         std::cout << "Running command!" << std::endl;
-     *     }
-     * };
-     * ```
-    */
-    template<typename T>
-    concept isArgvCommand = requires {
-        { T::name } -> std::convertible_to<std::string_view>;
-        { T::shortName } -> std::convertible_to<std::string_view>;
-            requires requires { T::run(); };
-    };
-
-    /**
-    * @details 一个用于检查类型是否为有效的 argv 未知命令的概念。
+   /**
+    * @details 一个用于检查类型是否为有效的 argv 命令的概念。
     * 可以编写以下类型的命令结构体/类：
-    * ```cpp
-    * struct ArgvUnknown {
-    *     static void run() {
-    *         std::cout << "Running unknown command!" << std::endl;
+	* ```cpp
+    * struct ArgvCommand {
+	*     static constexpr std::string_view name = "command";
+    *     static constexpr std::string_view shortName = "c";
+	*     static void run(const std::string& arg) {
+	*         std::cout << "Running command: " << arg << std::endl;
     *     }
     * };
     * ```
    */
     template<typename T>
-    concept isArgvUnknown = requires { T::run(); };
+    concept isArgvCommand = requires {
+        { T::name } -> std::convertible_to<std::string_view>;
+        { T::shortName } -> std::convertible_to<std::string_view>;
+            requires requires { T::run(std::string{}); };
+    };
+    
+    /**
+    * @details 一个用于检查类型是否为有效的 argv 未知命令的概念。
+    * 可以编写以下类型的命令结构体/类：
+    * ```cpp
+    * struct ArgvUnknown {
+    *     static void run(const std::string& arg) {
+    *         std::cout << "Running unknown command: " << arg << std::endl;
+    *     }
+    * };
+    * ```
+   */
+    template<typename T>
+    concept isArgvUnknown = requires(std::string s){ T::run(s); };
 
-    export
+    export std::optional<std::string> get(std::string_view key);
+
+    export 
         template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
     void run();
 
@@ -81,7 +83,7 @@ namespace Scriptforge::Argv {
         internal::args.assign(argv + 1, argv + argc);
     }
 
-    export std::optional<std::string> get(std::string_view key) {
+    std::optional<std::string> get(std::string_view key) {
         auto it = std::ranges::find(internal::args, key);
 
         // 找不到 key 或已经是最后一项 → 返回空
@@ -111,24 +113,29 @@ namespace Scriptforge::Argv {
         return h;
     }
 
-    template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
-    void CommandJumpTable<UnknownCommand, Commands...>::run(const std::vector<std::string>& args) {
+	template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
+	void CommandJumpTable<UnknownCommand, Commands...>::run(const std::vector<std::string>& args) {
         for (const auto& arg : args) {
             uint32_t h = hash(arg);
 
             bool found = false;
-
-            // 折叠表达式 = 生成 SWITCH 跳转表
-            ([&] {
-                if (h == hash(Commands::name) ||
-                    h == hash(Commands::shortName)) {
-                    Commands::run();
-                    found = true;
-                }
-                }(), ...);
-            if (!found) {
-                UnknownCommand::run();
+            if (arg.starts_with('-')) {
+                // 折叠表达式 = 生成 SWITCH 跳转表
+                ([&] {
+                    if (h == hash(Commands::name) ||
+                        h == hash(Commands::shortName)) {
+                        Commands::run(arg);
+                        found = true;
+                    }
+                    }(), ...);
             }
+            else {
+                continue;
+            }
+			if (!found) {
+				UnknownCommand::run(arg);
+                break;
+			}
         }
     }
 

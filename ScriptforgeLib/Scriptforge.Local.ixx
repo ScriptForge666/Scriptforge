@@ -166,13 +166,13 @@ namespace Scriptforge {
         template<typename T>
             requires is_basic_string<T>
         T Lang::getLanguageNameISO639_1() const {
-            return str_convert<T, std::string>(Scriptforge::LanguageCode::ENUM_TO_ISO639_1.at(m_lang));
+            return str_convert<T, std::string>(Scriptforge::LanguageCode::ENUM_TO_ISO639_1().at(m_lang));
         }
 
         template<typename T>
             requires is_basic_string<T>
         T Lang::getLanguageName() const {
-            return str_convert<T>(j.value("language_name", Scriptforge::LanguageCode::ENUM_TO_ISO639_1.at(m_lang)));
+            return str_convert<T>(j.value("language_name", Scriptforge::LanguageCode::ENUM_TO_ISO639_1().at(m_lang)));
         }
 
 

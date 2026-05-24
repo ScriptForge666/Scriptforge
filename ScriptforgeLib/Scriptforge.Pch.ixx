@@ -40,7 +40,11 @@ module;
 #include <wchar.h>
 #include <wctype.h>
 
+#ifdef __MSC__VER
+
 #include <intrin.h>
+
+#endif
 
 export module Scriptforge.Pch;
 
