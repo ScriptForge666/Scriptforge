@@ -12,6 +12,8 @@ export module Scriptforge.ThreadError;
 
 import Scriptforge.Local;
 import Scriptforge.Err;
+import Scriptforge.ErrCode;
+import Scriptforge.ErrCode.throwError;
 import Scriptforge.Msg;
 import Scriptforge.Pch;
 
@@ -40,12 +42,11 @@ namespace Scriptforge {
                 std::future<void> getFuture();
 
             private:
-                void threadFunc(std::function<void()> run);
+                void threadFunc(std::function<void()> run, std::optional<std::promise<void>> prom);
 				Scriptforge::Local::Lang m_lang;
                 std::jthread m_thread;
-                std::mutex m_mtx;
-                std::promise<void> m_completionPromise;
                 std::future<void> m_completionFuture;
+                std::mutex m_mtx;
                 std::atomic<bool> m_isRunning{ false };
                 std::exception_ptr m_storedException;
                 std::function<void()> m_taskFunc;
@@ -70,13 +71,29 @@ namespace Scriptforge {
 
 		template<bool Async>
         void ThreadError<Async>::start() {
+
             std::lock_guard<std::mutex> lock(m_mtx);
-            if constexpr(m_taskFunc) {
-                m_completionFuture = m_completionPromise.get_future();
-                m_thread = std::jthread(&ThreadError::threadFunc, this, m_taskFunc);
+
+            if(!m_taskFunc)
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::ThreadErrorThreadNoTask, __func__, m_lang);
+            if (m_isRunning)
+				Scriptforge::ErrCode::throwError(Scriptforge::ErrCode::ErrCode::ThreadErrorThreadAlreadyRunning, __func__, m_lang);
+
+            m_storedException = nullptr;
+            m_isRunning = true;
+            if constexpr (Async) {
+				std::promise<void> prom;
+				m_completionFuture = prom.get_future();
+                m_thread = std::jthread(
+                    [this, task = m_taskFunc, pOpt = std::move(promOpt)]
+                    (std::stop_token /* jthread 自动传入 */) mutable
+                    {
+                        this->threadFunc(std::move(task), std::move(pOpt));
+                    }
+                );
             }
             else {
-
+                m_thread = std::jthread(std::bind(&ThreadError<Async>::threadFunc, this, m_taskFunc, std::nullopt));
             }
 		}
     }

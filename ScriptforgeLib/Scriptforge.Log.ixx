@@ -15,7 +15,7 @@
  * @author Scriptforge
  * @date 2026/3/29
  */
-
+/*
 export module Scriptforge.Log;
 import Scriptforge.Err;
 import Scriptforge.ErrCode;
@@ -244,3 +244,61 @@ namespace Scriptforge {
 
     } // namespace Log
 } // namespace Scriptforge
+*/
+
+
+export module Scriptforge.Log;
+import Scriptforge.Local;
+import Scriptforge.ThreadError;
+import Scriptforge.Msg;
+import Scriptforge.Pch;
+
+namespace Scriptforge {
+    inline namespace Log {
+        namespace fs = std::filesystem;
+
+        export
+            template <typename T, typename Clock>
+        concept LoggerRequires = Scriptforge::Msg::MessageRequires<T, Clock>;
+
+        export
+            template <typename T = std::string, typename Clock = std::chrono::system_clock>
+            requires LoggerRequires<T, Clock>
+        class Logger {
+        public:
+            Logger(const fs::path& file, const Scriptforge::Local::Lang& lang,
+                Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Info);
+            Logger(fs::path&& file, const Scriptforge::Local::Lang& lang,
+                Scriptforge::Msg::InformationLevel level = Scriptforge::Msg::InformationLevel::Info);
+            Logger(const Logger&) = delete;
+            Logger& operator=(const Logger&) = delete;
+            ~Logger();
+
+            void start();
+            void stop();
+
+            void setLogLevel(Scriptforge::Msg::InformationLevel level);
+            Scriptforge::Msg::InformationLevel getLogLevel() const;
+
+            void log(const Scriptforge::BasicMessage<T, Clock>& msg);
+            fs::path getPath() const;
+
+        private:
+            void process();
+            void fileIsLegal(const fs::path& file) const;
+            void writeMessageToFile(const Scriptforge::BasicMessage<T, Clock>& msg);
+
+        private:
+            fs::path m_path;
+            Scriptforge::Local::Lang m_lang;
+            Scriptforge::Msg::InformationLevel m_level;
+            mutable std::mutex m_mtx;
+            std::condition_variable m_cv;
+            std::thread m_thread;
+            bool m_isRunning = false;
+            bool m_stopFlag = true;
+            std::queue<Scriptforge::BasicMessage<T, Clock>> m_logQueue;
+        };
+
+    }
+}

@@ -25,6 +25,7 @@ import Scriptforge.Pch;
 namespace Scriptforge::Argv {
 	namespace internal {
 		export inline std::vector<std::string> args;
+		bool isRunning = false;
 	}
 
     export void init(int argc, char* argv[]);
@@ -37,7 +38,7 @@ namespace Scriptforge::Argv {
     * struct ArgvCommand {
 	*     static constexpr std::string_view name = "command";
     *     static constexpr std::string_view shortName = "c";
-	*     static void run(const std::string& arg) {
+	*     static void run(std::string_view arg) {
 	*         std::cout << "Running command: " << arg << std::endl;
     *     }
     * };
@@ -47,7 +48,7 @@ namespace Scriptforge::Argv {
     concept isArgvCommand = requires {
         { T::name } -> std::convertible_to<std::string_view>;
         { T::shortName } -> std::convertible_to<std::string_view>;
-            requires requires { T::run(std::string{}); };
+            requires requires { T::run(std::string_view{}); };
     };
     
     /**
@@ -55,20 +56,22 @@ namespace Scriptforge::Argv {
     * 可以编写以下类型的命令结构体/类：
     * ```cpp
     * struct ArgvUnknown {
-    *     static void run(const std::string& arg) {
+    *     static void run(std::string_view arg) {
     *         std::cout << "Running unknown command: " << arg << std::endl;
     *     }
     * };
     * ```
    */
     template<typename T>
-    concept isArgvUnknown = requires(std::string s){ T::run(s); };
+    concept isArgvUnknown = requires(std::string_view s){ T::run(s); };
 
     export std::optional<std::string> get(std::string_view key);
 
     export 
         template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
     void run();
+
+    export void stop();
 
     constexpr uint32_t hash(std::string_view s);
 
@@ -115,11 +118,12 @@ namespace Scriptforge::Argv {
 
 	template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
 	void CommandJumpTable<UnknownCommand, Commands...>::run(const std::vector<std::string>& args) {
+		internal::isRunning = true;
         for (const auto& arg : args) {
             uint32_t h = hash(arg);
 
             bool found = false;
-            if (arg.starts_with('-')) {
+            if (arg.starts_with('-') && internal::isRunning) {
                 // 折叠表达式 = 生成 SWITCH 跳转表
                 ([&] {
                     if (h == hash(Commands::name) ||
@@ -139,4 +143,7 @@ namespace Scriptforge::Argv {
         }
     }
 
+	void stop() {
+		internal::isRunning = false;
+	}
 }

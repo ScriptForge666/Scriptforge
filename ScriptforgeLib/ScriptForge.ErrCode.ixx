@@ -38,6 +38,7 @@ namespace Scriptforge::ErrCode {
 		RingBufferCapacityBeZero = 50001,       // RingBuffer0001: Capacity must be greater than 0
 		ProcessPoolInvalidPoolSize = 60001,       // ProcessPool0002: Invalid pool size
 		ThreadErrorThreadAlreadyRunning = 70001,       // ThreadError0001: Thread is already running
+		ThreadErrorThreadNoTask = 70002,       // ThreadError0002: Thread is not running
 
 	};
 	export std::string toString(ErrCode code) {
