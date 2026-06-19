@@ -40,8 +40,8 @@ namespace Scriptforge::Argv {
     * 可以编写以下类型的命令结构体/类：
     * ```cpp
     * struct ArgvCommand {
-    *     static constexpr std::string_view name = "--command";
-    *     static constexpr std::string_view shortName = "-c";
+    *     static constexpr std::string_view name = "command";
+    *     static constexpr std::string_view shortName = "c";
     *     static void run(std::string_view arg, std::ostream& os, std::ostream& err, std::istream& is) {
     *         os << "Running command: " << arg << std::endl;
     *     }
