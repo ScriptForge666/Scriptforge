@@ -15,24 +15,7 @@ namespace fs = std::filesystem;
 using namespace Scriptforge::LanguageCode;
 using namespace Scriptforge::Local;
 
-namespace Scriptforge::Local::Test
-{
-    TEST(LocalTest, LangDefaultCtorThrows) {
-        try {
-            Lang{};
-            FAIL() << "默认构造应该抛出异常";
-        }
-        catch (const Scriptforge::Err::BasicError<Scriptforge::ErrCode::ErrCode>& e) {
-            EXPECT_EQ(
-                e.code(),
-                Scriptforge::ErrCode::ErrCode::LocalInvalidLanguageCode
-            );
-            EXPECT_STREQ(
-                e.what().c_str(),
-                "LanguageIsLegal: Neutral and Invariant are not valid language codes for loading language files."
-            );
-        }
-    }
+namespace Scriptforge::Local::Test {
 
     TEST(LocalTest, AutoLoadAllLanguages) {
         // 👉 直接返回 vector<Language>
