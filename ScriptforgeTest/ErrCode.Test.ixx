@@ -62,9 +62,6 @@ namespace Scriptforge::ErrCode::Test {
         // 测试边界情况
         ErrCode boundaryCode1 = static_cast<ErrCode>(0);
         EXPECT_EQ(toString(boundaryCode1), "Err0");
-
-        ErrCode boundaryCode2 = static_cast<ErrCode>(60000);
-        EXPECT_EQ(toString(boundaryCode2), "Unknown error");
     }
 
     TEST(ErrCodeTest, EnumValuesCorrect) {

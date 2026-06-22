@@ -12,6 +12,15 @@
     <Filter Include="头文件">
       <UniqueIdentifier>{57599684-6538-4371-9707-cf36cacacc13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{6911607e-08ad-4145-8d15-e5c5cfcfdeea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\utfcpp">
+      <UniqueIdentifier>{493468c5-d410-4b32-85c0-e909d3ccabff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\json">
+      <UniqueIdentifier>{f05781c3-2a1b-446b-a400-dc7e09f6e00b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scriptforge.Err.ixx">
@@ -74,6 +83,9 @@
     <ClCompile Include="Scriptforge.Argv.ixx">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\thirdParty\json\json.cppm">
+      <Filter>ThirdParty\json</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CHANGELOG.md">
@@ -107,29 +119,32 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\dependency\json.hpp">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\json\nlohmann\json.hpp">
+      <Filter>ThirdParty\json</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\json\nlohmann\json_fwd.hpp">
+      <Filter>ThirdParty\json</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8\checked.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\utf8\utf8.h">
+      <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8\core.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\utf8\utf8\checked.h">
+      <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8\cpp11.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\utf8\utf8\core.h">
+      <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8\cpp17.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\utf8\utf8\cpp11.h">
+      <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8\cpp20.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\utf8\utf8\cpp17.h">
+      <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
-    <ClInclude Include="utf8\utf8\unchecked.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\thirdParty\utf8\utf8\cpp20.h">
+      <Filter>ThirdParty\utfcpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\thirdParty\utf8\utf8\unchecked.h">
+      <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

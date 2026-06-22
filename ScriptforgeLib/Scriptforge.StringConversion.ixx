@@ -17,7 +17,7 @@
  */
 
 module;
-#include "utf8/utf8/cpp20.h"
+#include <utf8/cpp20.h>
 export module Scriptforge.StringConversion;
 import Scriptforge.Pch;
 

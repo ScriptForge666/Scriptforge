@@ -16,11 +16,9 @@
  * @date 2026/3/29
  */
 
-module;
-
-#include "json.hpp"
-
 export module Scriptforge.Local;
+
+import nlohmann.json;
 
 import Scriptforge.StringConversion;
 import Scriptforge.Err;

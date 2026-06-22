@@ -43,7 +43,18 @@ namespace Scriptforge {
 
         export using Error = BasicError<>;
 
+		export
+			template <typename CodeT, typename T, typename Clock>
+			requires ErrorRequires<CodeT, T, Clock>&&
+			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); }&&
+			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
+		std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& error);
 
+		export
+			template <typename T, typename Clock>
+			requires MessageRequires<T, Clock>&&
+		std::same_as<Clock, std::chrono::steady_clock>
+			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg);
     }
 }
 
@@ -69,6 +80,43 @@ namespace Scriptforge {
 			requires ErrorRequires<CodeT, T, Clock>
         const CodeT& BasicError<CodeT, T, Clock>::code() const {
             return m_code;
+		}
+
+		template <typename CodeT, typename T, typename Clock>
+			requires ErrorRequires<CodeT, T, Clock>&&
+			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); }&&
+			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
+		std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& error) {
+			auto tp = error.time();
+			auto zt = std::chrono::zoned_time{ std::chrono::current_zone(), tp };
+			auto local = zt.get_local_time();
+			auto days = floor<std::chrono::days>(local);
+			std::chrono::year_month_day ymd{ days };
+			std::chrono::hh_mm_ss      hms{ local - days };
+
+			// 直接输出！安全！干净！
+			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d} | {} | {}] {}",
+				static_cast<int>(ymd.year()),
+				static_cast<unsigned>(ymd.month()),
+				static_cast<unsigned>(ymd.day()),
+				hms.hours().count(),
+				hms.minutes().count(),
+				hms.seconds().count(),
+				getInformationLevel(error.level()),
+				error.code(),
+				error.message());
+			return os;
+		}
+
+		template <typename T, typename Clock>
+			requires MessageRequires<T, Clock>&&
+		std::same_as<Clock, std::chrono::steady_clock>
+			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
+			os << "[ " << msg.time().time_since_epoch().count()
+				<< " | " << getInformationLevel(msg.level())
+				<< " | " << msg.code()
+				<< "] " << msg.message();
+			return os;
 		}
     }
 }
