@@ -29,7 +29,6 @@ We recommend using the latest stable release until the update is complete.
 ---
 
 <!-- TREE_START -->
-``
 ```
 Scriptforge
 ├── CHANGELOG-CN.md
@@ -162,7 +161,6 @@ Scriptforge
 └── 更新方向.md
 ```
 
-``
 <!-- TREE_END -->
 
 
