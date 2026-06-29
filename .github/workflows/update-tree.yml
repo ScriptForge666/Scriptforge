@@ -30,6 +30,37 @@ jobs:
       - name: 输出```到repo_tree.md
         run: echo '```' >> repo_tree.md
 
+      - name: PowerShell 更新README目录树区块
+        shell: pwsh
+        run: |
+          # 1. 检查临时tree文件
+          $treeFile = "tree_temp.txt"
+          if (-not (Test-Path $treeFile)) {
+              Write-Host "⚠️ $treeFile 不存在，直接跳过更新"
+              exit 0
+          }
+          
+          # 读取内容
+          $treeText = Get-Content $treeFile -Raw
+          $readmePath = "README.md"
+          $originReadme = Get-Content $readmePath -Raw
+          $pattern = '(?s)(<!-- TREE_START -->).*?(<!-- TREE_END -->)'
+
+          # 2. 校验标记区块是否存在，防止误清空文档
+          if (-not ($originReadme -match $pattern)) {
+            Write-Error "❌ README.md 未找到 <!-- TREE_START --> / <!-- TREE_END --> 成对标记，终止执行"
+            exit 1
+          }
+
+          # 构造替换文本（单引号保留正则捕获组 ${1} ${2}）
+          $replaceStr = '${1}' + "`n````n" + $treeText + "`n````n" + '${2}'
+          $newReadme = $originReadme -replace $pattern, $replaceStr
+          
+
+          # 写入新README（UTF8无BOM，兼容Git）
+          [System.IO.File]::WriteAllText($readmePath, $newReadme, [System.Text.Encoding]::UTF8)
+          Remove-Item $treeFile -Force
+          Write-Host "✅ README 目录树区块已更新完成"
       - name: 自动提交变更
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
