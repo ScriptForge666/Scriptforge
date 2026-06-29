@@ -59,7 +59,6 @@ jobs:
          
          # 写入 UTF8 无BOM
          [System.IO.File]::WriteAllText($readmePath, $newReadme, [System.Text.Encoding]::UTF8)
-         Remove-Item $treeFile -Force
          Write-Host "✅ README 目录树区块已更新完成"
       - name: PowerShell 更新README-CN目录树区块
         shell: pwsh
