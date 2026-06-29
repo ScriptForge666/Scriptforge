@@ -31,4 +31,3 @@ jobs:
           commit_message: "docs: auto refresh repo directory tree"
           # 只提交目录树文件，其余文件忽略
           file_pattern: repo_tree.md
-          branch: main
