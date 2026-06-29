@@ -2,7 +2,8 @@ name: Auto Update Repo Tree
 # 触发时机：推送代码到main分支 / 手动在Actions页面运行
 on:
   push:
-    branches: [ master ]
+    branches:
+  
   workflow_dispatch:
 
 # 授予读写代码权限，才能提交文件
