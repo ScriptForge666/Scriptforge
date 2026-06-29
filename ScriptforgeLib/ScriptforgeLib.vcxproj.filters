@@ -21,6 +21,9 @@
     <Filter Include="ThirdParty\json">
       <UniqueIdentifier>{f05781c3-2a1b-446b-a400-dc7e09f6e00b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GitHub_Actions">
+      <UniqueIdentifier>{4c96dc7e-9d08-43c1-a202-82a18f604249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scriptforge.Err.ixx">
@@ -108,6 +111,9 @@
     </None>
     <None Include="lang\zh.json">
       <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\.github\workflows\update-tree.yml">
+      <Filter>GitHub_Actions</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

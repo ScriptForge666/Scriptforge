@@ -1,0 +1,33 @@
+name: Auto Update Repo Tree
+# 触发时机：推送代码到main分支 / 手动在Actions页面运行
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+# 授予读写代码权限，才能提交文件
+permissions:
+  contents: write
+
+jobs:
+  generate-tree:
+    runs-on: windows-latest
+    steps:
+      - name: 完整拉取仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 安装 tree-node-cli
+        run: npm install -g tree-node-cli
+
+      - name: 生成目录树，覆盖 repo_tree.md
+        run: tree . -L 8 --ignore ".git,x64,x86,Debug,Release,.vs,GeneratedTools" > repo_tree.md
+
+      - name: 自动提交变更
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: auto refresh repo directory tree"
+          # 只提交目录树文件，其余文件忽略
+          file_pattern: repo_tree.md
+          branch: main

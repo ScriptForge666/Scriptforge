@@ -42,6 +42,7 @@
     <ClCompile Include="Scriptforge.Version.ixx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.github\workflows\update-tree.yml" />
     <None Include="..\CHANGELOG-CN.md" />
     <None Include="..\CHANGELOG.md" />
     <None Include="..\README-CN.md" />
