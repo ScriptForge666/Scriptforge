@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           # 1. 检查临时tree文件
-          $treeFile = "tree_temp.txt"
+          $treeFile = "repo_tree.md"
           if (-not (Test-Path $treeFile)) {
               Write-Host "⚠️ $treeFile 不存在，直接跳过更新"
               exit 0
