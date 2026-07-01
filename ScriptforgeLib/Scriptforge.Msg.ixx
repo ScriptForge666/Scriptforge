@@ -214,7 +214,7 @@ namespace Scriptforge {
 		std::same_as<Clock, std::chrono::steady_clock>
 			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
 			os << "[ " << msg.time().time_since_epoch().count()
-				<< " | " << getInformationLevel(msg.level())
+				<< "] [" << getInformationLevel(msg.level())
 				<< "] " << msg.message();
 			return os;
 		}

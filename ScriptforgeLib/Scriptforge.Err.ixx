@@ -95,7 +95,7 @@ namespace Scriptforge {
 			std::chrono::hh_mm_ss      hms{ local - days };
 
 			// 直接输出！安全！干净！
-			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d} | {} | {}] {}",
+			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}] [{}] [{}] {}",
 				static_cast<int>(ymd.year()),
 				static_cast<unsigned>(ymd.month()),
 				static_cast<unsigned>(ymd.day()),
@@ -113,8 +113,8 @@ namespace Scriptforge {
 		std::same_as<Clock, std::chrono::steady_clock>
 			std::ostream& operator<<(std::ostream& os, const BasicMessage<T, Clock>& msg) {
 			os << "[ " << msg.time().time_since_epoch().count()
-				<< " | " << getInformationLevel(msg.level())
-				<< " | " << msg.code()
+				<< "] [" << getInformationLevel(msg.level())
+				<< "] [" << msg.code()
 				<< "] " << msg.message();
 			return os;
 		}
