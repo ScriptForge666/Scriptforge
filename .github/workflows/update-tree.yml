@@ -18,6 +18,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 安装 tree-node-cli
+        run: npm install -g tree-node-cli
+
       - name: 输出```到repo_tree.md
         run: echo '```' > repo_tree.md
 
