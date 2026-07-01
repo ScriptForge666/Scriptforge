@@ -49,7 +49,6 @@ Scriptforge
 │   ├── Scriptforge.AntiDebug.cpp
 │   ├── Scriptforge.AntiDebug.ixx
 │   ├── Scriptforge.Argv.ixx
-│   ├── Scriptforge.Argv.txt
 │   ├── Scriptforge.Err.ixx
 │   ├── Scriptforge.ErrCode.throwError.ixx
 │   ├── Scriptforge.LanguageCode.ixx

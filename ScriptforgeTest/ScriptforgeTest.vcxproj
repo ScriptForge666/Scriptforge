@@ -68,7 +68,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>X64;_DEBUG;_CONSOLE;_GUARDOVERFLOW_CRT_ALLOCATORS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -105,7 +105,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <PreprocessorDefinitions>X64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\thirdParty\json\json.cppm" />
     <ClCompile Include="AntiDebug.Test.ixx" />
     <ClCompile Include="Err.Test.ixx" />
     <ClCompile Include="ErrCode.Test.ixx" />
@@ -137,6 +138,17 @@
     <ProjectReference Include="..\ScriptforgeLib\ScriptforgeLib.vcxproj">
       <Project>{ee5cc680-18b4-4ea7-8899-c8aab8ab2c6f}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\thirdParty\json\nlohmann\json.hpp" />
+    <ClInclude Include="..\thirdParty\json\nlohmann\json_fwd.hpp" />
+    <ClInclude Include="..\thirdParty\utf8\utf8.h" />
+    <ClInclude Include="..\thirdParty\utf8\utf8\checked.h" />
+    <ClInclude Include="..\thirdParty\utf8\utf8\core.h" />
+    <ClInclude Include="..\thirdParty\utf8\utf8\cpp11.h" />
+    <ClInclude Include="..\thirdParty\utf8\utf8\cpp17.h" />
+    <ClInclude Include="..\thirdParty\utf8\utf8\cpp20.h" />
+    <ClInclude Include="..\thirdParty\utf8\utf8\unchecked.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

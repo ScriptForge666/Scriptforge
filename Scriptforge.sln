@@ -9,6 +9,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptforgeTest", "Scriptfo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenerateRandom", "GenerateRandom\GenerateRandom.vcxproj", "{543CCAF3-E212-4A60-A552-4405BC03507C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub_Actions", "GitHub_Actions", "{84FBC3F8-C08C-441F-9569-D65A746A9E37}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\update-tree.yml = .github\workflows\update-tree.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

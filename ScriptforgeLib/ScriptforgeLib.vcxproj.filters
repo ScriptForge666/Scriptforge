@@ -21,8 +21,11 @@
     <Filter Include="ThirdParty\json">
       <UniqueIdentifier>{f05781c3-2a1b-446b-a400-dc7e09f6e00b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GitHub_Actions">
-      <UniqueIdentifier>{4c96dc7e-9d08-43c1-a202-82a18f604249}</UniqueIdentifier>
+    <Filter Include="ThirdParty\json\nlohmann">
+      <UniqueIdentifier>{aee12fa6-c35b-4712-97fc-e5a56319fc51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\utfcpp\utf8">
+      <UniqueIdentifier>{bcf850d5-737d-407a-acf9-d6e5dd250a64}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -112,9 +115,6 @@
     <None Include="lang\zh.json">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="..\.github\workflows\update-tree.yml">
-      <Filter>GitHub_Actions</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\LICENSE-THIRD-PARTY.txt">
@@ -125,32 +125,32 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\thirdParty\json\nlohmann\json.hpp">
-      <Filter>ThirdParty\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\json\nlohmann\json_fwd.hpp">
-      <Filter>ThirdParty\json</Filter>
-    </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8.h">
       <Filter>ThirdParty\utfcpp</Filter>
     </ClInclude>
+    <ClInclude Include="..\thirdParty\json\nlohmann\json_fwd.hpp">
+      <Filter>ThirdParty\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\thirdParty\json\nlohmann\json.hpp">
+      <Filter>ThirdParty\json\nlohmann</Filter>
+    </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8\checked.h">
-      <Filter>ThirdParty\utfcpp</Filter>
+      <Filter>ThirdParty\utfcpp\utf8</Filter>
     </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8\core.h">
-      <Filter>ThirdParty\utfcpp</Filter>
+      <Filter>ThirdParty\utfcpp\utf8</Filter>
     </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8\cpp11.h">
-      <Filter>ThirdParty\utfcpp</Filter>
+      <Filter>ThirdParty\utfcpp\utf8</Filter>
     </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8\cpp17.h">
-      <Filter>ThirdParty\utfcpp</Filter>
+      <Filter>ThirdParty\utfcpp\utf8</Filter>
     </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8\cpp20.h">
-      <Filter>ThirdParty\utfcpp</Filter>
+      <Filter>ThirdParty\utfcpp\utf8</Filter>
     </ClInclude>
     <ClInclude Include="..\thirdParty\utf8\utf8\unchecked.h">
-      <Filter>ThirdParty\utfcpp</Filter>
+      <Filter>ThirdParty\utfcpp\utf8</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

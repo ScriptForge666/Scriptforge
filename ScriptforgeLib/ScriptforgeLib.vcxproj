@@ -42,7 +42,6 @@
     <ClCompile Include="Scriptforge.Version.ixx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.github\workflows\update-tree.yml" />
     <None Include="..\CHANGELOG-CN.md" />
     <None Include="..\CHANGELOG.md" />
     <None Include="..\README-CN.md" />
@@ -102,7 +101,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <VCToolsVersion>
     </VCToolsVersion>
-    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
