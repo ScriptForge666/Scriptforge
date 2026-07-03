@@ -149,8 +149,8 @@ namespace Scriptforge::Argv {
         ArgvCli& operator=(const ArgvCli&) = delete;
         ArgvCli(ArgvCli&&) noexcept = default;
         ArgvCli& operator=(ArgvCli&&) noexcept = default;
-        ArgvCli(const int& argc, char* argv[], const std::ostream& os = std::cout, const std::ostream& err = std::cerr, const std::istream& is = std::cin);
-		void init(const int& argc, char* argv[], const std::ostream& os = std::cout, const std::ostream& err = std::cerr, const std::istream& is = std::cin);
+        ArgvCli(const int& argc, char* argv[], std::ostream& os = std::cout, std::ostream& err = std::cerr, std::istream& is = std::cin);
+		void init(const int& argc, char* argv[], std::ostream& os = std::cout, std::ostream& err = std::cerr, std::istream& is = std::cin);
         std::optional<std::string> getNext(std::string_view key);
         std::optional<std::vector<std::string>> getAll(std::string_view key);
         template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
@@ -159,21 +159,21 @@ namespace Scriptforge::Argv {
 		void stop();
     private:
         std::vector<std::string> m_argv;
-        const std::ostream* m_os{ &std::cout };
-        const std::ostream* m_err{ &std::cerr };
-        const std::istream* m_is{ &std::cin };
+        std::ostream* m_os{ &std::cout };
+        std::ostream* m_err{ &std::cerr };
+        std::istream* m_is{ &std::cin };
         bool m_stopFlag = false;
     };
 }
 
 namespace Scriptforge::Argv {
     template<isHash HashT>
-    ArgvCli<HashT>::ArgvCli(const int& argc, char* argv[], const std::ostream& os, const std::ostream& err, const std::istream& is) {
+    ArgvCli<HashT>::ArgvCli(const int& argc, char* argv[], std::ostream& os, std::ostream& err, std::istream& is) {
         init(argc, argv, os, err, is);
     }
 
     template<isHash HashT>
-    void ArgvCli<HashT>::init(const int& argc, char* argv[], const std::ostream& os, const std::ostream& err, const std::istream& is) {
+    void ArgvCli<HashT>::init(const int& argc, char* argv[], std::ostream& os, std::ostream& err, std::istream& is) {
         m_os = &os;
         m_err = &err;
         m_is = &is;
