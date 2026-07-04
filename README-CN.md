@@ -77,6 +77,7 @@ Scriptforge
 │   ├── Local.Test.ixx
 │   ├── Msg.Test.ixx
 │   ├── ScriptforgeTest.vcxproj
+│   ├── ScriptforgeTest.vcxproj.filters
 │   ├── StringConversion.Test.ixx
 │   ├── Test.cpp
 │   ├── ThreadError.Test.ixx

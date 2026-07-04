@@ -26,13 +26,13 @@ namespace Scriptforge::Argv {
 
     export namespace Hash {
         struct FNV_1a_32 {
-			static constexpr uint32_t hash(std::string_view s) {
-				uint32_t h = 0x811C9DC5u;
-				for (char c : s)
-					h = (h ^ (uint8_t)c) * 0x01000193u;
-				return h;
-			}
-		};
+            static constexpr uint32_t hash(std::string_view s) {
+                uint32_t h = 0x811C9DC5u;
+                for (char c : s)
+                    h = (h ^ (uint8_t)c) * 0x01000193u;
+                return h;
+            }
+        };
     }
 
     /**
@@ -42,17 +42,17 @@ namespace Scriptforge::Argv {
     * struct ArgvCommand {
     *     static constexpr std::string_view name = "--command";
     *     static constexpr std::string_view shortName = "-c";
-    *     static void run(std::string_view arg, std::ostream& os, std::ostream& err, std::istream& is) {
+    *     static void run(std::vector<std::string>::iterator it, std::string_view arg, std::ostream& os, std::ostream& err, std::istream& is) {
     *         os << "Running command: " << arg << std::endl;
     *     }
     * };
     * ```
    */
     template<typename T>
-    concept isArgvCommand = requires(std::string_view s, std::ostream & os, std::ostream & err, std::istream & is) {
+    concept isArgvCommand = requires(std::vector<std::string>::iterator it, std::string_view s, std::ostream & os, std::ostream & err, std::istream & is) {
         { T::name } -> std::convertible_to<std::string_view>;
         { T::shortName } -> std::convertible_to<std::string_view>;
-        T::run(s, os, err, is);
+        T::run(it, s, os, err, is);
     };
 
     /**
@@ -60,15 +60,15 @@ namespace Scriptforge::Argv {
     * 可以编写以下类型的命令结构体/类：
     * ```cpp
     * struct ArgvUnknown {
-    *     static void run(std::string_view arg, std::ostream& os, std::ostream& err, std::istream& is) {
+    *     static void run(std::vector<std::string>::iterator it, std::string_view arg, std::ostream& os, std::ostream& err, std::istream& is) {
     *         err << "Running unknown command: " << arg << std::endl;
     *     }
     * };
     * ```
    */
     template<typename T>
-    concept isArgvUnknown = requires(std::string_view s, std::ostream & os, std::ostream & err, std::istream & is) {
-        T::run(s, os, err, is); 
+    concept isArgvUnknown = requires(std::vector<std::string>::iterator it, std::string_view s, std::ostream & os, std::ostream & err, std::istream & is) {
+        T::run(it, s, os, err, is);
     };
 
     template<typename HashT>
@@ -80,21 +80,21 @@ namespace Scriptforge::Argv {
     }
 
     /*
-	 * @details 一个用于检查类型是否具有 constexpr hash 函数的概念。
-	 * 可以编写以下类型的哈希结构体/类：
+     * @details 一个用于检查类型是否具有 constexpr hash 函数的概念。
+     * 可以编写以下类型的哈希结构体/类：
      * ```cpp
-	 * struct MyHash {
-	 *     static constexpr uint32_t hash(std::string_view s) {
-	 *         //TODO: 实现哈希函数
+     * struct MyHash {
+     *     static constexpr uint32_t hash(std::string_view s) {
+     *         //TODO: 实现哈希函数
      *     }
      * };
      * ```
     */
     template<typename HashT>
-	concept isHash = requires(std::string_view s) {
-		testHashConstexpr<HashT>();
-		{ HashT::hash(s) } -> std::convertible_to<uint32_t>;
-	};
+    concept isHash = requires(std::string_view s) {
+        testHashConstexpr<HashT>();
+        { HashT::hash(s) } -> std::convertible_to<uint32_t>;
+    };
 
     namespace DetectHashCollision {
         template<isHash Hash, isArgvCommand... Cmd>
@@ -132,7 +132,7 @@ namespace Scriptforge::Argv {
         }
     }
 
-    
+
 
     // 给 run 模板加约束：必须无哈希碰撞
     template<typename Hash, typename Unknown, typename... Cmd>
@@ -140,9 +140,9 @@ namespace Scriptforge::Argv {
         isHash<Hash> && isArgvUnknown<Unknown> && (isArgvCommand<Cmd> && ...) &&
         DetectHashCollision::noCommandHashCollision<Hash, Unknown, Cmd...>();
 
-    export 
+    export
         template<isHash HashT>
-        class ArgvCli {
+    class ArgvCli {
     public:
         ArgvCli() = default;
         ArgvCli(const ArgvCli&) = delete;
@@ -150,13 +150,12 @@ namespace Scriptforge::Argv {
         ArgvCli(ArgvCli&&) noexcept = default;
         ArgvCli& operator=(ArgvCli&&) noexcept = default;
         ArgvCli(const int& argc, char* argv[], std::ostream& os = std::cout, std::ostream& err = std::cerr, std::istream& is = std::cin);
-		void init(const int& argc, char* argv[], std::ostream& os = std::cout, std::ostream& err = std::cerr, std::istream& is = std::cin);
-        std::optional<std::string> getNext(std::string_view key);
-        std::optional<std::vector<std::string>> getAll(std::string_view key);
+        void init(const int& argc, char* argv[], std::ostream& os = std::cout, std::ostream& err = std::cerr, std::istream& is = std::cin);
         template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
             requires (isAllCommandHashUnique<HashT, UnknownCommand, Commands...>)
         void run();
-		void stop();
+        void stop();
+        const std::vector<std::string>& getArgv() const;
     private:
         std::vector<std::string> m_argv;
         std::ostream* m_os{ &std::cout };
@@ -181,42 +180,12 @@ namespace Scriptforge::Argv {
     }
 
     template<isHash HashT>
-    std::optional<std::string> ArgvCli<HashT>::getNext(std::string_view key) {
-        auto it = std::ranges::find(m_argv, key);
-        if (it == m_argv.end() || std::next(it) == m_argv.end())
-            return {};
-        const auto& next_arg = *std::next(it);
-        if (!next_arg.starts_with('-')) {
-            return next_arg;
-        }
-        return std::nullopt;
-    }
-
-    template<isHash HashT>
-    std::optional<std::vector<std::string>> ArgvCli<HashT>::getAll(std::string_view key) {
-        std::vector<std::string> values;
-        auto it = std::ranges::find(m_argv, key);
-        while (it != m_argv.end()) {
-            if (std::next(it) == m_argv.end())
-                break;
-            const auto& next_arg = *std::next(it);
-            if (!next_arg.starts_with('-')) {
-                values.push_back(next_arg);
-            }
-            else {
-                break;
-            }
-            it = std::ranges::find(std::next(it), m_argv.end(), key);
-        }
-        return values.empty() ? std::nullopt : std::make_optional(values);
-    }
-
-	template<isHash HashT>
     template<isArgvUnknown UnknownCommand, isArgvCommand... Commands>
         requires (isAllCommandHashUnique<HashT, UnknownCommand, Commands...>)
     void ArgvCli<HashT>::run() {
         m_stopFlag = false;
-        for (const auto& arg : m_argv) {
+        for (auto it = m_argv.begin(); it != m_argv.end(); ++it) {
+            const auto& arg = *it;
             uint32_t h = HashT::hash(arg);
 
             bool found = false;
@@ -225,7 +194,7 @@ namespace Scriptforge::Argv {
                 ([&] {
                     if (h == HashT::hash(Commands::name) ||
                         h == HashT::hash(Commands::shortName)) {
-                        Commands::run(arg, *m_os, *m_err, *m_is);
+                        Commands::run(it, arg, *m_os, *m_err, *m_is);
                         found = true;
                     }
                     }(), ...);
@@ -234,15 +203,19 @@ namespace Scriptforge::Argv {
                 continue;
             }
             if (!found) {
-                UnknownCommand::run(arg, *m_os, *m_err, *m_is);
+                UnknownCommand::run(it, arg, *m_os, *m_err, *m_is);
                 break;
             }
         }
     }
 
-	template<isHash HashT>
+    template<isHash HashT>
     void ArgvCli<HashT>::stop() {
         m_stopFlag = true;
     }
 
+	template<isHash HashT>
+	const std::vector<std::string>& ArgvCli<HashT>::getArgv() const {
+		return m_argv;
+	}
 }

@@ -197,7 +197,7 @@ namespace Scriptforge {
 			std::chrono::hh_mm_ss      hms{ local - days };
 
 			// 直接输出！安全！干净！
-			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d} | {}] {}",
+			os << std::format("[{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}] [{}] {}",
 				static_cast<int>(ymd.year()),
 				static_cast<unsigned>(ymd.month()),
 				static_cast<unsigned>(ymd.day()),

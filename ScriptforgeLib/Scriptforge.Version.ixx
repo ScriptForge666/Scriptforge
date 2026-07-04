@@ -25,7 +25,7 @@ namespace Scriptforge {
         export class VersionInfo {
         public:
             // 构造函数
-            constexpr VersionInfo(
+            VersionInfo(
                 std::string_view projectName,
                 std::string_view projectVersion,
                 std::string_view projectContributor,
@@ -40,7 +40,7 @@ namespace Scriptforge {
             std::string getFullInfo() const noexcept;
 
         private:
-            static constexpr std::chrono::year getCompileYear() noexcept;
+            static std::chrono::year getCompileYear() noexcept;
 
             std::string_view m_projectName;
             std::string_view m_projectVersion;
@@ -59,7 +59,7 @@ namespace Scriptforge {
 
 namespace Scriptforge {
     inline namespace Version {
-        constexpr std::chrono::year VersionInfo::getCompileYear() noexcept {
+        std::chrono::year VersionInfo::getCompileYear() noexcept {
             constexpr std::string_view date = __DATE__;
             // __DATE__ 格式：MMM DD YYYY 共 11 字符
             constexpr auto yearPos = date.size() - 4;
@@ -67,7 +67,7 @@ namespace Scriptforge {
             return std::chrono::year{ year };
         }
 
-        constexpr VersionInfo::VersionInfo(
+        VersionInfo::VersionInfo(
             std::string_view projectName,
             std::string_view projectVersion,
             std::string_view projectContributor,

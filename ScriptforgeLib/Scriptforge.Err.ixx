@@ -87,6 +87,7 @@ namespace Scriptforge {
 			requires { Clock::to_time_t(std::declval<typename Clock::time_point>()); }&&
 			requires { !std::is_same_v<Clock, std::chrono::steady_clock>; }
 		std::ostream& operator<<(std::ostream& os, const BasicError<CodeT, T, Clock>& error) {
+			// 拆分输出，不再把时区相关变量全部丢进std::format
 			auto tp = error.time();
 			auto zt = std::chrono::zoned_time{ std::chrono::current_zone(), tp };
 			auto local = zt.get_local_time();

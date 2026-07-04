@@ -41,7 +41,7 @@ namespace Scriptforge::ErrCode {
 		ThreadErrorThreadNoTask = 70002,       // ThreadError0002: Thread is not running
 
 	};
-	export std::string toString(ErrCode code) {
+	export std::string to_string(ErrCode code) {
 		std::string result;
 		int codeType = static_cast<int>(code) / 10000;
 		switch (codeType) {
@@ -77,7 +77,19 @@ namespace Scriptforge::ErrCode {
 	}
 
 	export std::ostream& operator<<(std::ostream& os, const ErrCode& errCode) {
-		os << toString(errCode);
+		os << to_string(errCode);
 		return os;
 	}
 }
+export
+template<>
+struct std::formatter<Scriptforge::ErrCode::ErrCode>
+{
+	constexpr auto parse(std::format_parse_context& ctx) {
+		return ctx.begin();
+	}
+	template<typename FmtCtx>
+	auto format(const Scriptforge::ErrCode::ErrCode& code, FmtCtx& ctx) const {
+		return std::format_to(ctx.out(), "{}", Scriptforge::ErrCode::to_string(code));
+	}
+};
