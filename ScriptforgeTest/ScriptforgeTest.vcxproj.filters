@@ -9,54 +9,5 @@
     <ClCompile Include="StringConversion.Test.ixx" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="ThreadError.Test.ixx" />
-    <ClCompile Include="..\thirdParty\json\json.cppm">
-      <Filter>ThirdParty\json</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="ThirdParty">
-      <UniqueIdentifier>{8896c8a4-2319-404c-aa48-0261db1d9704}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ThirdParty\json">
-      <UniqueIdentifier>{80e3db75-3cac-4443-bd25-99eea7c386d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ThirdParty\json\nlohmann">
-      <UniqueIdentifier>{2770a531-db14-42e5-87e5-fe04a5b86aa2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ThirdParty\utfcpp">
-      <UniqueIdentifier>{fc2c92f5-f97c-48c0-b1f9-052b63ca3577}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ThirdParty\utfcpp\utf8">
-      <UniqueIdentifier>{8f6347c4-d60d-4bca-b14b-e4d552128113}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\thirdParty\json\nlohmann\json.hpp">
-      <Filter>ThirdParty\json\nlohmann</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\json\nlohmann\json_fwd.hpp">
-      <Filter>ThirdParty\json\nlohmann</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8.h">
-      <Filter>ThirdParty\utfcpp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8\checked.h">
-      <Filter>ThirdParty\utfcpp\utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8\core.h">
-      <Filter>ThirdParty\utfcpp\utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8\cpp11.h">
-      <Filter>ThirdParty\utfcpp\utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8\cpp17.h">
-      <Filter>ThirdParty\utfcpp\utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8\cpp20.h">
-      <Filter>ThirdParty\utfcpp\utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\thirdParty\utf8\utf8\unchecked.h">
-      <Filter>ThirdParty\utfcpp\utf8</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

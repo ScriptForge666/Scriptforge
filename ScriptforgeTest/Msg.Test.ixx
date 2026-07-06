@@ -71,7 +71,7 @@ namespace Scriptforge::Msg::Test {
         EXPECT_NE(output.find(test_msg), std::string::npos);
 
         // 断言前缀格式完全匹配
-        std::string expected_prefix = "[2025-03-30 00:00:00 | Error] test";
+        std::string expected_prefix = "[2025-03-30 00:00:00] [Error] test";
         EXPECT_EQ(output.substr(0, expected_prefix.size()), expected_prefix);
     }
 

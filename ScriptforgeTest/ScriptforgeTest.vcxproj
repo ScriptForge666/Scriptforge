@@ -28,10 +28,10 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <MSVCPreviewEnabled>false</MSVCPreviewEnabled>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <MSVCPreviewEnabled>
@@ -124,7 +124,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\thirdParty\json\json.cppm" />
     <ClCompile Include="AntiDebug.Test.ixx" />
     <ClCompile Include="Err.Test.ixx" />
     <ClCompile Include="ErrCode.Test.ixx" />
@@ -138,17 +137,6 @@
     <ProjectReference Include="..\ScriptforgeLib\ScriptforgeLib.vcxproj">
       <Project>{ee5cc680-18b4-4ea7-8899-c8aab8ab2c6f}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\thirdParty\json\nlohmann\json.hpp" />
-    <ClInclude Include="..\thirdParty\json\nlohmann\json_fwd.hpp" />
-    <ClInclude Include="..\thirdParty\utf8\utf8.h" />
-    <ClInclude Include="..\thirdParty\utf8\utf8\checked.h" />
-    <ClInclude Include="..\thirdParty\utf8\utf8\core.h" />
-    <ClInclude Include="..\thirdParty\utf8\utf8\cpp11.h" />
-    <ClInclude Include="..\thirdParty\utf8\utf8\cpp17.h" />
-    <ClInclude Include="..\thirdParty\utf8\utf8\cpp20.h" />
-    <ClInclude Include="..\thirdParty\utf8\utf8\unchecked.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

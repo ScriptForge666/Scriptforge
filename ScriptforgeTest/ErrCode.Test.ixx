@@ -36,32 +36,32 @@ namespace Scriptforge::ErrCode::Test {
     TEST(ErrCodeTest, ToStringValidCodes) {
 
         // 测试 Tree 错误代码
-        EXPECT_EQ(toString(ErrCode::TreeInvalidNode), "Tree1");
-        EXPECT_EQ(toString(ErrCode::TreeEmptyNode), "Tree2");
-        EXPECT_EQ(toString(ErrCode::TreeOrphanedNode), "Tree3");
+        EXPECT_EQ(to_string(ErrCode::TreeInvalidNode), "Tree1");
+        EXPECT_EQ(to_string(ErrCode::TreeEmptyNode), "Tree2");
+        EXPECT_EQ(to_string(ErrCode::TreeOrphanedNode), "Tree3");
 
         // 测试 Log 错误代码
-        EXPECT_EQ(toString(ErrCode::LogCannotOpenLogFile), "Log1");
+        EXPECT_EQ(to_string(ErrCode::LogCannotOpenLogFile), "Log1");
         // 测试 BitPack 错误代码
-        EXPECT_EQ(toString(ErrCode::AntiDebugOSNotSupported), "AntiDebug1");
+        EXPECT_EQ(to_string(ErrCode::AntiDebugOSNotSupported), "AntiDebug1");
 
         // 测试 Local 错误代码
-        EXPECT_EQ(toString(ErrCode::LocalLanguageFileNotFound), "Local1");
-        EXPECT_EQ(toString(ErrCode::LocalInvalidLanguageFile), "Local2");
-        EXPECT_EQ(toString(ErrCode::LocalInvalidLanguageCode), "Local3");
+        EXPECT_EQ(to_string(ErrCode::LocalLanguageFileNotFound), "Local1");
+        EXPECT_EQ(to_string(ErrCode::LocalInvalidLanguageFile), "Local2");
+        EXPECT_EQ(to_string(ErrCode::LocalInvalidLanguageCode), "Local3");
 
         // 测试 RingBuffer 错误代码
-        EXPECT_EQ(toString(ErrCode::RingBufferCapacityBeZero), "RingBuffer1");
+        EXPECT_EQ(to_string(ErrCode::RingBufferCapacityBeZero), "RingBuffer1");
     }
 
     TEST(ErrCodeTest, ToStringUnknownCode) {
 
         // 测试未知错误代码类型
         ErrCode unknownCode = static_cast<ErrCode>(99999);
-        EXPECT_EQ(toString(unknownCode), "Unknown error");
+        EXPECT_EQ(to_string(unknownCode), "Unknown error");
         // 测试边界情况
         ErrCode boundaryCode1 = static_cast<ErrCode>(0);
-        EXPECT_EQ(toString(boundaryCode1), "Err0");
+        EXPECT_EQ(to_string(boundaryCode1), "Err0");
     }
 
     TEST(ErrCodeTest, EnumValuesCorrect) {

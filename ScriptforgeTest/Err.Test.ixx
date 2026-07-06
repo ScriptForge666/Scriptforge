@@ -83,7 +83,7 @@ namespace Scriptforge::Err::Test {
         EXPECT_NE(output.find(test_msg), std::string::npos);     // 错误信息
 
         // 4. 检查整体格式前缀（最关键）
-        std::string expected_prefix = "[2025-03-30 00:00:00 | Error | code] test";
+        std::string expected_prefix = "[2025-03-30 00:00:00] [Error] [code] test";
         EXPECT_EQ(output.substr(0, expected_prefix.size()), expected_prefix);
     }
 
